@@ -30,7 +30,7 @@
         android:layout_below="@+id/appLogo_id"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="50dp"
-        android:background="@color/colorFacebookBlue"
+        android:background="@drawable/facebook_login_button"
         android:text="@string/login_with_facebook"
         android:textAllCaps="false"
         android:textColor="@color/colorWhite" />
@@ -42,7 +42,7 @@
         android:layout_below="@+id/facebookLogin_id"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="10dp"
-        android:background="@color/colorGoogleRed"
+        android:background="@drawable/google_login_button"
         android:text="@string/login_with_google"
         android:textAllCaps="false"
         android:textColor="@color/colorWhite" />
@@ -97,7 +97,7 @@
             android:textColor="@color/colorWhite"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="10dp"
-            android:background="@color/colorGreenButton"/>
+            android:background="@drawable/green_rounded_button"/>
 
     </RelativeLayout>
 
