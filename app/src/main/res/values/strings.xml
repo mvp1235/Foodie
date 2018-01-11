@@ -15,4 +15,7 @@
     <string name="first_name">First Name</string>
     <string name="last_name">Last Name</string>
     <string name="email_address">Email Address</string>
+    <string name="chooseFromGallery">Choose From Gallery</string>
+    <string name="takeAPhoto">Take A Photo</string>
+
 </resources>

@@ -4,8 +4,6 @@
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
     <color name="colorGreenButton">#00E676</color>
-    <color name="colorWhite">#FFFFFF</color>
-    <color name="colorBlack">#000000</color>
     <color name="colorIntroBackground">#B9F6CA</color>
     <color name="colorFacebookBlue">#0D47A1</color>
     <color name="colorGoogleRed">#F44336</color>

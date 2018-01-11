@@ -33,7 +33,7 @@
         android:background="@drawable/facebook_login_button"
         android:text="@string/login_with_facebook"
         android:textAllCaps="false"
-        android:textColor="@color/colorWhite" />
+        android:textColor="@android:color/white" />
 
     <android.support.v7.widget.AppCompatButton
         android:id="@+id/googleLogin_id"
@@ -45,7 +45,7 @@
         android:background="@drawable/google_login_button"
         android:text="@string/login_with_google"
         android:textAllCaps="false"
-        android:textColor="@color/colorWhite" />
+        android:textColor="@android:color/white" />
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -94,7 +94,7 @@
             android:id="@+id/loginBtn_id"
             android:layout_below="@+id/passwordBlock_id"
             android:text="@string/login"
-            android:textColor="@color/colorWhite"
+            android:textColor="@android:color/white"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="10dp"
             android:background="@drawable/green_rounded_button"/>

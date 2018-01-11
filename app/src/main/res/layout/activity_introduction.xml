@@ -27,7 +27,7 @@
             android:layout_marginEnd="10dp"
             android:background="@drawable/white_rounded_button"
             android:text="@string/sign_in"
-            android:textColor="@color/colorBlack"/>
+            android:textColor="@android:color/black"/>
 
         <android.support.v7.widget.AppCompatButton
             android:layout_width="0dp"
@@ -38,7 +38,7 @@
             android:id="@+id/signUpBtn_id"
             android:text="@string/sign_up"
             android:background="@drawable/green_rounded_button"
-            android:textColor="@color/colorWhite"/>
+            android:textColor="@android:color/white"/>
 
     </LinearLayout>
 

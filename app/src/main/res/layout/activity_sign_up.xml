@@ -8,6 +8,8 @@
     android:layout_marginLeft="30dp"
     android:layout_marginRight="30dp"
     android:layout_marginStart="30dp"
+    android:focusable="true"
+    android:focusableInTouchMode="true"
     tools:context="com.example.mvp.foodie.SignUpActivity">
 
     <ImageView
@@ -100,7 +102,7 @@
         android:layout_marginTop="8dp"
         android:background="@drawable/green_rounded_button"
         android:text="@string/sign_up"
-        android:textColor="@color/colorWhite" />
+        android:textColor="@android:color/white" />
 
 
 </RelativeLayout>
