@@ -17,5 +17,7 @@
     <string name="email_address">Email Address</string>
     <string name="chooseFromGallery">Choose From Gallery</string>
     <string name="takeAPhoto">Take A Photo</string>
+    <string name="user_profile_photo">User\'s Profile Photo</string>
+    <string name="post_photo_slideshow">Post photo slideshow</string>
 
 </resources>
