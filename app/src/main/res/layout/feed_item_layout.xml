@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent" android:layout_height="match_parent"
+    android:layout_width="match_parent" android:layout_height="wrap_content"
     android:orientation="vertical"
     android:layout_margin="20dp">
 
@@ -12,7 +12,7 @@
         android:gravity="center"
         android:orientation="horizontal">
 
-        <ImageView
+        <android.support.v7.widget.AppCompatImageView
             android:id="@+id/userProfilePhoto_id"
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -29,13 +29,14 @@
             android:layout_marginStart="5dp"
             android:orientation="vertical">
 
-            <TextView
+            <android.support.v7.widget.AppCompatTextView
                 android:id="@+id/userName_id"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Huy Nguyen" />
+                android:text="Huy Nguyen"
+                android:textStyle="bold" />
 
-            <TextView
+            <android.support.v7.widget.AppCompatTextView
                 android:id="@+id/postLocation_id"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -43,7 +44,7 @@
 
         </LinearLayout>
 
-        <TextView
+        <android.support.v7.widget.AppCompatTextView
             android:id="@+id/postTime_id"
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -53,24 +54,86 @@
 
     </LinearLayout>
 
-    <TextView
+    <android.support.v7.widget.AppCompatTextView
+        android:id="@+id/postDescription_id"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/postContentText_id"
-        android:layout_marginTop="20dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
         android:layout_below="@+id/userInfoSection_id"
+        android:layout_marginTop="19dp"
+        android:text="Best place to be during the summer" />
 
-        android:text="Best place to be during the summer"/>
-
-    <android.support.v4.view.ViewPager
-        android:id="@+id/viewPager_id"
+    <android.support.v7.widget.AppCompatImageView
+        android:id="@+id/postPhoto_id"
         android:layout_width="match_parent"
         android:layout_height="220dp"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_below="@+id/userInfoSection_id">
+        android:layout_below="@+id/postDescription_id"
+        android:layout_marginTop="20dp">
+    </android.support.v7.widget.AppCompatImageView>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/postPhoto_id"
+        android:orientation="horizontal" android:baselineAligned="false">
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center_vertical"
+            android:id="@+id/likesSection_id"
+            android:orientation="horizontal">
+
+            <android.support.v7.widget.AppCompatImageView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:id="@+id/postHeart_id"
+                android:contentDescription="@string/likes_section"
+                android:src="@drawable/heart_unfilled"/>
+
+            <android.support.v7.widget.AppCompatTextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="4"
+                android:id="@+id/postNumLikes_id"
+                android:text="75 Likes"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:id="@+id/commentsSection_id"
+            android:orientation="horizontal">
+
+            <android.support.v7.widget.AppCompatImageView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:id="@+id/postComments_id"
+                android:contentDescription="@string/comments_section"
+                android:src="@drawable/comments"/>
+
+            <android.support.v7.widget.AppCompatTextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="4"
+                android:id="@+id/postNumComments_id"
+                android:text="10 Comments"/>
+
+        </LinearLayout>
 
 
-    </android.support.v4.view.ViewPager>
+
+    </LinearLayout>
+
+
 
 </RelativeLayout>

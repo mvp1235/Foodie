@@ -1,0 +1,66 @@
+package com.example.mvp.foodie;
+
+import android.content.Context;
+import android.support.v7.widget.RecyclerView;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Toast;
+
+import com.squareup.picasso.Picasso;
+
+import java.util.List;
+
+public class RecyclerAdapter extends RecyclerView.Adapter<ViewHolder>{
+
+    private Context context;
+    private List<Post> posts;
+
+    public RecyclerAdapter(Context context, List<Post> posts) {
+        this.context = context;
+        this.posts = posts;
+    }
+
+    @Override
+    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.feed_item_layout, parent, false);
+
+        return new ViewHolder(view);
+    }
+
+    @Override
+    public void onBindViewHolder(final ViewHolder holder, int position) {
+        Post post = posts.get(position);
+
+        holder.name.setText(post.getUser().getName());
+        Picasso.with(context).load(post.getUser().getProfileURL()).into(holder.userProfile);
+        holder.location.setText(post.getLocation());
+        holder.time.setText(post.getTime());
+        holder.description.setText(post.getDescription());
+        Picasso.with(context).load(post.getPhotoURL()).into(holder.postPhoto);
+
+        holder.likesLL.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //increment or decrement likes count here, as well as toggle heart icons
+                holder.postHeart.setImageResource(R.drawable.heart_filled);
+                Toast.makeText(context, "Like Clicked", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        holder.commentsLL.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //Show all comments available for the specific post here
+                holder.postHeart.setImageResource(R.drawable.heart_unfilled);
+                Toast.makeText(context, "Comments Clicked", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+    }
+
+    @Override
+    public int getItemCount() {
+        return posts.size();
+    }
+}

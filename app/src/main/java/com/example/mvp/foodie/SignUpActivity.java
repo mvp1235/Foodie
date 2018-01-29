@@ -11,6 +11,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.AppCompatEditText;
+import android.support.v7.widget.AppCompatImageView;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -22,7 +23,7 @@ public class SignUpActivity extends AppCompatActivity {
     private final static int REQUEST_GALLERY_PHOTO = 200;
     private final static int REQUEST_IMAGE_CAPTURE = 201;
 
-    ImageView profilePhotoIV;
+    AppCompatImageView profilePhotoIV;
     AppCompatEditText firstNameET, lastNameET, emailET, passwordET;
     AppCompatButton signUpBtn;
 

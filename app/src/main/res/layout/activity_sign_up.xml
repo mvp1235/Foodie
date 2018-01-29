@@ -12,7 +12,7 @@
     android:focusableInTouchMode="true"
     tools:context="com.example.mvp.foodie.SignUpActivity">
 
-    <ImageView
+    <android.support.v7.widget.AppCompatImageView
         android:layout_width="150dp"
         android:layout_height="150dp"
         android:id="@+id/profilePhoto_id"

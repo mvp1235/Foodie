@@ -19,5 +19,7 @@
     <string name="takeAPhoto">Take A Photo</string>
     <string name="user_profile_photo">User\'s Profile Photo</string>
     <string name="post_photo_slideshow">Post photo slideshow</string>
+    <string name="comments_section">Comments section</string>
+    <string name="likes_section">Likes section</string>
 
 </resources>
