@@ -22,7 +22,7 @@ public class MainActivity extends AppCompatActivity {
                     selectedFragment = new MainFeedFragment();
                     break;
                 case R.id.navigation_messages:
-                    selectedFragment = new MainFeedFragment();
+                    selectedFragment = new MessageFragment();
                     break;
                 case R.id.navigation_notifications:
                     selectedFragment = new NotificationFragment();
@@ -32,7 +32,7 @@ public class MainActivity extends AppCompatActivity {
             FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
             transaction.replace(R.id.content, selectedFragment);
             transaction.commit();
-            return false;
+            return true;
         }
     };
 
@@ -43,6 +43,8 @@ public class MainActivity extends AppCompatActivity {
 
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
+
+
 
         //Set default option to the Home view fragmemt.
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
