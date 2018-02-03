@@ -10,4 +10,9 @@
 
     <style name="FlatButton" parent="Widget.AppCompat.Button.Borderless"></style>
 
+    <style name="BottomNavigationTheme" parent="Widget.Design.BottomNavigationView">
+        <item name="colorPrimary">@color/colorBottomNavigation</item>
+
+    </style>
+
 </resources>

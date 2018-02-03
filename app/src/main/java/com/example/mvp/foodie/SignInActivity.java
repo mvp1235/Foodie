@@ -43,7 +43,7 @@ public class SignInActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 //for now just lead to the main activity
-                Intent intent = new Intent(SignInActivity.this, MainFeedActivity.class);
+                Intent intent = new Intent(SignInActivity.this, MainActivity.class);
                 startActivity(intent);
             }
         });

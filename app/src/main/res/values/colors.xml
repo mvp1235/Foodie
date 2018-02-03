@@ -7,4 +7,5 @@
     <color name="colorIntroBackground">#B9F6CA</color>
     <color name="colorFacebookBlue">#0D47A1</color>
     <color name="colorGoogleRed">#F44336</color>
+    <color name="colorBottomNavigation">#00E676</color>
 </resources>
