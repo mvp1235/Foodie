@@ -21,5 +21,8 @@
     <string name="post_photo_slideshow">Post photo slideshow</string>
     <string name="comments_section">Comments section</string>
     <string name="likes_section">Likes section</string>
+    <string name="home">Home</string>
+    <string name="notifications">Notifications</string>
+    <string name="messages">Messages</string>
 
 </resources>

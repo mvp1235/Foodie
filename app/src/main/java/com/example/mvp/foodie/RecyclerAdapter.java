@@ -39,12 +39,12 @@ public class RecyclerAdapter extends RecyclerView.Adapter<ViewHolder>{
         holder.description.setText(post.getDescription());
         Picasso.with(context).load(post.getPhotoURL()).into(holder.postPhoto);
 
-        holder.likesLL.setOnClickListener(new View.OnClickListener() {
+        holder.interestsLL.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //increment or decrement likes count here, as well as toggle heart icons
+                //increment or decrement interests count here, as well as toggle heart icons
                 holder.postHeart.setImageResource(R.drawable.heart_filled);
-                Toast.makeText(context, "Like Clicked", Toast.LENGTH_SHORT).show();
+//                Toast.makeText(context, "Like Clicked", Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -53,7 +53,15 @@ public class RecyclerAdapter extends RecyclerView.Adapter<ViewHolder>{
             public void onClick(View v) {
                 //Show all comments available for the specific post here
                 holder.postHeart.setImageResource(R.drawable.heart_unfilled);
-                Toast.makeText(context, "Comments Clicked", Toast.LENGTH_SHORT).show();
+//                Toast.makeText(context, "Comments Clicked", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        holder.numGoing.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //increment or decrement interests number for the specific post here
+//                Toast.makeText(context, "Going Clicked", Toast.LENGTH_SHORT).show();
             }
         });
 

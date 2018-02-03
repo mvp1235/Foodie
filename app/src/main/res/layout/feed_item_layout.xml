@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent" android:layout_height="wrap_content"
     android:orientation="vertical"
     android:layout_margin="20dp">
@@ -71,8 +72,8 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_below="@+id/postDescription_id"
-        android:layout_marginTop="20dp">
-    </android.support.v7.widget.AppCompatImageView>
+        android:layout_marginTop="20dp"
+        app:srcCompat="@drawable/camera"></android.support.v7.widget.AppCompatImageView>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -85,14 +86,14 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:gravity="center_vertical"
-            android:id="@+id/likesSection_id"
+            android:id="@+id/interestsSection"
             android:orientation="horizontal">
 
             <android.support.v7.widget.AppCompatImageView
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:id="@+id/postHeart_id"
+                android:id="@+id/postInterests_id"
                 android:contentDescription="@string/likes_section"
                 android:src="@drawable/heart_unfilled"/>
 
@@ -100,8 +101,8 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="4"
-                android:id="@+id/postNumLikes_id"
-                android:text="75 Likes"/>
+                android:id="@+id/postNumInterest_id"
+                android:text="75 Interests"/>
 
         </LinearLayout>
 
@@ -130,7 +131,30 @@
 
         </LinearLayout>
 
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:id="@+id/goingSection_id"
+            android:orientation="horizontal">
 
+            <android.support.v7.widget.AppCompatImageView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:id="@+id/postGoing_id"
+                android:contentDescription="@string/comments_section"
+                android:src="@drawable/clock"/>
+
+            <android.support.v7.widget.AppCompatTextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="4"
+                android:id="@+id/postNumGoing_id"
+                android:text="10 Going"/>
+
+        </LinearLayout>
 
     </LinearLayout>
 
