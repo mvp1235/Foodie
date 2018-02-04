@@ -12,7 +12,9 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
@@ -36,10 +38,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 case R.id.navigation_messages:
                     selectedFragment = new MessageFragment();
                     toolbar.setTitle(R.string.messages);
+                    //hide menu items
+                    toolbar.hideOverflowMenu();
                     break;
                 case R.id.navigation_notifications:
                     selectedFragment = new NotificationFragment();
                     toolbar.setTitle(R.string.notifications);
+
                     break;
             }
 
@@ -124,6 +129,29 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.replace(R.id.content, selectedFragment);
         transaction.commit();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.toolbar_items, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+
+        //Set action upon clicking on menu items
+        switch (id) {
+            case R.id.menu_search:
+
+                break;
+            case R.id.menu_add:
+
+                break;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 }
 
