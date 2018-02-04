@@ -19,6 +19,7 @@
         </activity>
         <activity android:label="@string/sign_in" android:name=".SignInActivity" />
         <activity android:label="@string/sign_up" android:name=".SignUpActivity" />
+        <activity android:label="@string/profile" android:name=".ProfileActivity" />
         <activity
             android:name=".MainActivity"
             android:label="@string/feeds">
