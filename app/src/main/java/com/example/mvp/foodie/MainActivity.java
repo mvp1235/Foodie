@@ -1,5 +1,6 @@
 package com.example.mvp.foodie;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
@@ -19,6 +20,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     Toolbar toolbar;
     DrawerLayout drawerLayout;
     NavigationView navigationView;
+    BottomNavigationView navigation;
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -38,9 +40,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     break;
             }
 
-            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-            transaction.replace(R.id.content, selectedFragment);
-            transaction.commit();
+            setFragment(selectedFragment);
             return true;
         }
     };
@@ -50,7 +50,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
+        navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
         //Set default option to the Home view fragmemt.
@@ -78,23 +78,26 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         //If drawer is open, pressing back key will close it instead of exiting the application
         if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
             drawerLayout.closeDrawer(GravityCompat.START);
+        } else if (navigation.getSelectedItemId() != R.id.navigation_home) { //If tabs other than home tab are currently selected, pressing back button will first take it to the home tab
+            Fragment selectedFragment = new MainFeedFragment();
+            setFragment(selectedFragment);
+            navigation.setSelectedItemId(R.id.navigation_home);
+            return;
         } else {
             super.onBackPressed();
         }
-
-
     }
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
-
+        Intent intent = null;
         switch (id) {
             case R.id.profile_id:
-
+                intent = new Intent(MainActivity.this, ProfileActivity.class);
                 break;
             case R.id.settings_id:
-
+                
                 break;
             case R.id.logout_id:
 
@@ -103,6 +106,21 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         drawerLayout.closeDrawer(GravityCompat.START);
 
+        if (intent != null)
+            startActivity(intent);
+
         return true;
     }
+
+    /**
+     * Set the main fragment view to a certain fragment determined by what the user had chosen
+     * @param selectedFragment the selected fragment
+     */
+    public void setFragment(Fragment selectedFragment) {
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        transaction.replace(R.id.content, selectedFragment);
+        transaction.commit();
+    }
 }
+
+
