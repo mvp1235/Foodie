@@ -1,9 +1,78 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.example.mvp.foodie.ProfileActivity">
 
-</android.support.constraint.ConstraintLayout>
+    <android.support.v7.widget.Toolbar
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:id="@+id/profile_toolbar"
+        android:background="@color/colorPrimary"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
+    </android.support.v7.widget.Toolbar>
+
+    <android.support.v7.widget.AppCompatTextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/profileName_id"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@id/profile_toolbar"
+        android:textStyle="bold"
+        android:textSize="30sp"
+        android:layout_marginTop="10dp"
+        android:text="Huy Nguyen"/>
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:layout_marginTop="10dp"
+        android:layout_centerHorizontal="true"
+        android:id="@+id/profilePhoto_id"
+        android:layout_below="@id/profileName_id"
+        android:src="@drawable/camera" />
+
+    <android.support.v7.widget.AppCompatTextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/profileEmail_id"
+        android:layout_centerHorizontal="true"
+        android:text="h.nguyen1235@gmail.com"
+        android:layout_marginTop="10dp"
+        android:layout_below="@+id/profilePhoto_id"/>
+
+    <android.support.v7.widget.AppCompatTextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/profileLocation_id"
+        android:layout_centerHorizontal="true"
+        android:text="San Jose, CA"
+        android:layout_marginTop="5dp"
+        android:layout_below="@+id/profileEmail_id"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:orientation="horizontal"
+        android:layout_below="@+id/profileLocation_id">
+
+        <android.support.v7.widget.AppCompatTextView
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:gravity="center_horizontal"
+            android:layout_height="match_parent"
+            android:text="150 Posts"/>
+
+        <android.support.v7.widget.AppCompatTextView
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:gravity="center_horizontal"
+            android:layout_height="match_parent"
+            android:text="271 Friends"/>
+
+    </LinearLayout>
+
+</RelativeLayout>
