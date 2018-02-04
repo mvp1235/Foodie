@@ -22,7 +22,6 @@
         <activity android:label="@string/sign_up" android:name=".SignUpActivity" />
         <activity
             android:name=".MainActivity"
-            android:theme="@style/AppTheme.NoActionBar"
             android:label="@string/feeds">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

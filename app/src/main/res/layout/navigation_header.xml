@@ -6,10 +6,10 @@
     android:gravity="bottom"
     android:theme="@style/ThemeOverlay.AppCompat.Dark">
 
-    <android.support.v4.widget.CircleImageView
+    <de.hdodenhof.circleimageview.CircleImageView
         android:layout_width="56dp"
         android:layout_height="56dp"
-        android:src="@drawable/account"
+        android:src="@drawable/comments"
         android:scaleType="centerCrop"
         android:contentDescription="@string/profile_photo"/>
 
