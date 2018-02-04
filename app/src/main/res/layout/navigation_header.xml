@@ -9,7 +9,7 @@
     <de.hdodenhof.circleimageview.CircleImageView
         android:layout_width="56dp"
         android:layout_height="56dp"
-        android:src="@drawable/comments"
+        android:src="@drawable/account"
         android:scaleType="centerCrop"
         android:contentDescription="@string/profile_photo"/>
 
