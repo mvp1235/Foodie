@@ -4,10 +4,13 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.LinearLayout;
 
+import de.hdodenhof.circleimageview.CircleImageView;
+
 public class ViewHolder extends RecyclerView.ViewHolder{
 
     public android.support.v7.widget.AppCompatTextView name, location, time, description, numGoing, numInterests, numComments;
-    public android.support.v7.widget.AppCompatImageView userProfile, postPhoto, postHeart;
+    public android.support.v7.widget.AppCompatImageView postPhoto, postHeart;
+    public CircleImageView userProfile;
     public LinearLayout interestsLL, commentsLL, goingLL;
 
     public ViewHolder(View itemView) {
