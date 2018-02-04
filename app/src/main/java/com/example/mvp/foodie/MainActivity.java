@@ -31,12 +31,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             switch (item.getItemId()) {
                 case R.id.navigation_home:
                     selectedFragment = new MainFeedFragment();
+                    toolbar.setTitle(R.string.feeds);
                     break;
                 case R.id.navigation_messages:
                     selectedFragment = new MessageFragment();
+                    toolbar.setTitle(R.string.messages);
                     break;
                 case R.id.navigation_notifications:
                     selectedFragment = new NotificationFragment();
+                    toolbar.setTitle(R.string.notifications);
                     break;
             }
 
@@ -78,7 +81,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         //If drawer is open, pressing back key will close it instead of exiting the application
         if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
             drawerLayout.closeDrawer(GravityCompat.START);
-        } else if (navigation.getSelectedItemId() != R.id.navigation_home) { //If tabs other than home tab are currently selected, pressing back button will first take it to the home tab
+        } else if (navigation.getSelectedItemId() != R.id.navigation_home) { //If tabs other than home tab are currently selected, pressing back key will first take it to the home tab
             Fragment selectedFragment = new MainFeedFragment();
             setFragment(selectedFragment);
             navigation.setSelectedItemId(R.id.navigation_home);
@@ -97,10 +100,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 intent = new Intent(MainActivity.this, ProfileActivity.class);
                 break;
             case R.id.settings_id:
-                
+
                 break;
             case R.id.logout_id:
-
+                //Log user out
                 break;
         }
 
@@ -109,7 +112,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         if (intent != null)
             startActivity(intent);
 
-        return true;
+        //return true will highlight chosen menu, false will do nothing
+        return false;
     }
 
     /**
