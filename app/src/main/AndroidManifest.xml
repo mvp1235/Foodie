@@ -12,10 +12,10 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name=".IntroductionActivity">
-            <!--<intent-filter>-->
-                <!--<action android:name="android.intent.action.MAIN" />-->
-                <!--<category android:name="android.intent.category.LAUNCHER" />-->
-            <!--</intent-filter>-->
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
         <activity android:label="@string/sign_in" android:name=".SignInActivity" />
         <activity android:label="@string/sign_up" android:name=".SignUpActivity" />
@@ -23,10 +23,10 @@
         <activity
             android:name=".MainActivity"
             android:label="@string/feeds">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+            <!--<intent-filter>-->
+                <!--<action android:name="android.intent.action.MAIN" />-->
+                <!--<category android:name="android.intent.category.LAUNCHER" />-->
+            <!--</intent-filter>-->
         </activity>
     </application>
 

@@ -40,6 +40,11 @@
     <string name="search">Search</string>
     <string name="add">Add</string>
     <string name="edit">Edit</string>
+    <string name="sample_friends">271 Friends</string>
+    <string name="sample_posts">150 Posts</string>
+    <string name="sample_location">San Jose, CA</string>
+    <string name="sample_email">user123@gmail.com</string>
+    <string name="sample_name">John Smith</string>
 
 
 </resources>

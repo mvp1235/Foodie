@@ -23,7 +23,7 @@
         android:textStyle="bold"
         android:textSize="30sp"
         android:layout_marginTop="10dp"
-        android:text="Huy Nguyen"/>
+        android:text="@string/sample_name"/>
 
     <de.hdodenhof.circleimageview.CircleImageView
         android:layout_width="150dp"
@@ -39,7 +39,7 @@
         android:layout_height="wrap_content"
         android:id="@+id/profileEmail_id"
         android:layout_centerHorizontal="true"
-        android:text="h.nguyen1235@gmail.com"
+        android:text="@string/sample_email"
         android:layout_marginTop="10dp"
         android:layout_below="@+id/profilePhoto_id"/>
 
@@ -48,14 +48,14 @@
         android:layout_height="wrap_content"
         android:id="@+id/profileLocation_id"
         android:layout_centerHorizontal="true"
-        android:text="San Jose, CA"
+        android:text="@string/sample_location"
         android:layout_marginTop="5dp"
         android:layout_below="@+id/profileEmail_id"/>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="5dp"
+        android:layout_marginTop="10dp"
         android:orientation="horizontal"
         android:layout_below="@+id/profileLocation_id">
 
@@ -64,14 +64,14 @@
             android:layout_weight="1"
             android:gravity="center_horizontal"
             android:layout_height="match_parent"
-            android:text="150 Posts"/>
+            android:text="@string/sample_posts"/>
 
         <android.support.v7.widget.AppCompatTextView
             android:layout_width="0dp"
             android:layout_weight="1"
             android:gravity="center_horizontal"
             android:layout_height="match_parent"
-            android:text="271 Friends"/>
+            android:text="@string/sample_friends"/>
 
     </LinearLayout>
 
