@@ -6,6 +6,8 @@ import android.os.Bundle;
 import android.support.v7.widget.AppCompatButton;
 import android.view.View;
 
+import com.example.mvp.foodie.signup.SignUpActivity;
+
 public class IntroductionActivity extends AppCompatActivity {
 
     private AppCompatButton signInBtn, signUpBtn;

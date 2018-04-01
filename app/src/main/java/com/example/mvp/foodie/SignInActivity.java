@@ -7,6 +7,8 @@ import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.AppCompatEditText;
 import android.view.View;
 
+import com.example.mvp.foodie.signup.SignUpActivity;
+
 public class SignInActivity extends AppCompatActivity {
 
     final static int CREATE_ACCOUNT_CODE = 100;

@@ -45,6 +45,9 @@
     <string name="sample_location">San Jose, CA</string>
     <string name="sample_email">user123@gmail.com</string>
     <string name="sample_name">John Smith</string>
+    <string name="successSignUp">Successfully signed up.</string>
+    <string name="emailPrompt">Please enter an email.</string>
+    <string name="passwordPrompt">Please enter a password.</string>
 
 
 </resources>

@@ -1,24 +1,25 @@
-package com.example.mvp.foodie;
+package com.example.mvp.foodie.signup;
 
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.provider.MediaStore;
-import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.AppCompatEditText;
 import android.support.v7.widget.AppCompatImageView;
+import android.text.TextUtils;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
-import java.io.ByteArrayOutputStream;
+import com.example.mvp.foodie.R;
+import com.google.firebase.auth.FirebaseUser;
 
-public class SignUpActivity extends AppCompatActivity {
+public class SignUpActivity extends AppCompatActivity implements SignUpContract.View {
 
     private final static int REQUEST_GALLERY_PHOTO = 200;
     private final static int REQUEST_IMAGE_CAPTURE = 201;
@@ -27,6 +28,9 @@ public class SignUpActivity extends AppCompatActivity {
     AppCompatEditText firstNameET, lastNameET, emailET, passwordET;
     AppCompatButton signUpBtn;
 
+    ProgressDialog mPrgressDialog;
+    private SignUpPresenter presenter;
+
     private AlertDialog photoActionDialog;
 
     @Override
@@ -34,6 +38,12 @@ public class SignUpActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_up);
 
+        init();
+        setListeners();
+
+    }
+
+    private void init() {
         profilePhotoIV = findViewById(R.id.profilePhoto_id);
 
         firstNameET = findViewById(R.id.firstNameText_id);
@@ -43,12 +53,46 @@ public class SignUpActivity extends AppCompatActivity {
 
         signUpBtn = findViewById(R.id.signUpBtn_id);
 
+        mPrgressDialog = new ProgressDialog(this);
+        mPrgressDialog.setMessage("Signing up account...");
+
+        presenter = new SignUpPresenter(this);
+    }
+
+    private void setListeners() {
         profilePhotoIV.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 showPhotoActionDialog();
             }
         });
+
+        signUpBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                validateInputs();
+            }
+        });
+    }
+
+    private void validateInputs() {
+        String emailInput = emailET.getText().toString();
+        String passwordInput = passwordET.getText().toString();
+
+        if (!TextUtils.isEmpty(emailInput) && !TextUtils.isEmpty(passwordInput)) {
+            initSignUp(emailInput, passwordInput);
+        } else {
+            if (!TextUtils.isEmpty(emailInput)) {
+                emailET.setError(getString(R.string.emailPrompt));
+            } else {
+                passwordET.setError(getString(R.string.passwordPrompt));
+            }
+        }
+    }
+
+    private void initSignUp(String email, String password) {
+        mPrgressDialog.show();
+        presenter.signUp(this, email, password);
     }
 
     @Override
@@ -99,5 +143,17 @@ public class SignUpActivity extends AppCompatActivity {
         if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
             startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
         }
+    }
+
+    @Override
+    public void onSignUpSuccess(FirebaseUser user) {
+        mPrgressDialog.dismiss();
+        Toast.makeText(this, R.string.successSignUp, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onSignUpFailure(String error) {
+        mPrgressDialog.dismiss();
+        Toast.makeText(this, error, Toast.LENGTH_SHORT).show();
     }
 }
