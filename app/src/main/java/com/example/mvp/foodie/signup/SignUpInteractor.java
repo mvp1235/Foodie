@@ -23,7 +23,7 @@ public class SignUpInteractor implements SignUpContract.Interactor {
                 .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
+                        if (!task.isSuccessful()) {
                             listener.onFailure(task.getException().getMessage());
                         } else {
                             listener.onSuccess(task.getResult().getUser());
