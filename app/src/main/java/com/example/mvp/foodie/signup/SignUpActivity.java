@@ -19,7 +19,7 @@ import android.widget.Toast;
 import com.example.mvp.foodie.R;
 import com.google.firebase.auth.FirebaseUser;
 
-public class SignUpActivity extends AppCompatActivity implements SignUpContract.View {
+public class SignUpActivity extends AppCompatActivity implements SignUpContract.View, SignUpContract.onUploadListener {
 
     private final static int REQUEST_GALLERY_PHOTO = 200;
     private final static int REQUEST_IMAGE_CAPTURE = 201;
@@ -54,7 +54,6 @@ public class SignUpActivity extends AppCompatActivity implements SignUpContract.
         signUpBtn = findViewById(R.id.signUpBtn_id);
 
         mPrgressDialog = new ProgressDialog(this);
-        mPrgressDialog.setMessage("Signing up account...");
 
         presenter = new SignUpPresenter(this);
     }
@@ -76,23 +75,30 @@ public class SignUpActivity extends AppCompatActivity implements SignUpContract.
     }
 
     private void validateInputs() {
+        String firstNameInput = firstNameET.getText().toString();
+        String lastNameInput = lastNameET.getText().toString();
         String emailInput = emailET.getText().toString();
         String passwordInput = passwordET.getText().toString();
 
-        if (!TextUtils.isEmpty(emailInput) && !TextUtils.isEmpty(passwordInput)) {
-            initSignUp(emailInput, passwordInput);
+        if (!TextUtils.isEmpty(emailInput) && !TextUtils.isEmpty(passwordInput)
+                && !TextUtils.isEmpty(firstNameInput) && !TextUtils.isEmpty(lastNameInput)) {
+            initSignUp(firstNameInput, lastNameInput, emailInput, passwordInput);
         } else {
-            if (!TextUtils.isEmpty(emailInput)) {
+            if (TextUtils.isEmpty(firstNameInput))
+                firstNameET.setError(getString(R.string.firstNamePrompt));
+            else if (TextUtils.isEmpty(lastNameInput))
+                lastNameET.setError(getString(R.string.lastNamePrompt));
+            else if (TextUtils.isEmpty(emailInput))
                 emailET.setError(getString(R.string.emailPrompt));
-            } else {
+            else
                 passwordET.setError(getString(R.string.passwordPrompt));
-            }
         }
     }
 
-    private void initSignUp(String email, String password) {
+    private void initSignUp(String firstName, String lastName, String email, String password) {
+        mPrgressDialog.setMessage("Signing up account...");
         mPrgressDialog.show();
-        presenter.signUp(this, email, password);
+        presenter.signUp(this, firstName, lastName, email, password);
     }
 
     @Override
@@ -156,4 +162,15 @@ public class SignUpActivity extends AppCompatActivity implements SignUpContract.
         mPrgressDialog.dismiss();
         Toast.makeText(this, error, Toast.LENGTH_SHORT).show();
     }
+
+    @Override
+    public void onPhotoUploadSuccess(Uri imageUri) {
+        profilePhotoIV.setImageURI(imageUri);
+    }
+
+    @Override
+    public void onPhotoUploadFailure(String error) {
+        Toast.makeText(this, error, Toast.LENGTH_SHORT).show();
+    }
+
 }

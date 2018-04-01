@@ -32,7 +32,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<ViewHolder>{
     public void onBindViewHolder(final ViewHolder holder, int position) {
         Post post = posts.get(position);
 
-        holder.name.setText(post.getUser().getName());
+        holder.name.setText(post.getUser().getFirstName() + " " + post.getUser().getLastName());
         Picasso.with(context).load(post.getUser().getProfileURL()).into(holder.userProfile);
         holder.location.setText(post.getLocation());
         holder.time.setText(post.getTime());

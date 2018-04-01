@@ -14,8 +14,8 @@ public class SignUpPresenter implements SignUpContract.Presenter, SignUpContract
     }
 
     @Override
-    public void signUp(Activity activity, String email, String password) {
-        signUpInteractor.performFirebaseSignUp(activity, email, password);
+    public void signUp(Activity activity, String firstName, String lastName, String email, String password) {
+        signUpInteractor.performFirebaseSignUp(activity, firstName, lastName, email, password);
     }
 
     @Override
