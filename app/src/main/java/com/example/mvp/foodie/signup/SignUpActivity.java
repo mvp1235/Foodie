@@ -1,10 +1,13 @@
 package com.example.mvp.foodie.signup;
 
+import android.Manifest;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.net.Uri;
+import android.os.Build;
 import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -38,9 +41,31 @@ public class SignUpActivity extends AppCompatActivity implements SignUpContract.
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_up);
 
+        getPermissions();
+
         init();
         setListeners();
 
+    }
+
+    private void getPermissions() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            //Request runtime permission for camera access
+            if (checkSelfPermission(android.Manifest.permission.CAMERA)
+                    != PackageManager.PERMISSION_GRANTED) {
+                requestPermissions(new String[]{android.Manifest.permission.CAMERA},
+                        REQUEST_IMAGE_CAPTURE);
+
+            }
+
+            //Request runtime permission for external storage writing permission
+            if (checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                    != PackageManager.PERMISSION_GRANTED) {
+
+                requestPermissions(new String[]{android.Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                        REQUEST_IMAGE_CAPTURE);
+            }
+        }
     }
 
     private void init() {
@@ -105,16 +130,11 @@ public class SignUpActivity extends AppCompatActivity implements SignUpContract.
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
             Bundle extras = data.getExtras();
-            Bitmap parkingBitmap = (Bitmap) extras.get("data");
-
-            profilePhotoIV.setImageBitmap(parkingBitmap);
-            photoActionDialog.dismiss();
-
+            Bitmap profileBitmap = (Bitmap) extras.get("data");
+            presenter.uploadCapturedPhoto(this, profileBitmap, "1");
         } else if (requestCode == REQUEST_GALLERY_PHOTO && resultCode == RESULT_OK) {
             Uri imageUri = data.getData();
-            profilePhotoIV.setImageURI(imageUri);
-            photoActionDialog.dismiss();
-
+            presenter.uploadGalleryPhotoTo(this, imageUri, "1");
         }
     }
 
@@ -165,11 +185,14 @@ public class SignUpActivity extends AppCompatActivity implements SignUpContract.
 
     @Override
     public void onPhotoUploadSuccess(Uri imageUri) {
+        photoActionDialog.dismiss();
         profilePhotoIV.setImageURI(imageUri);
+        Toast.makeText(this, "Photo uploaded.", Toast.LENGTH_SHORT).show();
     }
 
     @Override
     public void onPhotoUploadFailure(String error) {
+        photoActionDialog.dismiss();
         Toast.makeText(this, error, Toast.LENGTH_SHORT).show();
     }
 
