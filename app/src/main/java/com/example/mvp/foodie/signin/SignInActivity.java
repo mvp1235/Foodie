@@ -1,26 +1,39 @@
-package com.example.mvp.foodie;
+package com.example.mvp.foodie.signin;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.AppCompatEditText;
+import android.text.TextUtils;
 import android.view.View;
+import android.widget.Toast;
 
+import com.example.mvp.foodie.MainActivity;
+import com.example.mvp.foodie.R;
 import com.example.mvp.foodie.signup.SignUpActivity;
+import com.google.firebase.auth.FirebaseUser;
 
-public class SignInActivity extends AppCompatActivity {
+public class SignInActivity extends AppCompatActivity implements SignInContract.View {
 
     final static int CREATE_ACCOUNT_CODE = 100;
 
     AppCompatButton facebookLoginBtn, googleLoginBtn, loginBtn, createAccountBtn, forgotPasswordBtn;
     AppCompatEditText usernameET, passwordET;
 
+    private SignInContract.Presenter presenter;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_in);
 
+        init();
+        setUpListeners();
+    }
+
+    private void init() {
         //Referencing the buttons
         facebookLoginBtn = findViewById(R.id.facebookLogin_id);
         googleLoginBtn = findViewById(R.id.googleLogin_id);
@@ -32,6 +45,10 @@ public class SignInActivity extends AppCompatActivity {
         usernameET = findViewById(R.id.usernameText_id);
         passwordET = findViewById(R.id.passwordText_id);
 
+        presenter = new SignInPresenter(this);
+    }
+
+    private void setUpListeners() {
         //Setting onclick listener for the buttons
         createAccountBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -44,13 +61,41 @@ public class SignInActivity extends AppCompatActivity {
         loginBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //for now just lead to the main activity
-                Intent intent = new Intent(SignInActivity.this, MainActivity.class);
-                startActivity(intent);
+                validateInputs();
             }
         });
-
-
-
     }
+
+    private void validateInputs() {
+        String emailInput = usernameET.getText().toString();
+        String passwordInput = passwordET.getText().toString();
+
+        if (!TextUtils.isEmpty(emailInput) && !TextUtils.isEmpty(passwordInput)) {
+            initSignIn(emailInput, passwordInput);
+        } else {
+            if (TextUtils.isEmpty(emailInput))
+                usernameET.setError(getString(R.string.emailPrompt));
+            else
+                passwordET.setError(getString(R.string.passwordPrompt));
+
+        }
+    }
+
+    private void initSignIn(String email, String password) {
+        presenter.signIn(this, email, password);
+    }
+
+    @Override
+    public void onSignInSuccess(FirebaseUser user) {
+        MainActivity.currentUser = user;
+        Intent intent = new Intent(SignInActivity.this, MainActivity.class);
+        startActivity(intent);
+    }
+
+    @Override
+    public void onSignInFailure(String error) {
+        MainActivity.currentUser = null;
+        Toast.makeText(this, error, Toast.LENGTH_SHORT).show();
+    }
+
 }

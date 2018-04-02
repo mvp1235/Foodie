@@ -259,6 +259,7 @@ public class SignUpActivity extends AppCompatActivity implements SignUpContract.
     @Override
     public void onSignUpSuccess(FirebaseUser user) {
         mPrgressDialog.dismiss();
+        MainActivity.currentUser = user;
         Toast.makeText(this, R.string.successSignUp, Toast.LENGTH_SHORT).show();
         Intent intent = new Intent(SignUpActivity.this, MainActivity.class);
         startActivity(intent);

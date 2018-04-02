@@ -72,6 +72,7 @@ public class SignUpInteractor implements SignUpContract.Interactor {
                 uploadListener.onPhotoUploadSuccess(profileURI);
             }
         });
+        
 
     }
 }

@@ -8,7 +8,7 @@ import com.google.firebase.auth.FirebaseUser;
 
 public class SignUpPresenter implements SignUpContract.Presenter, SignUpContract.onSignUpListener, SignUpContract.onUploadListener {
     private SignUpContract.View signUpView;
-    private SignUpInteractor interactor;
+    private SignUpContract.Interactor interactor;
 
     public SignUpPresenter(SignUpContract.View signUpView) {
         this.signUpView = signUpView;

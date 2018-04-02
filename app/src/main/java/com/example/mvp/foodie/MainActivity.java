@@ -1,6 +1,7 @@
 package com.example.mvp.foodie;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
@@ -11,18 +12,28 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.AppCompatTextView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Toast;
 
+import com.example.mvp.foodie.signin.SignInContract;
+import com.example.mvp.foodie.signup.SignUpContract;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
-public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
+
+public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, SignInContract.View, SignUpContract.View{
 
     Toolbar toolbar;
     DrawerLayout drawerLayout;
     NavigationView navigationView;
     BottomNavigationView navigation;
+
+    public static FirebaseAuth mAuth;
+    public static FirebaseUser currentUser;
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -58,7 +69,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        navigation = (BottomNavigationView) findViewById(R.id.navigation);
+        mAuth = FirebaseAuth.getInstance();
+
+        navigation = findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
         //Set default option to the Home view fragmemt.
@@ -75,11 +88,20 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         navigationView.setNavigationItemSelectedListener(this);
 
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.open_drawer, R.string.closer_drawer);
-        drawerLayout.setDrawerListener(toggle);
+        drawerLayout.addDrawerListener(toggle);
         toggle.syncState();
 
+        //Customize header with user's information
+        View headerView = navigationView.getHeaderView(0);
+        de.hdodenhof.circleimageview.CircleImageView userProfilePhoto = headerView.findViewById(R.id.userProfilePhoto_id);
+        AppCompatTextView userFullName = headerView.findViewById(R.id.userFullName_id);
+        AppCompatTextView userEmail = headerView.findViewById(R.id.userEmail_id);
+
+        userEmail.setText(currentUser.getEmail());
+        userFullName.setText(currentUser.getDisplayName());
 
     }
+
 
     @Override
     public void onBackPressed() {
@@ -109,6 +131,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 break;
             case R.id.logout_id:
                 //Log user out
+                mAuth.signOut();
+                currentUser = null;
+                finish();
                 break;
         }
 
@@ -152,6 +177,37 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onSignInSuccess(FirebaseUser user) {
+        currentUser = user;
+    }
+
+    @Override
+    public void onSignInFailure(String error) {
+        currentUser = null;
+    }
+
+    @Override
+    public void onSignUpSuccess(FirebaseUser user) {
+        currentUser = user;
+    }
+
+    @Override
+    public void onSignUpFailure(String error) {
+        currentUser = null;
+        Toast.makeText(this, error, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onPhotoUploadSuccess(Uri profileURI) {
+
+    }
+
+    @Override
+    public void onPhotoUploadFailure(String error) {
+
     }
 }
 
