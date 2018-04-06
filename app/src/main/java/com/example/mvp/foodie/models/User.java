@@ -1,6 +1,7 @@
-package com.example.mvp.foodie;
+package com.example.mvp.foodie.models;
 
 public class User {
+    private String uID;
     private String firstName;
     private String lastName;
     private String profileURL;
@@ -9,10 +10,22 @@ public class User {
     private int postCount;
     private int friendCount;
 
-    public User() {
+    public User(String uID) {
+        this.uID = uID;
         firstName = "Joe";
         lastName = "Nguyen";
         profileURL = "https://www.shareicon.net/data/2016/09/01/822711_user_512x512.png";
+        location = "San Jose, CA";
+        postCount = 0;
+        friendCount = 0;
+    }
+
+    public String getuID() {
+        return uID;
+    }
+
+    public void setuID(String uID) {
+        this.uID = uID;
     }
 
     public String getFirstName() {

@@ -18,10 +18,12 @@ public interface SignUpContract {
         void signUp(Activity activity, String firstName, String lastName, String email, String password);
         void uploadCapturedPhoto(Activity activity, Bitmap profileBitmap, String userID);
         void uploadGalleryPhotoTo(Activity activity, Uri profileURI, String userID);
+        void storeUserData(Activity activity, String firstName, String lastName, String email);
     }
 
     interface Interactor {
         void performFirebaseSignUp(Activity activity, String firstName, String lastName, String email, String password);
+        void performUserDataStoring(Activity activity, String firstName, String lastName, String email);
         void uploadCapturedPhotoToFirebase(Activity activity, Bitmap profileBitmap, String userID);
         void uploadGalleryPhotoToFirebase(Activity activity, Uri profileURI, String userID);
     }

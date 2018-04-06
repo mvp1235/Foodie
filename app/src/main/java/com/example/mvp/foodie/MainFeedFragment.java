@@ -10,6 +10,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.example.mvp.foodie.models.Post;
+import com.example.mvp.foodie.models.User;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,7 +36,7 @@ public class MainFeedFragment extends Fragment {
         List<Post> posts = new ArrayList<>();
 
         for (int i=0; i<10; i++) {
-            posts.add(new Post(new User()));
+            posts.add(new Post(new User("1")));
         }
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
@@ -55,4 +58,5 @@ public class MainFeedFragment extends Fragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
     }
+
 }

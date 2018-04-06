@@ -106,6 +106,10 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
             navigation.setSelectedItemId(R.id.navigation_home);
             return;
         } else {
+            //Log the user out
+            //SHOW CONFIRM DIALOG LATER/////////////////////////
+            getmAuth().signOut();
+            setFirebaseUser(null);
             super.onBackPressed();
         }
     }

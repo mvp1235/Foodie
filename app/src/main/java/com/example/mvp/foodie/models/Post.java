@@ -1,7 +1,5 @@
-package com.example.mvp.foodie;
+package com.example.mvp.foodie.models;
 
-
-import android.support.v7.widget.AppCompatImageView;
 
 public class Post {
     private String description, time, photoURL, location;

@@ -90,6 +90,7 @@ public class SignInActivity extends BaseActivity implements SignInContract.View 
     public void onSignInSuccess(FirebaseUser user) {
         setFirebaseUser(user);
         Intent intent = new Intent(SignInActivity.this, MainActivity.class);
+        Toast.makeText(this, "Signed in successfully as " + user.getEmail(), Toast.LENGTH_SHORT).show();
         startActivity(intent);
     }
 

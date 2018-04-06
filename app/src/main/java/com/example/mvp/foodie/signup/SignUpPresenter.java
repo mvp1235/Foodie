@@ -31,6 +31,11 @@ public class SignUpPresenter implements SignUpContract.Presenter, SignUpContract
     }
 
     @Override
+    public void storeUserData(Activity activity, String firstName, String lastName, String email) {
+        interactor.performUserDataStoring(activity, firstName, lastName, email);
+    }
+
+    @Override
     public void onSuccess(FirebaseUser firebaseUser) {
         signUpView.onSignUpSuccess(firebaseUser);
     }
