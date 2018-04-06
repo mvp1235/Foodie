@@ -15,7 +15,6 @@ public class User {
         this.uID = uID;
         firstName = "Joe";
         lastName = "Nguyen";
-        profileURL = "https://www.shareicon.net/data/2016/09/01/822711_user_512x512.png";
         postCount = 0;
         friendCount = 0;
     }

@@ -22,8 +22,6 @@ import android.widget.Toast;
 import com.example.mvp.foodie.BaseActivity;
 import com.example.mvp.foodie.R;
 import com.example.mvp.foodie.models.User;
-import com.example.mvp.foodie.signup.SignUpActivity;
-import com.google.firebase.auth.FirebaseUser;
 import com.squareup.picasso.Picasso;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -253,6 +251,7 @@ public class ProfileActivity extends BaseActivity implements ProfileContract.Vie
         email.setText(user.getEmail());
         postCount.setText(user.getPostCount() + " posts");
         friendCount.setText(user.getFriendCount() + " friends");
+        Picasso.get().load(user.getProfileURL()).into(profileImage);
     }
 
     @Override
@@ -260,15 +259,6 @@ public class ProfileActivity extends BaseActivity implements ProfileContract.Vie
         Toast.makeText(this, error, Toast.LENGTH_SHORT).show();
     }
 
-    @Override
-    public void onLoadProfilePhotoSuccess(Uri imageURI) {
-        Picasso.get().load(imageURI).into(profileImage);
-    }
-
-    @Override
-    public void onLoadProfilePhotoFailure(String error) {
-        Picasso.get().load("http://www.personalbrandingblog.com/wp-content/uploads/2017/08/blank-profile-picture-973460_640-300x300.png").into(profileImage);
-    }
 
     @Override
     public void onEditSuccess(User user) {

@@ -10,8 +10,6 @@ public interface ProfileContract {
     interface View {
         void onLoadDataSuccess(User user);
         void onLoadDataFailure(String error);
-        void onLoadProfilePhotoSuccess(Uri imageURI);
-        void onLoadProfilePhotoFailure(String error);
         void onEditSuccess(User user);
         void onEditFailure(String error);
         void onPhotoUploadSuccess(Uri profileURI);
@@ -36,8 +34,6 @@ public interface ProfileContract {
     interface onLoadListener {
         void onLoadDataSuccess(User user);
         void onLoadDataFailure(String error);
-        void onLoadProfileURLSuccess(Uri imageURI);
-        void onLoadProfileURLFailure(String error);
     }
 
     interface onEditListener{

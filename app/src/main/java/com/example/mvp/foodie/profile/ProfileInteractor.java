@@ -5,7 +5,6 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
-import android.util.Log;
 
 import com.example.mvp.foodie.models.User;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -42,7 +41,7 @@ public class ProfileInteractor implements ProfileContract.Interactor {
     }
 
     @Override
-    public void uploadCapturedPhotoToFirebase(final Activity activity, Bitmap profileBitmap, String userID) {
+    public void uploadCapturedPhotoToFirebase(final Activity activity, final Bitmap profileBitmap, final String userID) {
         ByteArrayOutputStream bytes = new ByteArrayOutputStream();
         profileBitmap.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
         String path = MediaStore.Images.Media.insertImage(activity.getContentResolver(), profileBitmap, "Title", null);
@@ -53,17 +52,19 @@ public class ProfileInteractor implements ProfileContract.Interactor {
         filepath.putFile(profileURI).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
+                obtainProfileURL(userID);
                 uploadListener.onPhotoUploadSuccess(profileURI);
             }
         });
     }
 
     @Override
-    public void uploadGalleryPhotoToFirebase(final Activity activity, final Uri profileURI, String userID) {
+    public void uploadGalleryPhotoToFirebase(final Activity activity, final Uri profileURI, final String userID) {
         StorageReference filepath = storageReference.child("profilePhotos").child(userID);
         filepath.putFile(profileURI).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
+                obtainProfileURL(userID);
                 uploadListener.onPhotoUploadSuccess(profileURI);
             }
         });
@@ -71,22 +72,20 @@ public class ProfileInteractor implements ProfileContract.Interactor {
 
     @Override
     public void performLoadData(String userID) {
-        obtainProfilePicture(userID);
+        obtainProfileURL(userID);
         obtainData(userID);
     }
 
-    private void obtainProfilePicture(final String userID) {
+    private void obtainProfileURL(final String userID) {
         storageReference.child("profilePhotos").child(userID).getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
             @Override
             public void onSuccess(Uri uri) {
                 updateUserProfileURL(userID, uri);
-                loadListener.onLoadProfileURLSuccess(uri);
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception exception) {
                 // Handle any errors
-                loadListener.onLoadProfileURLFailure(exception.toString());
             }
         });
     }
@@ -96,8 +95,10 @@ public class ProfileInteractor implements ProfileContract.Interactor {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 User user = dataSnapshot.getValue(User.class);
-                user.setProfileURL(uri.toString());
-                userReference.child("Users").child(userID).setValue(user);
+                if (user != null) {
+                    user.setProfileURL(uri.toString());
+                    userReference.child("Users").child(userID).setValue(user);
+                }
             }
 
             @Override

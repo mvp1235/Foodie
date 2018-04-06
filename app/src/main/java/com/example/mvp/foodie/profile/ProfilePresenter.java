@@ -69,13 +69,4 @@ public class ProfilePresenter implements ProfileContract.Presenter, ProfileContr
         view.onLoadDataFailure(error);
     }
 
-    @Override
-    public void onLoadProfileURLSuccess(Uri imageURI) {
-        view.onLoadProfilePhotoSuccess(imageURI);
-    }
-
-    @Override
-    public void onLoadProfileURLFailure(String error) {
-        view.onLoadProfilePhotoFailure(error);
-    }
 }

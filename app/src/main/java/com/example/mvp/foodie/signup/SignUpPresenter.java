@@ -1,8 +1,6 @@
 package com.example.mvp.foodie.signup;
 
 import android.app.Activity;
-import android.graphics.Bitmap;
-import android.net.Uri;
 
 import com.google.firebase.auth.FirebaseUser;
 
