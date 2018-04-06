@@ -29,14 +29,12 @@ public class ProfileInteractor implements ProfileContract.Interactor {
     private ProfileContract.onLoadListener loadListener;
     private StorageReference storageReference;
     private DatabaseReference userReference;
-    private FirebaseAuth mAuth;
 
     public ProfileInteractor(ProfileContract.onEditListener editListener, ProfileContract.onUploadListener uploadListener, ProfileContract.onLoadListener loadListener) {
         this.editListener = editListener;
         this.uploadListener = uploadListener;
         this.loadListener = loadListener;
         storageReference = FirebaseStorage.getInstance().getReference();
-        mAuth = FirebaseAuth.getInstance();
         userReference = FirebaseDatabase.getInstance().getReference();
     }
 

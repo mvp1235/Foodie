@@ -15,12 +15,17 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
 
+import com.example.mvp.foodie.models.User;
+import com.example.mvp.foodie.navigation_drawer.DrawerContract;
+import com.example.mvp.foodie.navigation_drawer.DrawerPresenter;
 import com.example.mvp.foodie.profile.ProfileActivity;
 import com.google.firebase.auth.FirebaseAuth;
+import com.squareup.picasso.Picasso;
 
 
-public class MainActivity extends BaseActivity implements NavigationView.OnNavigationItemSelectedListener {
+public class MainActivity extends BaseActivity implements NavigationView.OnNavigationItemSelectedListener, DrawerContract.View {
 
     Toolbar toolbar;
     DrawerLayout drawerLayout;
@@ -56,6 +61,8 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         }
     };
 
+    private DrawerContract.Presenter presenter;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -83,14 +90,8 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         drawerLayout.addDrawerListener(toggle);
         toggle.syncState();
 
-        //Customize header with user's information
-        View headerView = navigationView.getHeaderView(0);
-        de.hdodenhof.circleimageview.CircleImageView userProfilePhoto = headerView.findViewById(R.id.userProfilePhoto_id);
-        AppCompatTextView userFullName = headerView.findViewById(R.id.userFullName_id);
-        AppCompatTextView userEmail = headerView.findViewById(R.id.userEmail_id);
-
-        userEmail.setText(getFirebaseUser().getEmail());
-        userFullName.setText(getFirebaseUser().getDisplayName());
+        presenter = new DrawerPresenter(this);
+        presenter.loadData(getmAuth().getCurrentUser().getUid());
 
     }
 
@@ -142,6 +143,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         return false;
     }
 
+
     /**
      * Set the main fragment view to a certain fragment determined by what the user had chosen
      * @param selectedFragment the selected fragment
@@ -175,7 +177,27 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    public void onLoadDataSuccess(User user) {
+        //Customize navigation drawer header with user's information
+        View headerView = navigationView.getHeaderView(0);
+        de.hdodenhof.circleimageview.CircleImageView userProfilePhoto = headerView.findViewById(R.id.userProfilePhoto_id);
+        AppCompatTextView userFullName = headerView.findViewById(R.id.userFullName_id);
+        AppCompatTextView userEmail = headerView.findViewById(R.id.userEmail_id);
 
+        userEmail.setText(user.getEmail());
+        userFullName.setText(user.getFullName());
+
+        if (user.getProfileURL() != null)
+            Picasso.get().load(user.getProfileURL()).into(userProfilePhoto);
+        else
+            Picasso.get().load("http://www.personalbrandingblog.com/wp-content/uploads/2017/08/blank-profile-picture-973460_640-300x300.png").into(userProfilePhoto);
+    }
+
+    @Override
+    public void onLoadDataFailure(String error) {
+        Toast.makeText(this, R.string.loadDataFailed, Toast.LENGTH_SHORT).show();
+    }
 }
 
 

@@ -51,6 +51,7 @@
     <string name="firstNamePrompt">Enter first name.</string>
     <string name="lastNamePrompt">Enter last name.</string>
     <string name="profileEditFailure">Failed to edit profile. Please try again.</string>
+    <string name="loadDataFailed">Failed to load data from database.</string>
 
 
 </resources>

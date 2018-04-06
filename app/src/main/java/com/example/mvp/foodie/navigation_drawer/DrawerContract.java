@@ -9,6 +9,15 @@ public interface DrawerContract {
     }
 
     interface Presenter {
+        void loadData(String userID);
+    }
 
+    interface Interactor {
+        void performLoadData(String userID);
+    }
+
+    interface onLoadListener {
+        void onLoadSuccess(User user);
+        void onLoadFailure(String error);
     }
 }

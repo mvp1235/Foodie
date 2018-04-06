@@ -251,7 +251,10 @@ public class ProfileActivity extends BaseActivity implements ProfileContract.Vie
         email.setText(user.getEmail());
         postCount.setText(user.getPostCount() + " posts");
         friendCount.setText(user.getFriendCount() + " friends");
-        Picasso.get().load(user.getProfileURL()).into(profileImage);
+        if (user.getProfileURL() != null)
+            Picasso.get().load(user.getProfileURL()).into(profileImage);
+        else
+            Picasso.get().load("http://www.personalbrandingblog.com/wp-content/uploads/2017/08/blank-profile-picture-973460_640-300x300.png").into(profileImage);
     }
 
     @Override
