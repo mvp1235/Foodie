@@ -10,12 +10,13 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.Toast;
 
+import com.example.mvp.foodie.BaseActivity;
 import com.example.mvp.foodie.MainActivity;
 import com.example.mvp.foodie.R;
 import com.example.mvp.foodie.signup.SignUpActivity;
 import com.google.firebase.auth.FirebaseUser;
 
-public class SignInActivity extends AppCompatActivity implements SignInContract.View {
+public class SignInActivity extends BaseActivity implements SignInContract.View {
 
     final static int CREATE_ACCOUNT_CODE = 100;
 
@@ -87,14 +88,14 @@ public class SignInActivity extends AppCompatActivity implements SignInContract.
 
     @Override
     public void onSignInSuccess(FirebaseUser user) {
-        MainActivity.currentUser = user;
+        firebaseUser = user;
         Intent intent = new Intent(SignInActivity.this, MainActivity.class);
         startActivity(intent);
     }
 
     @Override
     public void onSignInFailure(String error) {
-        MainActivity.currentUser = null;
+        firebaseUser = null;
         Toast.makeText(this, error, Toast.LENGTH_SHORT).show();
     }
 

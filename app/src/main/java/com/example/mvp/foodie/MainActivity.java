@@ -25,15 +25,12 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 
-public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, SignInContract.View, SignUpContract.View{
+public class MainActivity extends BaseActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     Toolbar toolbar;
     DrawerLayout drawerLayout;
     NavigationView navigationView;
     BottomNavigationView navigation;
-
-    public static FirebaseAuth mAuth;
-    public static FirebaseUser currentUser;
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -97,8 +94,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         AppCompatTextView userFullName = headerView.findViewById(R.id.userFullName_id);
         AppCompatTextView userEmail = headerView.findViewById(R.id.userEmail_id);
 
-        userEmail.setText(currentUser.getEmail());
-        userFullName.setText(currentUser.getDisplayName());
+        userEmail.setText(firebaseUser.getEmail());
+        userFullName.setText(firebaseUser.getDisplayName());
 
     }
 
@@ -132,7 +129,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             case R.id.logout_id:
                 //Log user out
                 mAuth.signOut();
-                currentUser = null;
+                firebaseUser = null;
                 finish();
                 break;
         }
@@ -179,36 +176,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         return super.onOptionsItemSelected(item);
     }
 
-    @Override
-    public void onSignInSuccess(FirebaseUser user) {
-        currentUser = user;
-    }
 
-    @Override
-    public void onSignInFailure(String error) {
-        currentUser = null;
-    }
-
-    @Override
-    public void onSignUpSuccess(FirebaseUser user) {
-        currentUser = user;
-    }
-
-    @Override
-    public void onSignUpFailure(String error) {
-        currentUser = null;
-        Toast.makeText(this, error, Toast.LENGTH_SHORT).show();
-    }
-
-    @Override
-    public void onPhotoUploadSuccess(Uri profileURI) {
-
-    }
-
-    @Override
-    public void onPhotoUploadFailure(String error) {
-
-    }
 }
 
 

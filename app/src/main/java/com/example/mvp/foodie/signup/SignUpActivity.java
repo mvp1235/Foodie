@@ -20,11 +20,12 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import com.example.mvp.foodie.BaseActivity;
 import com.example.mvp.foodie.MainActivity;
 import com.example.mvp.foodie.R;
 import com.google.firebase.auth.FirebaseUser;
 
-public class SignUpActivity extends AppCompatActivity implements SignUpContract.View, SignUpContract.onUploadListener {
+public class SignUpActivity extends BaseActivity implements SignUpContract.View, SignUpContract.onUploadListener {
 
     private static final int REQUEST_GALLERY_PHOTO = 200;
     private static final int REQUEST_IMAGE_CAPTURE = 201;
@@ -259,7 +260,7 @@ public class SignUpActivity extends AppCompatActivity implements SignUpContract.
     @Override
     public void onSignUpSuccess(FirebaseUser user) {
         mPrgressDialog.dismiss();
-        MainActivity.currentUser = user;
+        firebaseUser = user;
         Toast.makeText(this, R.string.successSignUp, Toast.LENGTH_SHORT).show();
         Intent intent = new Intent(SignUpActivity.this, MainActivity.class);
         startActivity(intent);

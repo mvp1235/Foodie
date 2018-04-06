@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/colorIntroBackground"
-    tools:context="com.example.mvp.foodie.IntroductionActivity">
+    tools:context="com.example.mvp.foodie.intro.IntroductionActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
