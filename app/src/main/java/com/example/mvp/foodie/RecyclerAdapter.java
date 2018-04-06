@@ -33,11 +33,11 @@ public class RecyclerAdapter extends RecyclerView.Adapter<ViewHolder>{
         Post post = posts.get(position);
 
         holder.name.setText(post.getUser().getFirstName() + " " + post.getUser().getLastName());
-        Picasso.with(context).load(post.getUser().getProfileURL()).into(holder.userProfile);
+        Picasso.get().load(post.getUser().getProfileURL()).into(holder.userProfile);
         holder.location.setText(post.getLocation());
         holder.time.setText(post.getTime());
         holder.description.setText(post.getDescription());
-        Picasso.with(context).load(post.getPhotoURL()).into(holder.postPhoto);
+        Picasso.get().load(post.getPhotoURL()).into(holder.postPhoto);
 
         holder.interestsLL.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -1,22 +1,47 @@
 package com.example.mvp.foodie.profile;
 
+import android.app.AlertDialog;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.net.Uri;
+import android.os.Build;
+import android.provider.MediaStore;
+import android.support.annotation.NonNull;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.AppCompatTextView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import com.example.mvp.foodie.BaseActivity;
 import com.example.mvp.foodie.R;
+import com.example.mvp.foodie.models.User;
+import com.example.mvp.foodie.signup.SignUpActivity;
+import com.google.firebase.auth.FirebaseUser;
+import com.squareup.picasso.Picasso;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class ProfileActivity extends AppCompatActivity {
+public class ProfileActivity extends BaseActivity implements ProfileContract.View, ProfileContract.onUploadListener {
+
+    private static final int REQUEST_GALLERY_PHOTO = 200;
+    private static final int REQUEST_IMAGE_CAPTURE = 201;
+    private static final int REQUEST_ALL = 202;
+    private static final int REQUEST_WRITE_EXTERNAL = 203;
 
     Toolbar toolbar;
     private AppCompatTextView name, email, location, postCount, friendCount;
     private CircleImageView profileImage;
+
+    private AlertDialog photoActionDialog;
+
+    private ProfileContract.Presenter presenter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,8 +49,34 @@ public class ProfileActivity extends AppCompatActivity {
         setContentView(R.layout.activity_profile);
 
         initViews();
+        getPermissions();
         setUpListeners();
+        presenter = new ProfilePresenter(this);
+        presenter.loadDataFromFirebase(getmAuth().getCurrentUser().getUid());
 
+    }
+
+    private void getPermissions() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            int cameraPermission = ContextCompat.checkSelfPermission(this, android.Manifest.permission.CAMERA);
+            int writeExternalStoragePermission = ContextCompat.checkSelfPermission(this, android.Manifest.permission.WRITE_EXTERNAL_STORAGE);
+
+            if (cameraPermission != PackageManager.PERMISSION_GRANTED
+                    && writeExternalStoragePermission != PackageManager.PERMISSION_GRANTED) {
+                requestPermissions(new String[]{android.Manifest.permission.CAMERA, android.Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                        REQUEST_ALL);
+            } else {
+                if (cameraPermission != PackageManager.PERMISSION_GRANTED) {//Request runtime permission for camera access
+                    requestPermissions(new String[]{android.Manifest.permission.CAMERA},
+                            REQUEST_IMAGE_CAPTURE);
+                }
+                if (writeExternalStoragePermission != PackageManager.PERMISSION_GRANTED) {
+                    //Request runtime permission for external storage writing permission
+                    requestPermissions(new String[]{android.Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                            REQUEST_WRITE_EXTERNAL);
+                }
+            }
+        }
     }
 
     private void initViews() {
@@ -42,8 +93,139 @@ public class ProfileActivity extends AppCompatActivity {
     }
 
     private void setUpListeners() {
+        profileImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showPhotoActionDialog();
+            }
+        });
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
+            Bundle extras = data.getExtras();
+            Bitmap profileBitmap = (Bitmap) extras.get("data");
+            presenter.uploadCapturedPhoto(this, profileBitmap, getmAuth().getCurrentUser().getUid());
+        } else if (requestCode == REQUEST_GALLERY_PHOTO && resultCode == RESULT_OK) {
+            Uri imageUri = data.getData();
+            presenter.uploadGalleryPhotoTo(this, imageUri, getmAuth().getCurrentUser().getUid());
+        }
+    }
+
+    private void showPhotoActionDialog() {
+        if (!hasPermissions()) {
+            getPermissions();
+        }
+
+        AlertDialog.Builder mBuilder = new AlertDialog.Builder(this);
+        View mView = getLayoutInflater().inflate(R.layout.dialog_pick_photos, null);
+        LinearLayout galleryLL = mView.findViewById(R.id.galleryLL);
+        LinearLayout cameraLL = mView.findViewById(R.id.cameraLL);
+
+        galleryLL.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT, MediaStore.Images.Media.INTERNAL_CONTENT_URI);
+                startActivityForResult(intent, REQUEST_GALLERY_PHOTO);
+            }
+        });
+
+        cameraLL.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dispatchTakePictureIntent();
+            }
+        });
+
+        mBuilder.setView(mView);
+        photoActionDialog = mBuilder.create();
+        photoActionDialog.show();
+    }
+
+    private void dispatchTakePictureIntent() {
+        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
+            startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        switch (requestCode) {
+            case REQUEST_ALL: {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED
+                        && grantResults[1] == PackageManager.PERMISSION_GRANTED) {
+                    // permission was granted, yay! Do the
+                    // contacts-related task you need to do.
+
+                } else {
+                    // permission denied, boo! Disable the
+                    // functionality that depends on this permission.
+                    if (photoActionDialog != null)
+                        photoActionDialog.dismiss();
+                    else
+                        finish();
+                    Toast.makeText(this, "Please allow permissions for uploading photo.", Toast.LENGTH_SHORT).show();
+
+                }
+                return;
+            }
+            case REQUEST_IMAGE_CAPTURE: {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+
+                    // permission was granted, yay! Do the
+                    // contacts-related task you need to do.
+
+                } else {
+                    // permission denied, boo! Disable the
+                    // functionality that depends on this permission.
+                    if (photoActionDialog != null)
+                        photoActionDialog.dismiss();
+                    Toast.makeText(this, "Please allow CAMERA permission.", Toast.LENGTH_SHORT).show();
+                }
+                return;
+            }
+            case REQUEST_WRITE_EXTERNAL: {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+
+                    // permission was granted, yay! Do the
+                    // contacts-related task you need to do.
+
+                } else {
+                    // permission denied, boo! Disable the
+                    // functionality that depends on this permission.
+                    if (photoActionDialog != null)
+                        photoActionDialog.dismiss();
+                    Toast.makeText(this, "Please allow WRITE EXTERNAL permission.", Toast.LENGTH_SHORT).show();
+                }
+                return;
+            }
+        }
+    }
+
+    /**
+     * Check if the device has permissions for camera and write external storage
+     * @return true if it does, false otherwise. For devices lower than Marshmallow, it will assume the device has the permission from Manifest file
+     */
+    private boolean hasPermissions() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            int cameraPermission = checkSelfPermission(android.Manifest.permission.CAMERA);
+            int writeExternalStoragePermission = checkSelfPermission(android.Manifest.permission.WRITE_EXTERNAL_STORAGE);
+
+            return cameraPermission != PackageManager.PERMISSION_GRANTED && writeExternalStoragePermission != PackageManager.PERMISSION_GRANTED;
+        }
+        return true;
 
     }
+
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -64,4 +246,51 @@ public class ProfileActivity extends AppCompatActivity {
 
         return super.onOptionsItemSelected(item);
     }
+
+    @Override
+    public void onLoadDataSuccess(User user) {
+        name.setText(user.getFullName());
+        email.setText(user.getEmail());
+        postCount.setText(user.getPostCount() + " posts");
+        friendCount.setText(user.getFriendCount() + " friends");
+    }
+
+    @Override
+    public void onLoadDataFailure(String error) {
+        Toast.makeText(this, error, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onLoadProfilePhotoSuccess(Uri imageURI) {
+        Picasso.get().load(imageURI).into(profileImage);
+    }
+
+    @Override
+    public void onLoadProfilePhotoFailure(String error) {
+        Picasso.get().load("http://www.personalbrandingblog.com/wp-content/uploads/2017/08/blank-profile-picture-973460_640-300x300.png").into(profileImage);
+    }
+
+    @Override
+    public void onEditSuccess(User user) {
+
+    }
+
+    @Override
+    public void onEditFailure(String error) {
+        Toast.makeText(this, R.string.profileEditFailure, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onPhotoUploadSuccess(Uri imageUri) {
+        photoActionDialog.dismiss();
+        profileImage.setImageURI(imageUri);
+        Toast.makeText(this, "Photo uploaded.", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onPhotoUploadFailure(String error) {
+        photoActionDialog.dismiss();
+        Toast.makeText(this, error, Toast.LENGTH_SHORT).show();
+    }
+
 }

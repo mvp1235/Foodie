@@ -5,17 +5,17 @@ public class User {
     private String firstName;
     private String lastName;
     private String profileURL;
-    private String location;
     private String email;
     private int postCount;
     private int friendCount;
+
+    public User(){};
 
     public User(String uID) {
         this.uID = uID;
         firstName = "Joe";
         lastName = "Nguyen";
         profileURL = "https://www.shareicon.net/data/2016/09/01/822711_user_512x512.png";
-        location = "San Jose, CA";
         postCount = 0;
         friendCount = 0;
     }
@@ -52,14 +52,6 @@ public class User {
         this.profileURL = profileURL;
     }
 
-    public String getLocation() {
-        return location;
-    }
-
-    public void setLocation(String location) {
-        this.location = location;
-    }
-
     public String getEmail() {
         return email;
     }
@@ -82,5 +74,9 @@ public class User {
 
     public void setFriendCount(int friendCount) {
         this.friendCount = friendCount;
+    }
+
+    public String getFullName() {
+        return firstName + " " + lastName;
     }
 }

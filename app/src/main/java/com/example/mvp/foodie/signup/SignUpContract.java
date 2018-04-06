@@ -10,31 +10,20 @@ public interface SignUpContract {
     interface View {
         void onSignUpSuccess(FirebaseUser user);
         void onSignUpFailure(String error);
-        void onPhotoUploadSuccess(Uri profileURI);
-        void onPhotoUploadFailure(String error);
     }
 
     interface Presenter {
         void signUp(Activity activity, String firstName, String lastName, String email, String password);
-        void uploadCapturedPhoto(Activity activity, Bitmap profileBitmap, String userID);
-        void uploadGalleryPhotoTo(Activity activity, Uri profileURI, String userID);
-        void storeUserData(Activity activity, String firstName, String lastName, String email);
     }
 
     interface Interactor {
         void performFirebaseSignUp(Activity activity, String firstName, String lastName, String email, String password);
         void performUserDataStoring(Activity activity, String firstName, String lastName, String email);
-        void uploadCapturedPhotoToFirebase(Activity activity, Bitmap profileBitmap, String userID);
-        void uploadGalleryPhotoToFirebase(Activity activity, Uri profileURI, String userID);
+
     }
 
     interface onSignUpListener{
         void onSuccess(FirebaseUser firebaseUser);
         void onFailure(String message);
-    }
-
-    interface onUploadListener {
-        void onPhotoUploadSuccess(Uri imageUri);
-        void onPhotoUploadFailure(String error);
     }
 }

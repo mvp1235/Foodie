@@ -6,33 +6,20 @@ import android.net.Uri;
 
 import com.google.firebase.auth.FirebaseUser;
 
-public class SignUpPresenter implements SignUpContract.Presenter, SignUpContract.onSignUpListener, SignUpContract.onUploadListener {
+public class SignUpPresenter implements SignUpContract.Presenter, SignUpContract.onSignUpListener{
     private SignUpContract.View signUpView;
     private SignUpContract.Interactor interactor;
 
     public SignUpPresenter(SignUpContract.View signUpView) {
         this.signUpView = signUpView;
-        interactor = new SignUpInteractor(this, this);
+        interactor = new SignUpInteractor(this);
     }
 
     @Override
     public void signUp(Activity activity, String firstName, String lastName, String email, String password) {
+        firstName = firstName.substring(0,1).toUpperCase() + firstName.substring(1).toLowerCase();
+        lastName = lastName.substring(0,1).toUpperCase() + lastName.substring(1).toLowerCase();
         interactor.performFirebaseSignUp(activity, firstName, lastName, email, password);
-    }
-
-    @Override
-    public void uploadCapturedPhoto(Activity activity, Bitmap profileBitmap, String userID) {
-        interactor.uploadCapturedPhotoToFirebase(activity, profileBitmap, userID);
-    }
-
-    @Override
-    public void uploadGalleryPhotoTo(Activity activity, Uri profileURI, String userID) {
-        interactor.uploadGalleryPhotoToFirebase(activity, profileURI, userID);
-    }
-
-    @Override
-    public void storeUserData(Activity activity, String firstName, String lastName, String email) {
-        interactor.performUserDataStoring(activity, firstName, lastName, email);
     }
 
     @Override
@@ -45,13 +32,5 @@ public class SignUpPresenter implements SignUpContract.Presenter, SignUpContract
         signUpView.onSignUpFailure(message);
     }
 
-    @Override
-    public void onPhotoUploadSuccess(Uri imageUri) {
-        signUpView.onPhotoUploadSuccess(imageUri);
-    }
 
-    @Override
-    public void onPhotoUploadFailure(String error) {
-        signUpView.onPhotoUploadFailure(error);
-    }
 }

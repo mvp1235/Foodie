@@ -50,6 +50,7 @@
     <string name="passwordPrompt">Enter a password.</string>
     <string name="firstNamePrompt">Enter first name.</string>
     <string name="lastNamePrompt">Enter last name.</string>
+    <string name="profileEditFailure">Failed to edit profile. Please try again.</string>
 
 
 </resources>

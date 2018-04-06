@@ -23,15 +23,11 @@ import java.io.ByteArrayOutputStream;
 public class SignUpInteractor implements SignUpContract.Interactor {
 
     private SignUpContract.onSignUpListener signUpListener;
-    private SignUpContract.onUploadListener uploadListener;
-    private StorageReference storageReference;
     private DatabaseReference mDatabase;
     private FirebaseAuth mAuth;
 
-    public SignUpInteractor(SignUpContract.onSignUpListener listener, SignUpContract.onUploadListener uploadListener) {
+    public SignUpInteractor(SignUpContract.onSignUpListener listener) {
         this.signUpListener = listener;
-        this.uploadListener = uploadListener;
-        storageReference = FirebaseStorage.getInstance().getReference();
         mDatabase = FirebaseDatabase.getInstance().getReference();
         mAuth = FirebaseAuth.getInstance();
     }
@@ -63,34 +59,4 @@ public class SignUpInteractor implements SignUpContract.Interactor {
         mDatabase.child("Users").child(mAuth.getCurrentUser().getUid()).setValue(user);
     }
 
-    @Override
-    public void uploadCapturedPhotoToFirebase(final Activity activity, Bitmap profileBitmap, String userID) {
-        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-        profileBitmap.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
-        String path = MediaStore.Images.Media.insertImage(activity.getContentResolver(), profileBitmap, "Title", null);
-
-        final Uri profileURI = Uri.parse(path);
-
-        StorageReference filepath = storageReference.child("profilePhotos").child(userID);
-        filepath.putFile(profileURI).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
-                uploadListener.onPhotoUploadSuccess(profileURI);
-            }
-        });
-    }
-
-    @Override
-    public void uploadGalleryPhotoToFirebase(final Activity activity, final Uri profileURI, String userID) {
-
-        StorageReference filepath = storageReference.child("profilePhotos").child(userID);
-        filepath.putFile(profileURI).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
-                uploadListener.onPhotoUploadSuccess(profileURI);
-            }
-        });
-        
-
-    }
 }
