@@ -88,14 +88,14 @@ public class SignInActivity extends BaseActivity implements SignInContract.View 
 
     @Override
     public void onSignInSuccess(FirebaseUser user) {
-        firebaseUser = user;
+        setFirebaseUser(user);
         Intent intent = new Intent(SignInActivity.this, MainActivity.class);
         startActivity(intent);
     }
 
     @Override
     public void onSignInFailure(String error) {
-        firebaseUser = null;
+        setFirebaseUser(null);
         Toast.makeText(this, error, Toast.LENGTH_SHORT).show();
     }
 

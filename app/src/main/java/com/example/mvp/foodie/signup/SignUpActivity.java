@@ -24,6 +24,7 @@ import com.example.mvp.foodie.BaseActivity;
 import com.example.mvp.foodie.MainActivity;
 import com.example.mvp.foodie.R;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
 
 public class SignUpActivity extends BaseActivity implements SignUpContract.View, SignUpContract.onUploadListener {
 
@@ -260,7 +261,7 @@ public class SignUpActivity extends BaseActivity implements SignUpContract.View,
     @Override
     public void onSignUpSuccess(FirebaseUser user) {
         mPrgressDialog.dismiss();
-        firebaseUser = user;
+        setFirebaseUser(user);
         Toast.makeText(this, R.string.successSignUp, Toast.LENGTH_SHORT).show();
         Intent intent = new Intent(SignUpActivity.this, MainActivity.class);
         startActivity(intent);

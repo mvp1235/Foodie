@@ -1,7 +1,6 @@
 package com.example.mvp.foodie;
 
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
@@ -11,18 +10,14 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatTextView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Toast;
 
-import com.example.mvp.foodie.signin.SignInContract;
-import com.example.mvp.foodie.signup.SignUpContract;
+import com.example.mvp.foodie.profile.ProfileActivity;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 
 
 public class MainActivity extends BaseActivity implements NavigationView.OnNavigationItemSelectedListener {
@@ -66,7 +61,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        mAuth = FirebaseAuth.getInstance();
+        setmAuth(FirebaseAuth.getInstance());
 
         navigation = findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
@@ -94,8 +89,8 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         AppCompatTextView userFullName = headerView.findViewById(R.id.userFullName_id);
         AppCompatTextView userEmail = headerView.findViewById(R.id.userEmail_id);
 
-        userEmail.setText(firebaseUser.getEmail());
-        userFullName.setText(firebaseUser.getDisplayName());
+        userEmail.setText(getFirebaseUser().getEmail());
+        userFullName.setText(getFirebaseUser().getDisplayName());
 
     }
 
@@ -128,8 +123,8 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
                 break;
             case R.id.logout_id:
                 //Log user out
-                mAuth.signOut();
-                firebaseUser = null;
+                getmAuth().signOut();
+                setFirebaseUser(null);
                 finish();
                 break;
         }

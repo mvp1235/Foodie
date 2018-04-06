@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.mvp.foodie.ProfileActivity">
+    tools:context="com.example.mvp.foodie.profile.ProfileActivity">
 
     <android.support.v7.widget.Toolbar
         android:layout_width="match_parent"
@@ -60,18 +60,20 @@
         android:layout_below="@+id/profileLocation_id">
 
         <android.support.v7.widget.AppCompatTextView
+            android:id="@+id/profilePostCount_id"
             android:layout_width="0dp"
+            android:layout_height="match_parent"
             android:layout_weight="1"
             android:gravity="center_horizontal"
-            android:layout_height="match_parent"
-            android:text="@string/sample_posts"/>
+            android:text="@string/sample_posts" />
 
         <android.support.v7.widget.AppCompatTextView
+            android:id="@+id/profileFriendCount_id"
             android:layout_width="0dp"
+            android:layout_height="match_parent"
             android:layout_weight="1"
             android:gravity="center_horizontal"
-            android:layout_height="match_parent"
-            android:text="@string/sample_friends"/>
+            android:text="@string/sample_friends" />
 
     </LinearLayout>
 
