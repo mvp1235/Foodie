@@ -38,12 +38,10 @@
             android:name=".MainActivity"
             android:label="@string/feeds">
 
-            <!-- <intent-filter> -->
-            <!-- <action android:name="android.intent.action.MAIN" /> -->
-            <!-- <category android:name="android.intent.category.LAUNCHER" /> -->
-            <!-- </intent-filter> -->
         </activity>
-        <activity android:name=".profile.EditProfileActivity"></activity>
+        <activity android:name=".profile.EditProfileActivity"
+            android:label="@string/editProfile">
+        </activity>
     </application>
 
 </manifest>

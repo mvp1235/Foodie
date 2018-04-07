@@ -4,7 +4,10 @@ import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.AppCompatEditText;
+import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
@@ -17,6 +20,8 @@ public class EditProfileActivity extends BaseActivity implements ProfileContract
 
     private AppCompatEditText firstName, lastName, email;
     private AppCompatButton editBtn;
+
+    Toolbar toolbar;
 
     private ProgressDialog mPrgressDialog;
 
@@ -35,6 +40,10 @@ public class EditProfileActivity extends BaseActivity implements ProfileContract
     }
 
     private void initViews() {
+        toolbar = findViewById(R.id.profile_toolbar);
+        setSupportActionBar(toolbar);
+        toolbar.setTitle(R.string.editProfile);
+
         firstName = findViewById(R.id.firstNameText_id);
         lastName = findViewById(R.id.lastNameText_id);
         email = findViewById(R.id.emailText_id);

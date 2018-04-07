@@ -55,6 +55,8 @@
     <string name="email">Email</string>
     <string name="editSuccessfully">Edited profile successfully.</string>
     <string name="editFailed">Edit profile failed. Please try again later.</string>
+    <string name="editProfile">Edit Profile</string>
+    <string name="save">Save</string>
 
 
 </resources>

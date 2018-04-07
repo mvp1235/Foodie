@@ -1,75 +1,97 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
+    android:focusable="true"
+    android:focusableInTouchMode="true"
     tools:context=".profile.EditProfileActivity">
 
-    <LinearLayout
+    <android.support.v7.widget.Toolbar
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="2"
-        android:orientation="horizontal"
-        android:id="@+id/nameBlock_id"
-        android:layout_marginTop="30dp">
+        android:layout_height="?attr/actionBarSize"
+        android:id="@+id/profile_toolbar"
+        android:background="@color/colorPrimary"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
+    </android.support.v7.widget.Toolbar>
 
-        <android.support.design.widget.TextInputLayout
-            android:layout_width="0dp"
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="30dp"
+        android:layout_marginEnd="30dp"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp"
+        android:layout_marginStart="30dp"
+        android:layout_below="@+id/profile_toolbar">
+
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:id="@+id/firstNameBlock_id">
+            android:orientation="horizontal"
+            android:id="@+id/nameBlock_id">
 
-            <android.support.v7.widget.AppCompatEditText
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_width="match_parent"
-                android:id="@+id/firstNameText_id"
-                android:hint="@string/first_name"
-                android:inputType="textCapWords" />
+                android:layout_weight="1"
+                android:id="@+id/firstNameBlock_id">
 
-        </android.support.design.widget.TextInputLayout>
+                <android.support.v7.widget.AppCompatEditText
+                    android:layout_height="wrap_content"
+                    android:layout_width="match_parent"
+                    android:id="@+id/firstNameText_id"
+                    android:hint="@string/first_name"
+                    android:inputType="textCapWords" />
+
+            </android.support.design.widget.TextInputLayout>
+
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:id="@+id/lastNameBlock_id">
+
+                <android.support.v7.widget.AppCompatEditText
+                    android:layout_height="match_parent"
+                    android:layout_width="match_parent"
+                    android:id="@+id/lastNameText_id"
+                    android:hint="@string/last_name"
+                    android:inputType="textCapWords" />
+
+            </android.support.design.widget.TextInputLayout>
+
+        </LinearLayout>
+
 
         <android.support.design.widget.TextInputLayout
-            android:layout_width="0dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:id="@+id/lastNameBlock_id">
+            android:id="@+id/emailBlock_id"
+            android:layout_below="@+id/nameBlock_id">
 
             <android.support.v7.widget.AppCompatEditText
                 android:layout_height="match_parent"
                 android:layout_width="match_parent"
-                android:id="@+id/lastNameText_id"
-                android:hint="@string/last_name"
-                android:inputType="textCapWords" />
+                android:id="@+id/emailText_id"
+                android:hint="@string/email_address"
+                android:inputType="textEmailAddress" />
 
         </android.support.design.widget.TextInputLayout>
 
-    </LinearLayout>
+        <android.support.v7.widget.AppCompatButton
+            android:id="@+id/editBtn_id"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_below="@id/emailBlock_id"
+            android:background="@drawable/green_rounded_button"
+            android:text="@string/save"
+            android:textColor="@android:color/white" />
+
+    </RelativeLayout>
 
 
-    <android.support.design.widget.TextInputLayout
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="2"
-        android:id="@+id/emailBlock_id">
 
-        <android.support.v7.widget.AppCompatEditText
-            android:layout_height="match_parent"
-            android:layout_width="match_parent"
-            android:id="@+id/emailText_id"
-            android:hint="@string/email_address"
-            android:inputType="textEmailAddress" />
-
-    </android.support.design.widget.TextInputLayout>
-
-    <android.support.v7.widget.AppCompatButton
-        android:id="@+id/editBtn_id"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:background="@drawable/green_rounded_button"
-        android:text="@string/edit"
-        android:textColor="@android:color/white" />
-
-</LinearLayout>
+</RelativeLayout>
