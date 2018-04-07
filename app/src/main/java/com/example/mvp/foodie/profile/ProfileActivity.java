@@ -32,6 +32,11 @@ public class ProfileActivity extends BaseActivity implements ProfileContract.Vie
     private static final int REQUEST_IMAGE_CAPTURE = 201;
     private static final int REQUEST_ALL = 202;
     private static final int REQUEST_WRITE_EXTERNAL = 203;
+    private static final int EDIT_PROFILE = 204;
+
+    public static final String EMAIL = "Email Address";
+    public static final String FULL_NAME = "Full name";
+
 
     Toolbar toolbar;
     private AppCompatTextView name, email, location, postCount, friendCount;
@@ -108,8 +113,14 @@ public class ProfileActivity extends BaseActivity implements ProfileContract.Vie
         } else if (requestCode == REQUEST_GALLERY_PHOTO && resultCode == RESULT_OK) {
             Uri imageUri = data.getData();
             presenter.uploadGalleryPhotoTo(this, imageUri, getmAuth().getCurrentUser().getUid());
+        } else if (requestCode == EDIT_PROFILE && resultCode == RESULT_OK) {
+            String fullName = data.getStringExtra(FULL_NAME);
+            String email = data.getStringExtra(EMAIL);
+
+
         }
     }
+
 
     private void showPhotoActionDialog() {
         if (!hasPermissions()) {
@@ -239,6 +250,10 @@ public class ProfileActivity extends BaseActivity implements ProfileContract.Vie
         switch (id) {
             case R.id.profile_edit:
 //                Toast.makeText(getApplicationContext(), "Editing Profile", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(this, EditProfileActivity.class);
+                intent.putExtra(FULL_NAME, name.getText().toString());
+                intent.putExtra(EMAIL, email.getText().toString());
+                startActivityForResult(intent, EDIT_PROFILE);
                 break;
         }
 
@@ -262,16 +277,6 @@ public class ProfileActivity extends BaseActivity implements ProfileContract.Vie
         Toast.makeText(this, error, Toast.LENGTH_SHORT).show();
     }
 
-
-    @Override
-    public void onEditSuccess(User user) {
-
-    }
-
-    @Override
-    public void onEditFailure(String error) {
-        Toast.makeText(this, R.string.profileEditFailure, Toast.LENGTH_SHORT).show();
-    }
 
     @Override
     public void onPhotoUploadSuccess(Uri imageUri) {

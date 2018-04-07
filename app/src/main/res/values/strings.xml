@@ -52,6 +52,9 @@
     <string name="lastNamePrompt">Enter last name.</string>
     <string name="profileEditFailure">Failed to edit profile. Please try again.</string>
     <string name="loadDataFailed">Failed to load data from database.</string>
+    <string name="email">Email</string>
+    <string name="editSuccessfully">Edited profile successfully.</string>
+    <string name="editFailed">Edit profile failed. Please try again later.</string>
 
 
 </resources>

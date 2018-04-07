@@ -24,14 +24,12 @@ import com.google.firebase.storage.UploadTask;
 import java.io.ByteArrayOutputStream;
 
 public class ProfileInteractor implements ProfileContract.Interactor {
-    private ProfileContract.onEditListener editListener;
     private ProfileContract.onUploadListener uploadListener;
     private ProfileContract.onLoadListener loadListener;
     private StorageReference storageReference;
     private DatabaseReference userReference;
 
-    public ProfileInteractor(ProfileContract.onEditListener editListener, ProfileContract.onUploadListener uploadListener, ProfileContract.onLoadListener loadListener) {
-        this.editListener = editListener;
+    public ProfileInteractor(ProfileContract.onUploadListener uploadListener, ProfileContract.onLoadListener loadListener) {
         this.uploadListener = uploadListener;
         this.loadListener = loadListener;
         storageReference = FirebaseStorage.getInstance().getReference();
@@ -119,24 +117,4 @@ public class ProfileInteractor implements ProfileContract.Interactor {
         });
     }
 
-    @Override
-    public void performProfileEdit(Activity activity, final String userID, final String firstName, final String lastName, final String email) {
-        userReference.child("Users").child(userID).addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                User user = dataSnapshot.getValue(User.class);
-                user.setFirstName(firstName);
-                user.setLastName(lastName);
-                user.setEmail(email);
-                userReference.child("Users").child(userID).setValue(user);
-
-                editListener.onEditSuccess(user);
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                editListener.onEditFailure(databaseError.getMessage());
-            }
-        });
-    }
 }
