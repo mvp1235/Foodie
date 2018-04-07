@@ -32,6 +32,10 @@ public class SignInActivity extends BaseActivity implements SignInContract.View 
 
         init();
         setUpListeners();
+
+        //check whether user is logged in or not.
+        //If yes, go to feed activity, else show login page
+        presenter.checkFirebaseAuth();
     }
 
     private void init() {
@@ -98,6 +102,12 @@ public class SignInActivity extends BaseActivity implements SignInContract.View 
     public void onSignInFailure(String error) {
         setFirebaseUser(null);
         Toast.makeText(this, error, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void isLoggedIn(FirebaseUser user) {
+        Intent intent = new Intent(this, MainActivity.class);
+        startActivity(intent);
     }
 
 }

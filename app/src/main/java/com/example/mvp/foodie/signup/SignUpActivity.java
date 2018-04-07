@@ -16,7 +16,6 @@ import com.example.mvp.foodie.R;
 import com.google.firebase.auth.FirebaseUser;
 
 public class SignUpActivity extends BaseActivity implements SignUpContract.View {
-
     AppCompatImageView profilePhotoIV;
     AppCompatEditText firstNameET, lastNameET, emailET, passwordET;
     AppCompatButton signUpBtn;
@@ -93,6 +92,7 @@ public class SignUpActivity extends BaseActivity implements SignUpContract.View 
         Intent intent = new Intent(SignUpActivity.this, MainActivity.class);
         startActivity(intent);
     }
+
 
     @Override
     public void onSignUpFailure(String error) {

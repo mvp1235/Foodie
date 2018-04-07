@@ -10,11 +10,12 @@ public interface SignInContract {
     interface View {
         void onSignInSuccess(FirebaseUser user);
         void onSignInFailure(String error);
-
+        void isLoggedIn(FirebaseUser user);
     }
 
     interface Presenter {
         void signIn(Activity activity, String email, String password);
+        void checkFirebaseAuth();
     }
 
     interface Interactor {
