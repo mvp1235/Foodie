@@ -57,6 +57,8 @@
     <string name="editFailed">Edit profile failed. Please try again later.</string>
     <string name="editProfile">Edit Profile</string>
     <string name="save">Save</string>
+    <string name="addPost">Add Post</string>
+    <string name="sendMessage">Send Message</string>
 
 
 </resources>

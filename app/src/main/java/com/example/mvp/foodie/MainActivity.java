@@ -32,6 +32,8 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     NavigationView navigationView;
     BottomNavigationView navigation;
 
+    MenuItem searchMenu, addPostMenu, sendMessageMenu;
+
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
 
@@ -42,16 +44,26 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
                 case R.id.navigation_home:
                     selectedFragment = new MainFeedFragment();
                     toolbar.setTitle(R.string.feeds);
+                    searchMenu.setVisible(true);
+                    addPostMenu.setVisible(true);
+                    sendMessageMenu.setVisible(false);
+
                     break;
                 case R.id.navigation_messages:
                     selectedFragment = new MessageFragment();
                     toolbar.setTitle(R.string.messages);
-                    //hide menu items
-                    toolbar.hideOverflowMenu();
+
+                    searchMenu.setVisible(false);
+                    addPostMenu.setVisible(false);
+                    sendMessageMenu.setVisible(true);
                     break;
                 case R.id.navigation_notifications:
                     selectedFragment = new NotificationFragment();
                     toolbar.setTitle(R.string.notifications);
+
+                    searchMenu.setVisible(false);
+                    addPostMenu.setVisible(false);
+                    sendMessageMenu.setVisible(false);
 
                     break;
             }
@@ -122,6 +134,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         switch (id) {
             case R.id.profile_id:
                 intent = new Intent(MainActivity.this, ProfileActivity.class);
+                startActivity(intent);
                 break;
             case R.id.settings_id:
 
@@ -135,9 +148,6 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         }
 
         drawerLayout.closeDrawer(GravityCompat.START);
-
-        if (intent != null)
-            startActivity(intent);
 
         //return true will highlight chosen menu, false will do nothing
         return false;
@@ -157,6 +167,11 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.toolbar_items, menu);
+        searchMenu = menu.findItem(R.id.menu_search);
+        addPostMenu = menu.findItem(R.id.menu_add_post);
+        sendMessageMenu = menu.findItem(R.id.menu_send_message);
+
+        sendMessageMenu.setVisible(false);
         return true;
     }
 
@@ -167,10 +182,13 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         //Set action upon clicking on menu items
         switch (id) {
             case R.id.menu_search:
-
+                Toast.makeText(this, "Search", Toast.LENGTH_SHORT).show();
                 break;
-            case R.id.menu_add:
-
+            case R.id.menu_add_post:
+                Toast.makeText(this, "Add post", Toast.LENGTH_SHORT).show();
+                break;
+            case R.id.menu_send_message:
+                Toast.makeText(this, "Send message", Toast.LENGTH_SHORT).show();
                 break;
         }
 

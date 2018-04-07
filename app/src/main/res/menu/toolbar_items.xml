@@ -8,8 +8,14 @@
         app:showAsAction="ifRoom"/>
 
     <item
-        android:title="@string/add"
-        android:id="@+id/menu_add"
+        android:title="@string/addPost"
+        android:id="@+id/menu_add_post"
+        android:icon="@drawable/add"
+        app:showAsAction="always"/>
+
+    <item
+        android:title="@string/sendMessage"
+        android:id="@+id/menu_send_message"
         android:icon="@drawable/add"
         app:showAsAction="always"/>
 </menu>
