@@ -1,19 +1,28 @@
 package com.example.mvp.foodie.models;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 
 public class Post {
     private String description, time, photoURL, location;
+    private long createdTime;
     private User user;
     private ArrayList<String> commentIDs;
     private ArrayList<String> interestIDs;
     private ArrayList<String> goingIDs;
 
+    public Post() {
+        createdTime = Calendar.getInstance().getTimeInMillis();
+        commentIDs = new ArrayList<>();
+        interestIDs = new ArrayList<>();
+        goingIDs = new ArrayList<>();
+    }
+
     public Post(User u) {
         user = u;
         description = "Best restaurant to go to during summer";
         time = "15m";
-        photoURL = "https://api.learn2crack.com/android/images/donut.png";
+        photoURL = "https://i.ytimg.com/vi/mEBFswpYms4/maxresdefault.jpg";
         location = "San Jose, CA";
 
         commentIDs = new ArrayList<>();
@@ -110,5 +119,13 @@ public class Post {
     public void removeGoingID(String goingID) {
         if (this.goingIDs.contains(goingID))
             this.goingIDs.remove(goingID);
+    }
+
+    public long getCreatedTime() {
+        return createdTime;
+    }
+
+    public void setCreatedTime(long createdTime) {
+        this.createdTime = createdTime;
     }
 }

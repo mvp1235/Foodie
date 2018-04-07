@@ -75,6 +75,22 @@ public class User {
         this.friendCount = friendCount;
     }
 
+    public void incrementPostCount() {
+        postCount++;
+    }
+
+    public void decrementPostCount() {
+        postCount--;
+    }
+
+    public void incrementFriendCount() {
+        friendCount++;
+    }
+
+    public void decrementFriendCount() {
+        friendCount--;
+    }
+
     public String getFullName() {
         return firstName + " " + lastName;
     }

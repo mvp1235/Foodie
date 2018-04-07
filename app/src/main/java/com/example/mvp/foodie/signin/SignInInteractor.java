@@ -32,7 +32,14 @@ public class SignInInteractor implements SignInContract.Interactor {
                     } else {
                         // If sign in fails, display a message to the user.
                         String error = task.getException().toString();
-                        signInListener.onFailure(error);
+                        String message;
+                        if (error.contains("There is no user record corresponding to this identifier"))
+                            message = "There are no existing accounts with this email address.";
+                        else if (error.contains("The password is invalid"))
+                            message = "Invalid password.";
+                        else
+                            message = error;
+                        signInListener.onFailure(message);
 
                     }
                 }

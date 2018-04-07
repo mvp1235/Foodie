@@ -63,7 +63,7 @@
         android:layout_alignParentStart="true"
         android:layout_below="@+id/userInfoSection_id"
         android:layout_marginTop="19dp"
-        android:text="Best place to be during the summer" />
+        android:text="Best taco NA!!" />
 
     <android.support.v7.widget.AppCompatImageView
         android:id="@+id/postPhoto_id"
@@ -73,7 +73,7 @@
         android:layout_alignParentStart="true"
         android:layout_below="@+id/postDescription_id"
         android:layout_marginTop="20dp"
-        app:srcCompat="@drawable/camera"></android.support.v7.widget.AppCompatImageView>
+        app:srcCompat="@drawable/camera"/>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -102,7 +102,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="4"
                 android:id="@+id/postNumInterest_id"
-                android:text="75 Interests"/>
+                android:text="75"/>
 
         </LinearLayout>
 
@@ -127,7 +127,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="4"
                 android:id="@+id/postNumComments_id"
-                android:text="10 Comments"/>
+                android:text="10"/>
 
         </LinearLayout>
 
@@ -152,7 +152,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="4"
                 android:id="@+id/postNumGoing_id"
-                android:text="10 Going"/>
+                android:text="10"/>
 
         </LinearLayout>
 

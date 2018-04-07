@@ -190,6 +190,8 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
                 break;
             case R.id.menu_add_post:
                 Toast.makeText(this, "Add post", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(this, NewPostActivity.class);
+                startActivity(intent);
                 break;
             case R.id.menu_send_message:
                 Toast.makeText(this, "Send message", Toast.LENGTH_SHORT).show();

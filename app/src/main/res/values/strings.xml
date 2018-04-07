@@ -59,6 +59,13 @@
     <string name="save">Save</string>
     <string name="addPost">Add Post</string>
     <string name="sendMessage">Send Message</string>
+    <string name="title_activity_new_post">NewPostActivity</string>
+    <string name="selectPostPhoto">Select post photo</string>
+    <string name="post">Post</string>
+    <string name="description">Description</string>
+    <string name="address">Address</string>
+    <string name="location">Location</string>
+    <string name="newPost">New Post</string>
 
 
 </resources>
