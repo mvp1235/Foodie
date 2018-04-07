@@ -24,6 +24,8 @@ import com.example.mvp.foodie.profile.ProfileActivity;
 import com.google.firebase.auth.FirebaseAuth;
 import com.squareup.picasso.Picasso;
 
+import static com.example.mvp.foodie.signin.SignInActivity.RESULT_CLOSE_ALL;
+
 
 public class MainActivity extends BaseActivity implements NavigationView.OnNavigationItemSelectedListener, DrawerContract.View {
 
@@ -123,7 +125,8 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
             //SHOW CONFIRM DIALOG LATER/////////////////////////
             getmAuth().signOut();
             setFirebaseUser(null);
-            super.onBackPressed();
+            setResult(RESULT_CLOSE_ALL);
+            finish();
         }
     }
 
@@ -143,6 +146,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
                 //Log user out
                 getmAuth().signOut();
                 setFirebaseUser(null);
+                setResult(RESULT_CLOSE_ALL);
                 finish();
                 break;
         }

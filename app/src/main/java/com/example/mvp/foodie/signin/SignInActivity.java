@@ -1,8 +1,6 @@
 package com.example.mvp.foodie.signin;
 
-import android.app.ProgressDialog;
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.AppCompatEditText;
@@ -18,7 +16,9 @@ import com.google.firebase.auth.FirebaseUser;
 
 public class SignInActivity extends BaseActivity implements SignInContract.View {
 
-    final static int CREATE_ACCOUNT_CODE = 100;
+    public static final int CREATE_ACCOUNT_CODE = 100;
+
+    public static final int RESULT_CLOSE_ALL = 9999999;
 
     AppCompatButton facebookLoginBtn, googleLoginBtn, loginBtn, createAccountBtn, forgotPasswordBtn;
     AppCompatEditText usernameET, passwordET;
@@ -59,7 +59,7 @@ public class SignInActivity extends BaseActivity implements SignInContract.View 
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(SignInActivity.this, SignUpActivity.class);
-                startActivityForResult(intent, CREATE_ACCOUNT_CODE);
+                startActivity(intent);
             }
         });
 

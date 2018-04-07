@@ -15,7 +15,11 @@ import com.example.mvp.foodie.MainActivity;
 import com.example.mvp.foodie.R;
 import com.google.firebase.auth.FirebaseUser;
 
+import static com.example.mvp.foodie.signin.SignInActivity.RESULT_CLOSE_ALL;
+
 public class SignUpActivity extends BaseActivity implements SignUpContract.View {
+    private static final int VIEW_FEED = 50001;
+
     AppCompatImageView profilePhotoIV;
     AppCompatEditText firstNameET, lastNameET, emailET, passwordET;
     AppCompatButton signUpBtn;
@@ -90,9 +94,15 @@ public class SignUpActivity extends BaseActivity implements SignUpContract.View 
         setFirebaseUser(user);
         Toast.makeText(this, R.string.successSignUp, Toast.LENGTH_SHORT).show();
         Intent intent = new Intent(SignUpActivity.this, MainActivity.class);
-        startActivity(intent);
+        startActivityForResult(intent, VIEW_FEED);
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == VIEW_FEED && resultCode == RESULT_CLOSE_ALL) {
+            finish();
+        }
+    }
 
     @Override
     public void onSignUpFailure(String error) {
