@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 
 public class Post {
+    private String postID;
     private String description, time, photoURL, location;
     private long createdTime;
     private User user;
@@ -11,23 +12,19 @@ public class Post {
     private ArrayList<String> interestIDs;
     private ArrayList<String> goingIDs;
 
-    public Post() {
+    public Post(String postID) {
+        this.postID = postID;
         createdTime = Calendar.getInstance().getTimeInMillis();
         commentIDs = new ArrayList<>();
         interestIDs = new ArrayList<>();
         goingIDs = new ArrayList<>();
-    }
 
-    public Post(User u) {
-        user = u;
         description = "Best restaurant to go to during summer";
         time = "15m";
         photoURL = "https://i.ytimg.com/vi/mEBFswpYms4/maxresdefault.jpg";
         location = "San Jose, CA";
 
-        commentIDs = new ArrayList<>();
-        interestIDs = new ArrayList<>();
-        goingIDs = new ArrayList<>();
+        this.user = new User();
     }
 
     public String getLocation() {
@@ -60,14 +57,6 @@ public class Post {
 
     public void setPhotoURL(String photoURL) {
         this.photoURL = photoURL;
-    }
-
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
     }
 
     public ArrayList<String> getCommentIDs() {
@@ -127,5 +116,21 @@ public class Post {
 
     public void setCreatedTime(long createdTime) {
         this.createdTime = createdTime;
+    }
+
+    public String getPostID() {
+        return postID;
+    }
+
+    public void setPostID(String postID) {
+        this.postID = postID;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 }

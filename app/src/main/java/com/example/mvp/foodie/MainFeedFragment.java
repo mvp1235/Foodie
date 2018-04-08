@@ -12,12 +12,18 @@ import android.view.ViewGroup;
 
 import com.example.mvp.foodie.models.Post;
 import com.example.mvp.foodie.models.User;
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class MainFeedFragment extends Fragment {
 
+    DatabaseReference databaseReference;
     RecyclerView recyclerView;
 
     public MainFeedFragment() {
@@ -36,8 +42,11 @@ public class MainFeedFragment extends Fragment {
         List<Post> posts = new ArrayList<>();
 
         for (int i=0; i<10; i++) {
-            posts.add(new Post(new User("1")));
+            posts.add(new Post("1"));
         }
+
+        databaseReference = FirebaseDatabase.getInstance().getReference();
+
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
         recyclerView.setLayoutManager(linearLayoutManager);
