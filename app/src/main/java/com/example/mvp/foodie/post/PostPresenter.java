@@ -1,19 +1,25 @@
 package com.example.mvp.foodie.post;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.widget.ImageView;
 
 import com.example.mvp.foodie.BaseActivity;
 import com.example.mvp.foodie.models.Post;
 
-public class PostPresenter implements PostContract.Presenter, PostContract.onPostCreateListener{
+public class PostPresenter implements PostContract.Presenter, PostContract.onPostCreateListener, PostContract.onLocationPickedListener {
 
     private PostContract.View view;
     private PostContract.Interactor interactor;
 
     public PostPresenter(PostContract.View view) {
         this.view = view;
-        interactor = new PostInteractor(this);
+        interactor = new PostInteractor(this, this);
+    }
+
+    @Override
+    public void getLocation(BaseActivity activity) {
+        interactor.performGetLocation(activity);
     }
 
     @Override
@@ -29,5 +35,15 @@ public class PostPresenter implements PostContract.Presenter, PostContract.onPos
     @Override
     public void onPostFailure(String error) {
         view.onPostFailed(error);
+    }
+
+    @Override
+    public void onLocationPickedSuccess(Intent intent) {
+        view.onLocationPickedSuccess(intent);
+    }
+
+    @Override
+    public void onLocationPickedFailure(String error) {
+        view.onLocationPickedFailure(error);
     }
 }

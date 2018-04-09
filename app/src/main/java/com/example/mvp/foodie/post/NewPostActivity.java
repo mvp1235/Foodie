@@ -53,6 +53,8 @@ public class NewPostActivity extends BaseActivity implements PostContract.View {
 
     private PostContract.Presenter presenter;
 
+    SupportPlaceAutocompleteFragment autocompleteFragment;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -62,22 +64,6 @@ public class NewPostActivity extends BaseActivity implements PostContract.View {
         initViews();
         setUpListeners();
 
-        SupportPlaceAutocompleteFragment autocompleteFragment = (SupportPlaceAutocompleteFragment)
-                getSupportFragmentManager().findFragmentById(R.id.place_autocomplete_fragment);
-
-        autocompleteFragment.setOnPlaceSelectedListener(new PlaceSelectionListener() {
-            @Override
-            public void onPlaceSelected(Place place) {
-                // TODO: Get info about the selected place.
-                Log.i("TEST", "Place: " + place.getName());
-            }
-
-            @Override
-            public void onError(Status status) {
-                // TODO: Handle the error.
-                Log.i("TEST", "An error occurred: " + status);
-            }
-        });
 
     }
 
@@ -89,6 +75,9 @@ public class NewPostActivity extends BaseActivity implements PostContract.View {
         locationET = findViewById(R.id.location_id);
         postImage = findViewById(R.id.newPostPhoto_id);
         postBtn = findViewById(R.id.postBtn_id);
+
+        autocompleteFragment = (SupportPlaceAutocompleteFragment)
+                getSupportFragmentManager().findFragmentById(R.id.place_autocomplete_fragment);
 
         mPrgressDialog = new ProgressDialog(this);
         presenter = new PostPresenter(this);
@@ -115,18 +104,7 @@ public class NewPostActivity extends BaseActivity implements PostContract.View {
         locationET.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                try {
-                    Intent intent =
-                            new PlaceAutocomplete.IntentBuilder(PlaceAutocomplete.MODE_OVERLAY)
-                                    .build(NewPostActivity.this);
-                    startActivityForResult(intent, PLACE_AUTOCOMPLETE_REQUEST_CODE);
-                } catch (GooglePlayServicesRepairableException e) {
-                    // TODO: Handle the error.
-                    Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
-                } catch (GooglePlayServicesNotAvailableException e) {
-                    // TODO: Handle the error.
-                    Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
-                }
+                presenter.getLocation(NewPostActivity.this);
             }
         });
     }
@@ -169,7 +147,7 @@ public class NewPostActivity extends BaseActivity implements PostContract.View {
         } else if (requestCode == PLACE_AUTOCOMPLETE_REQUEST_CODE) {
             if (resultCode == RESULT_OK) {
                 Place place = PlaceAutocomplete.getPlace(this, data);
-                locationET.setText(place.getName());
+                locationET.setText(place.getAddress());
 
             } else if (resultCode == PlaceAutocomplete.RESULT_ERROR) {
                 Status status = PlaceAutocomplete.getStatus(this, data);
@@ -297,6 +275,16 @@ public class NewPostActivity extends BaseActivity implements PostContract.View {
         mPrgressDialog.hide();
         Toast.makeText(this, error, Toast.LENGTH_SHORT).show();
         finish();
+    }
+
+    @Override
+    public void onLocationPickedSuccess(Intent intent) {
+        startActivityForResult(intent, PLACE_AUTOCOMPLETE_REQUEST_CODE);
+    }
+
+    @Override
+    public void onLocationPickedFailure(String error) {
+        Toast.makeText(this, error, Toast.LENGTH_SHORT).show();
     }
 
     @Override

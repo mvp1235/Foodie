@@ -1,13 +1,19 @@
 package com.example.mvp.foodie.post;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.example.mvp.foodie.BaseActivity;
 import com.example.mvp.foodie.models.Post;
 import com.example.mvp.foodie.models.User;
+import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
+import com.google.android.gms.common.GooglePlayServicesRepairableException;
+import com.google.android.gms.location.places.ui.PlaceAutocomplete;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DataSnapshot;
@@ -23,12 +29,31 @@ import java.io.ByteArrayOutputStream;
 public class PostInteractor implements PostContract.Interactor {
 
     private StorageReference storageReference;
-    private PostContract.onPostCreateListener listener;
+    private PostContract.onPostCreateListener postListener;
+    private PostContract.onLocationPickedListener locationListener;
 
-    public PostInteractor(PostContract.onPostCreateListener listener) {
-        this.listener = listener;
+    public PostInteractor(PostContract.onPostCreateListener postListener, PostContract.onLocationPickedListener locationListener) {
+        this.postListener = postListener;
+        this.locationListener = locationListener;
         storageReference = FirebaseStorage.getInstance().getReference();
     }
+
+    @Override
+    public void performGetLocation(BaseActivity activity) {
+        try {
+            Intent intent =
+                    new PlaceAutocomplete.IntentBuilder(PlaceAutocomplete.MODE_OVERLAY)
+                            .build(activity);
+            locationListener.onLocationPickedSuccess(intent);
+        } catch (GooglePlayServicesRepairableException e) {
+            // TODO: Handle the error.
+            locationListener.onLocationPickedFailure(e.getMessage());
+        } catch (GooglePlayServicesNotAvailableException e) {
+            // TODO: Handle the error.
+            locationListener.onLocationPickedFailure(e.getMessage());
+        }
+    }
+
 
     @Override
     public void uploadPostToFirebaseStorage(final BaseActivity activity, ImageView imageView, final String description, final String location, final String userID) {
@@ -49,7 +74,7 @@ public class PostInteractor implements PostContract.Interactor {
             @Override
             public void onFailure(@NonNull Exception exception) {
                 // Handle unsuccessful uploads
-                listener.onPostFailure(exception.toString());
+                postListener.onPostFailure(exception.toString());
             }
         }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @Override
@@ -69,12 +94,12 @@ public class PostInteractor implements PostContract.Interactor {
                         User u = dataSnapshot.getValue(User.class);
                         post.setUser(u);
                         databaseReference.child(newPostID).setValue(post);
-                        listener.onPostSuccess(post);
+                        postListener.onPostSuccess(post);
                     }
 
                     @Override
                     public void onCancelled(DatabaseError databaseError) {
-                        listener.onPostFailure(databaseError.getMessage());
+                        postListener.onPostFailure(databaseError.getMessage());
                     }
                 });
 
