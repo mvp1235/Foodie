@@ -1,6 +1,5 @@
 package com.example.mvp.foodie;
 
-
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;

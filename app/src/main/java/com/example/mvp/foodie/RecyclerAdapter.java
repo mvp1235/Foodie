@@ -32,36 +32,34 @@ public class RecyclerAdapter extends RecyclerView.Adapter<ViewHolder>{
     public void onBindViewHolder(final ViewHolder holder, int position) {
         Post post = posts.get(position);
 
-        holder.name.setText("Huy Nguyen");
+        holder.name.setText(post.getUser().getFullName());
         Picasso.get().load(post.getUser().getProfileURL()).into(holder.userProfile);
         holder.location.setText(post.getLocation());
         holder.time.setText(post.getTime());
         holder.description.setText(post.getDescription());
-        Picasso.get().load("https://i.ytimg.com/vi/mEBFswpYms4/maxresdefault.jpg").into(holder.postPhoto);
+        Picasso.get().load(post.getPhotoURL()).into(holder.postPhoto);
 
         holder.interestsLL.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //increment or decrement interests count here, as well as toggle heart icons
-                holder.postHeart.setImageResource(R.drawable.heart_filled);
-//                Toast.makeText(context, "Like Clicked", Toast.LENGTH_SHORT).show();
+            //increment or decrement interests count here, as well as toggle heart icons
+            holder.postHeart.setImageResource(R.drawable.heart_filled);
             }
         });
 
         holder.commentsLL.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //Show all comments available for the specific post here
-                holder.postHeart.setImageResource(R.drawable.heart_unfilled);
-//                Toast.makeText(context, "Comments Clicked", Toast.LENGTH_SHORT).show();
+            //Show all comments available for the specific post here
+            holder.postHeart.setImageResource(R.drawable.heart_unfilled);
             }
         });
 
         holder.numGoing.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //increment or decrement interests number for the specific post here
-//                Toast.makeText(context, "Going Clicked", Toast.LENGTH_SHORT).show();
+            //increment or decrement interests number for the specific post here
+
             }
         });
 

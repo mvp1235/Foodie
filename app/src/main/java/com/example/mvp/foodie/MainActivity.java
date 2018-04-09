@@ -12,6 +12,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.AppCompatTextView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -22,6 +23,7 @@ import com.example.mvp.foodie.navigation_drawer.DrawerContract;
 import com.example.mvp.foodie.navigation_drawer.DrawerPresenter;
 import com.example.mvp.foodie.post.NewPostActivity;
 import com.example.mvp.foodie.profile.ProfileActivity;
+import com.google.android.gms.location.places.ui.SupportPlaceAutocompleteFragment;
 import com.google.firebase.auth.FirebaseAuth;
 import com.squareup.picasso.Picasso;
 

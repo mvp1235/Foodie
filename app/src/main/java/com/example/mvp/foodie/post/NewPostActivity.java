@@ -18,6 +18,7 @@ import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.AppCompatEditText;
 import android.support.v7.widget.AppCompatImageView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.Toast;
@@ -25,6 +26,13 @@ import android.widget.Toast;
 import com.example.mvp.foodie.BaseActivity;
 import com.example.mvp.foodie.R;
 import com.example.mvp.foodie.models.Post;
+import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
+import com.google.android.gms.common.GooglePlayServicesRepairableException;
+import com.google.android.gms.common.api.Status;
+import com.google.android.gms.location.places.Place;
+import com.google.android.gms.location.places.ui.PlaceAutocomplete;
+import com.google.android.gms.location.places.ui.PlaceSelectionListener;
+import com.google.android.gms.location.places.ui.SupportPlaceAutocompleteFragment;
 
 public class NewPostActivity extends BaseActivity implements PostContract.View {
 
@@ -32,6 +40,7 @@ public class NewPostActivity extends BaseActivity implements PostContract.View {
     private static final int REQUEST_IMAGE_CAPTURE = 2001;
     private static final int REQUEST_ALL = 2002;
     private static final int REQUEST_WRITE_EXTERNAL = 2003;
+    private static final int PLACE_AUTOCOMPLETE_REQUEST_CODE = 2004;
 
 
     Toolbar toolbar;
@@ -52,6 +61,23 @@ public class NewPostActivity extends BaseActivity implements PostContract.View {
 
         initViews();
         setUpListeners();
+
+        SupportPlaceAutocompleteFragment autocompleteFragment = (SupportPlaceAutocompleteFragment)
+                getSupportFragmentManager().findFragmentById(R.id.place_autocomplete_fragment);
+
+        autocompleteFragment.setOnPlaceSelectedListener(new PlaceSelectionListener() {
+            @Override
+            public void onPlaceSelected(Place place) {
+                // TODO: Get info about the selected place.
+                Log.i("TEST", "Place: " + place.getName());
+            }
+
+            @Override
+            public void onError(Status status) {
+                // TODO: Handle the error.
+                Log.i("TEST", "An error occurred: " + status);
+            }
+        });
 
     }
 
@@ -83,6 +109,24 @@ public class NewPostActivity extends BaseActivity implements PostContract.View {
                 mPrgressDialog.setMessage("Creating post...");
                 mPrgressDialog.show();
                 presenter.uploadPost(NewPostActivity.this, postImage, descriptionET.getText().toString(), locationET.getText().toString(), getmAuth().getCurrentUser().getUid());
+            }
+        });
+
+        locationET.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                try {
+                    Intent intent =
+                            new PlaceAutocomplete.IntentBuilder(PlaceAutocomplete.MODE_OVERLAY)
+                                    .build(NewPostActivity.this);
+                    startActivityForResult(intent, PLACE_AUTOCOMPLETE_REQUEST_CODE);
+                } catch (GooglePlayServicesRepairableException e) {
+                    // TODO: Handle the error.
+                    Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
+                } catch (GooglePlayServicesNotAvailableException e) {
+                    // TODO: Handle the error.
+                    Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
+                }
             }
         });
     }
@@ -122,6 +166,17 @@ public class NewPostActivity extends BaseActivity implements PostContract.View {
             Uri imageUri = data.getData();
             postImage.setImageURI(imageUri);
             photoActionDialog.hide();
+        } else if (requestCode == PLACE_AUTOCOMPLETE_REQUEST_CODE) {
+            if (resultCode == RESULT_OK) {
+                Place place = PlaceAutocomplete.getPlace(this, data);
+                locationET.setText(place.getName());
+
+            } else if (resultCode == PlaceAutocomplete.RESULT_ERROR) {
+                Status status = PlaceAutocomplete.getStatus(this, data);
+                // TODO: Handle the error.
+                Toast.makeText(this, status.getStatusMessage(),Toast.LENGTH_SHORT).show();
+
+            }
         }
     }
 

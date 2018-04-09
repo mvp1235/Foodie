@@ -12,6 +12,8 @@ public class Post {
     private ArrayList<String> interestIDs;
     private ArrayList<String> goingIDs;
 
+    public Post(){};
+
     public Post(String postID) {
         this.postID = postID;
         createdTime = Calendar.getInstance().getTimeInMillis();
