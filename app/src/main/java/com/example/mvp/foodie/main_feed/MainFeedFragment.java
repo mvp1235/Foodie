@@ -1,4 +1,4 @@
-package com.example.mvp.foodie;
+package com.example.mvp.foodie.main_feed;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -10,6 +10,10 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
+
+import com.example.mvp.foodie.R;
+import com.example.mvp.foodie.RecyclerAdapter;
 import com.example.mvp.foodie.models.Post;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -20,15 +24,14 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainFeedFragment extends Fragment {
+public class MainFeedFragment extends Fragment implements MainFeedContract.View {
 
-    DatabaseReference databaseReference;
+    private MainFeedContract.Presenter presenter;
     RecyclerView recyclerView;
-    List<Post> posts;
-
 
     public MainFeedFragment() {
         // Required empty public constructor
+
     }
 
 
@@ -40,31 +43,21 @@ public class MainFeedFragment extends Fragment {
 
         recyclerView = view.findViewById(R.id.recyclerView_id);
 
-        posts = new ArrayList<>();
 
-        databaseReference = FirebaseDatabase.getInstance().getReference();
-        databaseReference.child("Posts").addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                loadAllPosts(dataSnapshot);
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
+        presenter = new MainFeedPresenter(this);
+        presenter.loadPosts();
         
         return view;
     }
 
-    private void loadAllPosts(DataSnapshot dataSnapshot) {
-        for(DataSnapshot singleSnapshot : dataSnapshot.getChildren()){
-            Post p = singleSnapshot.getValue(Post.class);
-            posts.add(p);
-//            recyclerViewAdapter = new RecyclerViewAdapter(MainActivity.this, allTask);
-//            recyclerView.setAdapter(recyclerViewAdapter);
-        }
+
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+    }
+
+    @Override
+    public void onPostsLoadedSuccess(List<Post> posts) {
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
         recyclerView.setLayoutManager(linearLayoutManager);
 
@@ -77,10 +70,8 @@ public class MainFeedFragment extends Fragment {
         recyclerView.addItemDecoration(mDividerItemDecoration);
     }
 
-
     @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
+    public void onPostsLoadedFailure(String error) {
+        Toast.makeText(getContext(), error, Toast.LENGTH_SHORT).show();
     }
-
 }

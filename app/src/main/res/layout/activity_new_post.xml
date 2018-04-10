@@ -1,95 +1,103 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".post.NewPostActivity">
 
-    <fragment
-        android:id="@+id/place_autocomplete_fragment"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:name="com.google.android.gms.location.places.ui.SupportPlaceAutocompleteFragment"/>
-
-    <android.support.design.widget.AppBarLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/new_post_toolbar_layout"
-        android:theme="@style/AppTheme.AppBarOverlay">
-
-        <android.support.v7.widget.Toolbar
-            android:id="@+id/new_post_toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:background="?attr/colorPrimary"
-            app:popupTheme="@style/AppTheme.PopupOverlay" />
-
-    </android.support.design.widget.AppBarLayout>
-
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginTop="50dp"
-        android:padding="30dp"
-        android:layout_below="@+id/new_post_toolbar_layout">
+        android:layout_height="wrap_content">
 
-        <android.support.v7.widget.AppCompatImageView
-            android:layout_width="150dp"
-            android:layout_height="150dp"
-            android:id="@+id/newPostPhoto_id"
-            android:layout_centerHorizontal="true"
-            android:src="@drawable/camera"
-            android:contentDescription="@string/selectPostPhoto" />
-
-
-
-        <android.support.design.widget.TextInputLayout
+        <fragment
+            android:id="@+id/place_autocomplete_fragment"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/descriptionBlock_id"
-            android:layout_below="@+id/newPostPhoto_id">
+            android:name="com.google.android.gms.location.places.ui.SupportPlaceAutocompleteFragment"/>
 
-            <android.support.v7.widget.AppCompatEditText
-                android:layout_height="200dp"
+        <android.support.design.widget.AppBarLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/new_post_toolbar_layout"
+            android:theme="@style/AppTheme.AppBarOverlay">
+
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/new_post_toolbar"
                 android:layout_width="match_parent"
-                android:id="@+id/description_id"
-                android:hint="@string/description"
-                android:inputType="textMultiLine" />
+                android:layout_height="?attr/actionBarSize"
+                android:background="?attr/colorPrimary"
+                app:popupTheme="@style/AppTheme.PopupOverlay" />
 
-        </android.support.design.widget.TextInputLayout>
+        </android.support.design.widget.AppBarLayout>
 
-        <android.support.design.widget.TextInputLayout
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/locationBlock_id"
-            android:layout_below="@+id/descriptionBlock_id">
+            android:layout_height="match_parent"
+            android:layout_marginTop="50dp"
+            android:padding="20dp"
+            android:layout_below="@+id/new_post_toolbar_layout">
 
-            <android.support.v7.widget.AppCompatEditText
+            <android.support.v7.widget.AppCompatImageView
+                android:id="@+id/newPostPhoto_id"
+                android:layout_width="match_parent"
+                android:layout_height="300dp"
+                android:layout_centerHorizontal="true"
+                android:contentDescription="@string/selectPostPhoto"
+                android:src="@drawable/camera" />
+
+
+
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:id="@+id/descriptionBlock_id"
+                android:layout_below="@+id/newPostPhoto_id">
+
+                <android.support.v7.widget.AppCompatEditText
+                    android:layout_height="200dp"
+                    android:layout_width="match_parent"
+                    android:id="@+id/description_id"
+                    android:hint="@string/description"
+                    android:inputType="textMultiLine" />
+
+            </android.support.design.widget.TextInputLayout>
+
+            <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
-                android:id="@+id/location_id"
-                android:hint="@string/location"
-                android:focusable="false"
-                android:inputType="text" />
+                android:layout_height="wrap_content"
+                android:id="@+id/locationBlock_id"
+                android:layout_below="@+id/descriptionBlock_id">
 
-        </android.support.design.widget.TextInputLayout>
+                <android.support.v7.widget.AppCompatEditText
+                    android:layout_height="wrap_content"
+                    android:layout_width="match_parent"
+                    android:id="@+id/location_id"
+                    android:hint="@string/location"
+                    android:focusable="false"
+                    android:inputType="text" />
+
+            </android.support.design.widget.TextInputLayout>
 
 
-        <android.support.v7.widget.AppCompatButton
-            android:id="@+id/postBtn_id"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:layout_marginTop="8dp"
-            android:background="@drawable/green_rounded_button"
-            android:text="@string/post"
-            android:layout_alignParentBottom="true"
-            android:textColor="@android:color/white" />
+            <android.support.v7.widget.AppCompatButton
+                android:id="@+id/postBtn_id"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_marginTop="8dp"
+                android:background="@drawable/green_rounded_button"
+                android:text="@string/post"
+                android:layout_alignParentBottom="true"
+                android:layout_below="@+id/locationBlock_id"
+                android:textColor="@android:color/white" />
+
+        </RelativeLayout>
+
 
     </RelativeLayout>
 
 
-
-</RelativeLayout>
+</ScrollView>

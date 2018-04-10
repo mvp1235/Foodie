@@ -39,6 +39,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<ViewHolder>{
         holder.description.setText(post.getDescription());
         Picasso.get().load(post.getPhotoURL()).into(holder.postPhoto);
 
+
         holder.interestsLL.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

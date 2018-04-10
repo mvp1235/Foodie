@@ -64,7 +64,6 @@ public class NewPostActivity extends BaseActivity implements PostContract.View {
         initViews();
         setUpListeners();
 
-
     }
 
     private void initViews() {

@@ -12,18 +12,17 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.AppCompatTextView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
+import com.example.mvp.foodie.main_feed.MainFeedFragment;
 import com.example.mvp.foodie.models.User;
 import com.example.mvp.foodie.navigation_drawer.DrawerContract;
 import com.example.mvp.foodie.navigation_drawer.DrawerPresenter;
 import com.example.mvp.foodie.post.NewPostActivity;
 import com.example.mvp.foodie.profile.ProfileActivity;
-import com.google.android.gms.location.places.ui.SupportPlaceAutocompleteFragment;
 import com.google.firebase.auth.FirebaseAuth;
 import com.squareup.picasso.Picasso;
 
@@ -207,18 +206,23 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     @Override
     public void onLoadDataSuccess(User user) {
         //Customize navigation drawer header with user's information
-        View headerView = navigationView.getHeaderView(0);
-        de.hdodenhof.circleimageview.CircleImageView userProfilePhoto = headerView.findViewById(R.id.userProfilePhoto_id);
-        AppCompatTextView userFullName = headerView.findViewById(R.id.userFullName_id);
-        AppCompatTextView userEmail = headerView.findViewById(R.id.userEmail_id);
+        if (user != null) {
+            View headerView = navigationView.getHeaderView(0);
+            de.hdodenhof.circleimageview.CircleImageView userProfilePhoto = headerView.findViewById(R.id.userProfilePhoto_id);
+            AppCompatTextView userFullName = headerView.findViewById(R.id.userFullName_id);
+            AppCompatTextView userEmail = headerView.findViewById(R.id.userEmail_id);
 
-        userEmail.setText(user.getEmail());
-        userFullName.setText(user.getFullName());
+            userEmail.setText(user.getEmail());
+            userFullName.setText(user.getFullName());
 
-        if (user.getProfileURL() != null)
-            Picasso.get().load(user.getProfileURL()).into(userProfilePhoto);
-        else
-            Picasso.get().load("http://www.personalbrandingblog.com/wp-content/uploads/2017/08/blank-profile-picture-973460_640-300x300.png").into(userProfilePhoto);
+            if (user.getProfileURL() != null)
+                Picasso.get().load(user.getProfileURL()).into(userProfilePhoto);
+            else
+                Picasso.get().load("http://www.personalbrandingblog.com/wp-content/uploads/2017/08/blank-profile-picture-973460_640-300x300.png").into(userProfilePhoto);
+        } else {
+            //Problems on database, user cannot be found, back to login page
+            finish();
+        }
     }
 
     @Override
