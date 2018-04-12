@@ -6,14 +6,14 @@ import android.widget.LinearLayout;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class ViewHolder extends RecyclerView.ViewHolder{
+public class PostViewHolder extends RecyclerView.ViewHolder{
 
     public android.support.v7.widget.AppCompatTextView name, location, time, description, numGoing, numInterests, numComments;
     public android.support.v7.widget.AppCompatImageView postPhoto, postHeart;
     public CircleImageView userProfile;
     public LinearLayout interestsLL, commentsLL, goingLL;
 
-    public ViewHolder(View itemView) {
+    public PostViewHolder(View itemView) {
         super(itemView);
 
         userProfile = itemView.findViewById(R.id.userProfilePhoto_id);

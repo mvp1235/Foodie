@@ -11,25 +11,25 @@ import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
-public class RecyclerAdapter extends RecyclerView.Adapter<ViewHolder>{
+public class PostRecyclerAdapter extends RecyclerView.Adapter<PostViewHolder>{
 
     private Context context;
     private List<Post> posts;
 
-    public RecyclerAdapter(Context context, List<Post> posts) {
+    public PostRecyclerAdapter(Context context, List<Post> posts) {
         this.context = context;
         this.posts = posts;
     }
 
     @Override
-    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public PostViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.feed_item_layout, parent, false);
 
-        return new ViewHolder(view);
+        return new PostViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(final ViewHolder holder, int position) {
+    public void onBindViewHolder(final PostViewHolder holder, int position) {
         Post post = posts.get(position);
 
         holder.name.setText(post.getUser().getFullName());
