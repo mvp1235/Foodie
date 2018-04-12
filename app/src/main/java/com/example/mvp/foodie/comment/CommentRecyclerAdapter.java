@@ -1,4 +1,4 @@
-package com.example.mvp.foodie.signin;
+package com.example.mvp.foodie.comment;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
@@ -6,9 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.example.mvp.foodie.CommentViewHolder;
 import com.example.mvp.foodie.R;
-import com.example.mvp.foodie.PostViewHolder;
 import com.example.mvp.foodie.models.Comment;
 import com.squareup.picasso.Picasso;
 

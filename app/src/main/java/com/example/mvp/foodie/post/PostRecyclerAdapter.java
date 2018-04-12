@@ -1,11 +1,14 @@
-package com.example.mvp.foodie;
+package com.example.mvp.foodie.post;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.example.mvp.foodie.R;
+import com.example.mvp.foodie.comment.PostCommentsActivity;
 import com.example.mvp.foodie.models.Post;
 import com.squareup.picasso.Picasso;
 
@@ -53,6 +56,9 @@ public class PostRecyclerAdapter extends RecyclerView.Adapter<PostViewHolder>{
             public void onClick(View v) {
             //Show all comments available for the specific post here
             holder.postHeart.setImageResource(R.drawable.heart_unfilled);
+
+            Intent intent = new Intent(context, PostCommentsActivity.class);
+            context.startActivity(intent);
             }
         });
 

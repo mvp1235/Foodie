@@ -20,7 +20,7 @@
         android:theme="@style/AppTheme">
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyASOssdMNKGno25UXyZFuLZV0KRGCc8qDM"/>
+            android:value="AIzaSyASOssdMNKGno25UXyZFuLZV0KRGCc8qDM" />
 
         <activity android:name=".signin.SignInActivity">
             <intent-filter android:label="@string/app_name">
@@ -34,10 +34,11 @@
         <activity android:name=".MainActivity" />
         <activity
             android:name=".profile.EditProfileActivity"
-            android:label="@string/editProfile"/>
+            android:label="@string/editProfile" />
         <activity
             android:name=".post.NewPostActivity"
-            android:label="@string/newPost"/>
+            android:label="@string/newPost" />
+        <activity android:name=".comment.PostCommentsActivity" />
     </application>
 
 </manifest>

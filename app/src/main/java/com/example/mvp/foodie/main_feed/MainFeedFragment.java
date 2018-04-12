@@ -12,7 +12,7 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.example.mvp.foodie.R;
-import com.example.mvp.foodie.PostRecyclerAdapter;
+import com.example.mvp.foodie.post.PostRecyclerAdapter;
 import com.example.mvp.foodie.models.Post;
 
 import java.util.List;

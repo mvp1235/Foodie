@@ -1,8 +1,10 @@
-package com.example.mvp.foodie;
+package com.example.mvp.foodie.comment;
 
 import android.support.v7.widget.AppCompatTextView;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+
+import com.example.mvp.foodie.R;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
