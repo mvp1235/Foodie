@@ -1,5 +1,8 @@
 package com.example.mvp.foodie.models;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class User {
     private String uID;
     private String firstName;
@@ -8,16 +11,15 @@ public class User {
     private String email;
     private int postCount;
     private int friendCount;
+    private List<String> postIDs;
+    private List<String> commentsIDs;
 
-    public User(){};
-
-    public User(String uID) {
-        this.uID = uID;
-        firstName = "Joe";
-        lastName = "Nguyen";
+    public User(){
         postCount = 0;
         friendCount = 0;
-    }
+        postIDs = new ArrayList<>();
+        commentsIDs = new ArrayList<>();
+    };
 
     public String getuID() {
         return uID;
@@ -93,5 +95,21 @@ public class User {
 
     public String getFullName() {
         return firstName + " " + lastName;
+    }
+
+    public List<String> getPostIDs() {
+        return postIDs;
+    }
+
+    public void setPostIDs(List<String> postIDs) {
+        this.postIDs = postIDs;
+    }
+
+    public List<String> getCommentsIDs() {
+        return commentsIDs;
+    }
+
+    public void setCommentsIDs(List<String> commentsIDs) {
+        this.commentsIDs = commentsIDs;
     }
 }

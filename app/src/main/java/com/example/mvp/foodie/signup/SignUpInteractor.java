@@ -43,7 +43,8 @@ public class SignUpInteractor implements SignUpContract.Interactor {
 
     @Override
     public void performUserDataStoring(Activity activity, String firstName, String lastName, String emailAddress) {
-        User user = new User(mAuth.getCurrentUser().getUid());
+        User user = new User();
+        user.setuID(mAuth.getCurrentUser().getUid());
         user.setFirstName(firstName);
         user.setLastName(lastName);
         user.setEmail(emailAddress);
