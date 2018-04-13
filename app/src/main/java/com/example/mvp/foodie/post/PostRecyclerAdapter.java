@@ -33,7 +33,7 @@ public class PostRecyclerAdapter extends RecyclerView.Adapter<PostViewHolder>{
 
     @Override
     public void onBindViewHolder(final PostViewHolder holder, int position) {
-        Post post = posts.get(position);
+        final Post post = posts.get(position);
 
         holder.name.setText(post.getUser().getFullName());
         Picasso.get().load(post.getUser().getProfileURL()).into(holder.userProfile);
@@ -58,6 +58,7 @@ public class PostRecyclerAdapter extends RecyclerView.Adapter<PostViewHolder>{
             holder.postHeart.setImageResource(R.drawable.heart_unfilled);
 
             Intent intent = new Intent(context, PostCommentsActivity.class);
+            intent.putExtra("POST_ID", post.getPostID());
             context.startActivity(intent);
             }
         });

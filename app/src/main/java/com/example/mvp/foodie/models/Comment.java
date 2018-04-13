@@ -1,12 +1,16 @@
 package com.example.mvp.foodie.models;
 
+import java.util.Calendar;
+
 public class Comment {
     private String cID;
     private String content;
     private long createdTime;
     private User user;
 
-    public Comment() {}
+    public Comment() {
+        createdTime = Calendar.getInstance().getTimeInMillis();
+    }
 
     public String getcID() {
         return cID;

@@ -83,10 +83,11 @@ public class PostInteractor implements PostContract.Interactor {
                 Uri downloadUrl = taskSnapshot.getDownloadUrl();
 
 
-                final Post post = new Post(newPostID);
+                final Post post = new Post();
                 post.setDescription(description);
                 post.setLocation(location);
                 post.setPhotoURL(downloadUrl.toString());
+                post.setPostID(newPostID);
 
                 activity.getmDatabase().child("Users").child(userID).addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override

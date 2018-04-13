@@ -8,16 +8,14 @@ public class Post {
     private String description, time, photoURL, location;
     private long createdTime;
     private User user;
-    private ArrayList<String> commentIDs;
+    private ArrayList<Comment> comments;
     private ArrayList<String> interestIDs;
     private ArrayList<String> goingIDs;
 
-    public Post(){};
-
-    public Post(String postID) {
+    public Post(){
         this.postID = postID;
         createdTime = Calendar.getInstance().getTimeInMillis();
-        commentIDs = new ArrayList<>();
+        comments = new ArrayList<>();
         interestIDs = new ArrayList<>();
         goingIDs = new ArrayList<>();
 
@@ -27,7 +25,7 @@ public class Post {
         location = "San Jose, CA";
 
         this.user = new User();
-    }
+    };
 
     public String getLocation() {
         return location;
@@ -61,21 +59,21 @@ public class Post {
         this.photoURL = photoURL;
     }
 
-    public ArrayList<String> getCommentIDs() {
-        return commentIDs;
+    public ArrayList<Comment> getComments() {
+        return comments;
     }
 
-    public void setCommentIDs(ArrayList<String> commentIDs) {
-        this.commentIDs = commentIDs;
+    public void setComments(ArrayList<Comment> comments) {
+        this.comments = comments;
     }
 
-    public void addCommentID(String commentID) {
-        this.commentIDs.add(commentID);
+    public void addComment(Comment comment) {
+        this.comments.add(comment);
     }
 
-    public void removeCommentID(String commendID) {
-        if (this.commentIDs.contains(commendID))
-            this.commentIDs.remove(commendID);
+    public void removeComment(String commend) {
+        if (this.comments.contains(commend))
+            this.comments.remove(commend);
     }
 
     public ArrayList<String> getInterestIDs() {

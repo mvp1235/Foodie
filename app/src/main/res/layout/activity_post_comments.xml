@@ -29,9 +29,9 @@
             android:id="@+id/commentBlock_id">
 
             <android.support.v7.widget.AppCompatEditText
-                android:layout_height="wrap_content"
+                android:id="@+id/commentText_id"
                 android:layout_width="match_parent"
-                android:id="@+id/firstNameText_id"
+                android:layout_height="wrap_content"
                 android:hint="@string/add_a_new_comment"
                 android:inputType="textMultiLine" />
 
