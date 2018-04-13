@@ -75,8 +75,9 @@ public class PostInteractor implements PostContract.Interactor {
         bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
         byte[] data = baos.toByteArray();
 
-        final DatabaseReference databaseReference = activity.getmDatabase().child("Posts");
-        final String newPostID = databaseReference.push().getKey();
+        final DatabaseReference postRef = activity.getmDatabase().child("Posts");
+        final DatabaseReference userRef = activity.getmDatabase().child("Users");
+        final String newPostID = postRef.push().getKey();
 
         StorageReference postPhotosRef = storageReference.child("postPhotos").child(newPostID);
         UploadTask uploadTask = postPhotosRef.putBytes(data);
@@ -92,19 +93,24 @@ public class PostInteractor implements PostContract.Interactor {
                 // taskSnapshot.getMetadata() contains file metadata such as size, content-type, and download URL.
                 Uri downloadUrl = taskSnapshot.getDownloadUrl();
 
-
                 final Post post = new Post();
                 post.setDescription(description);
                 post.setLocation(location);
                 post.setPhotoURL(downloadUrl.toString());
                 post.setPostID(newPostID);
 
-                activity.getmDatabase().child("Users").child(userID).addListenerForSingleValueEvent(new ValueEventListener() {
+                userRef.child(userID).addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         User u = dataSnapshot.getValue(User.class);
+
+                        //Update user database
+                        u.incrementPostCount();
+                        userRef.child(userID).setValue(u);
+
+                        //Update post database
                         post.setUser(u);
-                        databaseReference.child(newPostID).setValue(post);
+                        postRef.child(newPostID).setValue(post);
                         postListener.onPostSuccess(post);
                     }
 

@@ -246,7 +246,6 @@ public class ProfileActivity extends BaseActivity implements ProfileContract.Vie
         //Set action upon clicking on menu items
         switch (id) {
             case R.id.profile_edit:
-//                Toast.makeText(getApplicationContext(), "Editing Profile", Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(this, EditProfileActivity.class);
                 intent.putExtra(FULL_NAME, name.getText().toString());
                 intent.putExtra(EMAIL, email.getText().toString());

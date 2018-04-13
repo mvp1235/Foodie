@@ -80,7 +80,8 @@ public class User {
     }
 
     public void decrementPostCount() {
-        postCount--;
+        if (postCount > 0)
+            postCount--;
     }
 
     public void incrementFriendCount() {
@@ -101,6 +102,16 @@ public class User {
 
     public void setPostIDs(List<String> postIDs) {
         this.postIDs = postIDs;
+    }
+
+    public void addPostID(String postID) {
+        if (!postIDs.contains(postID))
+            postIDs.add(postID);
+    }
+
+    public void deletePostID(String postID) {
+        if(postIDs.contains(postID))
+            postIDs.remove(postID);
     }
 
 }

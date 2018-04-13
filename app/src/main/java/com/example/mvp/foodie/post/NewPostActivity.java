@@ -92,7 +92,7 @@ public class NewPostActivity extends BaseActivity implements PostContract.View {
         postBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mPrgressDialog.setMessage("Editi post...");
+                mPrgressDialog.setMessage("Creating post...");
                 mPrgressDialog.show();
                 presenter.uploadPost(NewPostActivity.this, postImage, descriptionET.getText().toString(), locationET.getText().toString(), getmAuth().getCurrentUser().getUid());
             }
