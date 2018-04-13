@@ -34,6 +34,7 @@ public class PostRecyclerAdapter extends RecyclerView.Adapter<PostViewHolder>{
     @Override
     public void onBindViewHolder(final PostViewHolder holder, int position) {
         final Post post = posts.get(position);
+        post.updatePostDuration();
 
         holder.name.setText(post.getUser().getFullName());
         Picasso.get().load(post.getUser().getProfileURL()).into(holder.userProfile);
@@ -41,6 +42,9 @@ public class PostRecyclerAdapter extends RecyclerView.Adapter<PostViewHolder>{
         holder.time.setText(post.getTime());
         holder.description.setText(post.getDescription());
         Picasso.get().load(post.getPhotoURL()).into(holder.postPhoto);
+        holder.numComments.setText(post.getCommentCount());
+        holder.numGoing.setText(post.getGoingCount());
+        holder.numInterests.setText(post.getInterestCount());
 
 
         holder.interestsLL.setOnClickListener(new View.OnClickListener() {

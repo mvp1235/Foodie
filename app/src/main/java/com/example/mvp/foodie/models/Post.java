@@ -19,13 +19,58 @@ public class Post {
         interestIDs = new ArrayList<>();
         goingIDs = new ArrayList<>();
 
-        description = "Best restaurant to go to during summer";
-        time = "15m";
+        time = "Just now";
         photoURL = "https://i.ytimg.com/vi/mEBFswpYms4/maxresdefault.jpg";
         location = "San Jose, CA";
 
         this.user = new User();
     };
+
+    public void updatePostDuration() {
+        long currentTime = Calendar.getInstance().getTimeInMillis();
+        long timeDifference = currentTime - createdTime;
+
+        //number of difference in seconds
+        timeDifference /= 1000;
+
+        int secondsInAYear = 31536000;
+        int secondsInAMonth = 2592000;
+        int secondsInADay = 86400;
+        int secondsInAnHour = 3600;
+        int secondsInAMinute = 60;
+
+        long numYears = timeDifference / secondsInAYear;
+        long numMonths = timeDifference / secondsInAMonth;
+        long numDays = timeDifference / secondsInADay;
+        long numHours = timeDifference / secondsInAnHour;
+        long numMinutes = timeDifference / secondsInAMinute;
+
+        if (numYears >= 1) {
+            time = numYears + " yr ago";
+        } else if (numMonths >= 1) {
+            time = numMonths + " mo ago";
+        } else if (numDays >= 1) {
+            time = numDays + " day ago";
+        } else if (numHours >= 1) {
+            time = numHours + " hr ago";
+        } else if (numMinutes >= 1) {
+            time = numMinutes + " min ago";
+        } else {
+            time = "Just now";
+        }
+    }
+
+    public String getCommentCount() {
+        return comments.size() + " Comments";
+    }
+
+    public String getInterestCount() {
+        return interestIDs.size() + " Interests";
+    }
+
+    public String getGoingCount() {
+        return goingIDs.size() + " Going";
+    }
 
     public String getLocation() {
         return location;
@@ -71,9 +116,9 @@ public class Post {
         this.comments.add(comment);
     }
 
-    public void removeComment(String commend) {
-        if (this.comments.contains(commend))
-            this.comments.remove(commend);
+    public void removeComment(Comment comment) {
+        if (this.comments.contains(comment))
+            this.comments.remove(comment);
     }
 
     public ArrayList<String> getInterestIDs() {
