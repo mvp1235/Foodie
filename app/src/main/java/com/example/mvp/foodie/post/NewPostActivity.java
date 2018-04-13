@@ -103,7 +103,7 @@ public class NewPostActivity extends BaseActivity implements PostContract.View {
         locationET.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                presenter.getLocation(NewPostActivity.this);
+                presenter.getLocation(NewPostActivity.this, locationET.getText().toString());
             }
         });
     }

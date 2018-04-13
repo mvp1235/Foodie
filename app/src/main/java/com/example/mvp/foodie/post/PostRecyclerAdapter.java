@@ -5,8 +5,10 @@ import android.content.Intent;
 import android.support.v7.widget.AppCompatImageView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.PopupMenu;
 import android.widget.Toast;
 
 import com.example.mvp.foodie.BaseActivity;
@@ -85,11 +87,44 @@ public class PostRecyclerAdapter extends RecyclerView.Adapter<PostViewHolder>{
             }
         });
 
+        holder.menuBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                PopupMenu popupMenu = new PopupMenu(context, holder.menuBtn);
+                popupMenu.getMenuInflater().inflate(R.menu.post_option_menu_items, popupMenu.getMenu());
+
+                popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                    @Override
+                    public boolean onMenuItemClick(MenuItem item) {
+                        if (item.getTitle().toString().equalsIgnoreCase("Edit")) {
+
+
+                            Toast.makeText(context, "Edit", Toast.LENGTH_SHORT).show();
+                        } else {
+
+
+                            Toast.makeText(context, "Delete", Toast.LENGTH_SHORT).show();
+                        }
+                        return false;
+                    }
+                });
+                popupMenu.show();
+            }
+        });
+
     }
 
     @Override
     public int getItemCount() {
         return posts.size();
+    }
+
+    private void editPost() {
+
+    }
+
+    private void deletePost() {
+
     }
 
     private void userLikedPost(final AppCompatImageView heart, final String postID, final String userID) {

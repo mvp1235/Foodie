@@ -18,8 +18,8 @@ public class PostPresenter implements PostContract.Presenter, PostContract.onPos
     }
 
     @Override
-    public void getLocation(BaseActivity activity) {
-        interactor.performGetLocation(activity);
+    public void getLocation(BaseActivity activity, String providedLocation) {
+        interactor.performGetLocation(activity, providedLocation);
     }
 
     @Override

@@ -15,12 +15,12 @@ public interface PostContract {
     }
 
     interface Presenter {
-        void getLocation(BaseActivity activity);
+        void getLocation(BaseActivity activity, String providedLocation);
         void uploadPost(BaseActivity activity, ImageView imageView, String description, String location, String userID);
     }
 
     interface Interactor {
-        void performGetLocation(BaseActivity activity);
+        void performGetLocation(BaseActivity activity, String providedLocation);
         void uploadPostToFirebaseStorage(BaseActivity activity, ImageView imageView, String description, String location, String userID);
     }
 

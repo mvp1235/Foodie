@@ -39,11 +39,12 @@ public class PostInteractor implements PostContract.Interactor {
     }
 
     @Override
-    public void performGetLocation(BaseActivity activity) {
+    public void performGetLocation(BaseActivity activity, String providedLocation) {
         try {
             Intent intent =
                     new PlaceAutocomplete.IntentBuilder(PlaceAutocomplete.MODE_OVERLAY)
                             .build(activity);
+            intent.putExtra("initial_query", providedLocation);
             locationListener.onLocationPickedSuccess(intent);
         } catch (GooglePlayServicesRepairableException e) {
             // TODO: Handle the error.

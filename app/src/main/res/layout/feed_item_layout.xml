@@ -45,13 +45,28 @@
 
         </LinearLayout>
 
-        <android.support.v7.widget.AppCompatTextView
-            android:id="@+id/postTime_id"
+        <LinearLayout
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="2"
             android:gravity="center"
-            android:text="6m" />
+            android:orientation="vertical">
+
+            <android.support.v7.widget.AppCompatImageButton
+                android:id="@+id/postMenu_id"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                style="?android:attr/actionOverflowButtonStyle"/>
+
+            <android.support.v7.widget.AppCompatTextView
+                android:id="@+id/postTime_id"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="6m" />
+        </LinearLayout>
 
     </LinearLayout>
 

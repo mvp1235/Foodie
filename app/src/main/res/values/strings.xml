@@ -67,6 +67,7 @@
     <string name="location">Location</string>
     <string name="newPost">New Post</string>
     <string name="add_a_new_comment">Add a new comment</string>
+    <string name="delete">Delete</string>
 
 
 </resources>

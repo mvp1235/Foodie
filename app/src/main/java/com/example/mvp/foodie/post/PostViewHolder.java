@@ -1,6 +1,7 @@
 package com.example.mvp.foodie.post;
 
 import android.content.Context;
+import android.support.v7.widget.AppCompatImageButton;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,6 +21,7 @@ public class PostViewHolder extends RecyclerView.ViewHolder{
 
     public android.support.v7.widget.AppCompatTextView name, location, time, description, numGoing, numInterests, numComments;
     public android.support.v7.widget.AppCompatImageView postPhoto, postHeart;
+    public AppCompatImageButton menuBtn;
     public CircleImageView userProfile;
     public LinearLayout interestsLL, commentsLL, goingLL;
 
@@ -31,6 +33,7 @@ public class PostViewHolder extends RecyclerView.ViewHolder{
         location = itemView.findViewById(R.id.postLocation_id);
         time = itemView.findViewById(R.id.postTime_id);
         description = itemView.findViewById(R.id.postDescription_id);
+        menuBtn = itemView.findViewById(R.id.postMenu_id);
 
         numInterests = itemView.findViewById(R.id.postNumInterest_id);
         numGoing = itemView.findViewById(R.id.postNumGoing_id);
