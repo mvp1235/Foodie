@@ -109,7 +109,7 @@ public class PostInteractor implements PostContract.Interactor {
                         userRef.child(userID).setValue(u);
 
                         //Update post database
-                        post.setUser(u);
+                        post.setUserID(u.getuID());
                         postRef.child(newPostID).setValue(post);
                         postListener.onPostSuccess(post);
                     }
@@ -160,22 +160,9 @@ public class PostInteractor implements PostContract.Interactor {
                         post.setDescription(description);
                         post.setLocation(location);
                         post.setPhotoURL(downloadUrl.toString());
-                        post.setPostID(postID);
 
-                        activity.getmDatabase().child("Users").child(userID).addListenerForSingleValueEvent(new ValueEventListener() {
-                            @Override
-                            public void onDataChange(DataSnapshot dataSnapshot) {
-                                User u = dataSnapshot.getValue(User.class);
-                                post.setUser(u);
-                                databaseReference.child(postID).setValue(post);
-                                editListener.onEditSuccess(post);
-                            }
-
-                            @Override
-                            public void onCancelled(DatabaseError databaseError) {
-                                editListener.onEditFailure(databaseError.getMessage());
-                            }
-                        });
+                        databaseReference.child(postID).setValue(post);
+                        editListener.onEditSuccess(post);
                     }
 
                     @Override

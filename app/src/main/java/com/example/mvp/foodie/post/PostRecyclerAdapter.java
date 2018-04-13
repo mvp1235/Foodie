@@ -15,6 +15,7 @@ import com.example.mvp.foodie.BaseActivity;
 import com.example.mvp.foodie.R;
 import com.example.mvp.foodie.comment.PostCommentsActivity;
 import com.example.mvp.foodie.models.Post;
+import com.example.mvp.foodie.models.User;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -51,12 +52,28 @@ public class PostRecyclerAdapter extends RecyclerView.Adapter<PostViewHolder>{
         return new PostViewHolder(view);
     }
 
+    private void setUserInfo(String userID, final PostViewHolder holder) {
+        DatabaseReference userRef = ((BaseActivity)context).getmDatabase().child("Users");
+        userRef.child(userID).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                User u = dataSnapshot.getValue(User.class);
+                holder.name.setText(u.getFullName());
+                Picasso.get().load(u.getProfileURL()).into(holder.userProfile);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
+
     @Override
     public void onBindViewHolder(final PostViewHolder holder, int position) {
         final Post post = posts.get(position);
 
-        holder.name.setText(post.getUser().getFullName());
-        Picasso.get().load(post.getUser().getProfileURL()).into(holder.userProfile);
+        setUserInfo(post.getUserID(), holder);
         holder.location.setText(post.getLocation());
         holder.time.setText(post.getPostDuration());
         holder.description.setText(post.getDescription());
@@ -97,33 +114,36 @@ public class PostRecyclerAdapter extends RecyclerView.Adapter<PostViewHolder>{
         holder.menuBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                PopupMenu popupMenu = new PopupMenu(context, holder.menuBtn);
-                popupMenu.getMenuInflater().inflate(R.menu.post_option_menu_items, popupMenu.getMenu());
-
-                popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-                    @Override
-                    public boolean onMenuItemClick(MenuItem item) {
-                        if (item.getTitle().toString().equalsIgnoreCase("Edit")) {
-                            Intent intent = new Intent(context, EditPostActivity.class);
-                            intent.putExtra(POST_ID, post.getPostID());
-                            intent.putExtra(USER_ID, post.getUser().getuID());
-                            intent.putExtra(POST_DESCRIPTION, post.getDescription());
-                            intent.putExtra(POST_URL, post.getPhotoURL());
-                            intent.putExtra(POST_LOCATION, post.getLocation());
-                            ((BaseActivity) context).startActivityForResult(intent, REQUEST_EDIT_POST);
-
-                        } else {
-
-
-                            Toast.makeText(context, "Delete", Toast.LENGTH_SHORT).show();
-                        }
-                        return false;
-                    }
-                });
-                popupMenu.show();
+                showPostPopupMenu(post, holder);
             }
         });
 
+    }
+
+    private void showPostPopupMenu(final Post post, PostViewHolder holder) {
+        PopupMenu popupMenu = new PopupMenu(context, holder.menuBtn);
+        popupMenu.getMenuInflater().inflate(R.menu.post_option_menu_items, popupMenu.getMenu());
+
+        popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                if (item.getTitle().toString().equalsIgnoreCase("Edit")) {
+                    Intent intent = new Intent(context, EditPostActivity.class);
+                    intent.putExtra(POST_ID, post.getPostID());
+                    intent.putExtra(USER_ID, post.getUserID());
+                    intent.putExtra(POST_DESCRIPTION, post.getDescription());
+                    intent.putExtra(POST_URL, post.getPhotoURL());
+                    intent.putExtra(POST_LOCATION, post.getLocation());
+                    ((BaseActivity) context).startActivityForResult(intent, REQUEST_EDIT_POST);
+
+                } else {
+                    
+                    Toast.makeText(context, "Delete", Toast.LENGTH_SHORT).show();
+                }
+                return false;
+            }
+        });
+        popupMenu.show();
     }
 
     @Override

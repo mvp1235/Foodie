@@ -13,7 +13,7 @@ public class Post {
     private String postID;
     private String description, photoURL, location;
     private long createdTime;
-    private User user;
+    private String userID;
     private ArrayList<Comment> comments;
     private ArrayList<String> interestIDs;
     private ArrayList<String> goingIDs;
@@ -28,7 +28,6 @@ public class Post {
         photoURL = "https://i.ytimg.com/vi/mEBFswpYms4/maxresdefault.jpg";
         location = "San Jose, CA";
 
-        this.user = new User();
     };
 
     public String getPostDuration() {
@@ -164,11 +163,11 @@ public class Post {
         this.postID = postID;
     }
 
-    public User getUser() {
-        return user;
+    public String getUserID() {
+        return userID;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public void setUserID(String userID) {
+        this.userID = userID;
     }
 }
