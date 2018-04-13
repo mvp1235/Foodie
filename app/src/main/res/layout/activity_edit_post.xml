@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".post.NewPostActivity">
+    tools:context=".post.EditPostActivity">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -20,13 +19,13 @@
         <android.support.design.widget.AppBarLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/new_post_toolbar_layout"
+            android:id="@+id/edit_post_toolbar_layout"
             android:theme="@style/AppTheme.AppBarOverlay">
 
             <android.support.v7.widget.Toolbar
-                android:id="@+id/new_post_toolbar"
+                android:id="@+id/edit_post_toolbar"
                 android:layout_width="match_parent"
-                android:layout_height="?android:attr/actionBarSize"
+                android:layout_height="?attr/actionBarSize"
                 android:background="?attr/colorPrimary"
                 app:popupTheme="@style/AppTheme.PopupOverlay" />
 
@@ -37,10 +36,10 @@
             android:layout_height="match_parent"
             android:layout_marginTop="50dp"
             android:padding="20dp"
-            android:layout_below="@+id/new_post_toolbar_layout">
+            android:layout_below="@+id/edit_post_toolbar_layout">
 
             <android.support.v7.widget.AppCompatImageView
-                android:id="@+id/newPostPhoto_id"
+                android:id="@+id/editPostPhoto_id"
                 android:layout_width="match_parent"
                 android:layout_height="300dp"
                 android:layout_centerHorizontal="true"
@@ -54,7 +53,7 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/descriptionBlock_id"
                 android:hint="@string/description"
-                android:layout_below="@+id/newPostPhoto_id">
+                android:layout_below="@+id/editPostPhoto_id">
 
                 <android.support.v7.widget.AppCompatEditText
                     android:layout_height="200dp"
@@ -82,14 +81,14 @@
 
 
             <android.support.v7.widget.AppCompatButton
-                android:id="@+id/postBtn_id"
+                android:id="@+id/editBtn_id"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentStart="true"
                 android:layout_marginTop="8dp"
                 android:background="@drawable/green_rounded_button"
-                android:text="@string/post"
+                android:text="@string/save"
                 android:layout_alignParentBottom="true"
                 android:layout_below="@+id/locationBlock_id"
                 android:textColor="@android:color/white" />
@@ -98,6 +97,5 @@
 
 
     </RelativeLayout>
-
 
 </ScrollView>

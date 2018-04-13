@@ -68,6 +68,8 @@
     <string name="newPost">New Post</string>
     <string name="add_a_new_comment">Add a new comment</string>
     <string name="delete">Delete</string>
+    <string name="comments">Comments</string>
+    <string name="edit_post">Edit Post</string>
 
 
 </resources>

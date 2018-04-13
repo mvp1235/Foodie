@@ -15,11 +15,6 @@ import com.example.mvp.foodie.signup.SignUpActivity;
 import com.google.firebase.auth.FirebaseUser;
 
 public class SignInActivity extends BaseActivity implements SignInContract.View {
-
-    public static final int CREATE_ACCOUNT_CODE = 100;
-
-    public static final int RESULT_CLOSE_ALL = 9999999;
-
     AppCompatButton facebookLoginBtn, googleLoginBtn, loginBtn, createAccountBtn, forgotPasswordBtn;
     AppCompatEditText usernameET, passwordET;
 

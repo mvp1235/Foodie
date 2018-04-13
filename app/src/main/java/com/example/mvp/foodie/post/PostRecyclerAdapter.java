@@ -23,6 +23,13 @@ import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
+import static com.example.mvp.foodie.UtilHelper.POST_DESCRIPTION;
+import static com.example.mvp.foodie.UtilHelper.POST_ID;
+import static com.example.mvp.foodie.UtilHelper.POST_LOCATION;
+import static com.example.mvp.foodie.UtilHelper.POST_URL;
+import static com.example.mvp.foodie.UtilHelper.REQUEST_EDIT_POST;
+import static com.example.mvp.foodie.UtilHelper.USER_ID;
+
 public class PostRecyclerAdapter extends RecyclerView.Adapter<PostViewHolder>{
 
     private Context context;
@@ -97,9 +104,14 @@ public class PostRecyclerAdapter extends RecyclerView.Adapter<PostViewHolder>{
                     @Override
                     public boolean onMenuItemClick(MenuItem item) {
                         if (item.getTitle().toString().equalsIgnoreCase("Edit")) {
+                            Intent intent = new Intent(context, EditPostActivity.class);
+                            intent.putExtra(POST_ID, post.getPostID());
+                            intent.putExtra(USER_ID, post.getUser().getuID());
+                            intent.putExtra(POST_DESCRIPTION, post.getDescription());
+                            intent.putExtra(POST_URL, post.getPhotoURL());
+                            intent.putExtra(POST_LOCATION, post.getLocation());
+                            ((BaseActivity) context).startActivityForResult(intent, REQUEST_EDIT_POST);
 
-
-                            Toast.makeText(context, "Edit", Toast.LENGTH_SHORT).show();
                         } else {
 
 
@@ -117,14 +129,6 @@ public class PostRecyclerAdapter extends RecyclerView.Adapter<PostViewHolder>{
     @Override
     public int getItemCount() {
         return posts.size();
-    }
-
-    private void editPost() {
-
-    }
-
-    private void deletePost() {
-
     }
 
     private void userLikedPost(final AppCompatImageView heart, final String postID, final String userID) {

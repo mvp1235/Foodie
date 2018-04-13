@@ -26,14 +26,23 @@ import com.google.firebase.storage.UploadTask;
 
 import java.io.ByteArrayOutputStream;
 
+import static com.example.mvp.foodie.UtilHelper.INITIAL_QUERY;
+
 public class PostInteractor implements PostContract.Interactor {
 
     private StorageReference storageReference;
     private PostContract.onPostCreateListener postListener;
     private PostContract.onLocationPickedListener locationListener;
+    private PostContract.onPostEditListener editListener;
 
     public PostInteractor(PostContract.onPostCreateListener postListener, PostContract.onLocationPickedListener locationListener) {
         this.postListener = postListener;
+        this.locationListener = locationListener;
+        storageReference = FirebaseStorage.getInstance().getReference();
+    }
+
+    public PostInteractor(PostContract.onPostEditListener editListener, PostContract.onLocationPickedListener locationListener) {
+        this.editListener = editListener;
         this.locationListener = locationListener;
         storageReference = FirebaseStorage.getInstance().getReference();
     }
@@ -44,7 +53,7 @@ public class PostInteractor implements PostContract.Interactor {
             Intent intent =
                     new PlaceAutocomplete.IntentBuilder(PlaceAutocomplete.MODE_OVERLAY)
                             .build(activity);
-            intent.putExtra("initial_query", providedLocation);
+            intent.putExtra(INITIAL_QUERY, providedLocation);
             locationListener.onLocationPickedSuccess(intent);
         } catch (GooglePlayServicesRepairableException e) {
             // TODO: Handle the error.
@@ -108,6 +117,62 @@ public class PostInteractor implements PostContract.Interactor {
 
             }
         });
+
+    }
+
+    @Override
+    public void editPostOnFirebase(final BaseActivity activity, ImageView imageView, final String description, final String location, final String userID, final String postID) {
+        // Get the data from an ImageView as bytes
+        imageView.setDrawingCacheEnabled(true);
+        imageView.buildDrawingCache();
+        Bitmap bitmap = imageView.getDrawingCache();
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+        byte[] data = baos.toByteArray();
+
+        final DatabaseReference databaseReference = activity.getmDatabase().child("Posts");
+//        final String newPostID = databaseReference.push().getKey();
+
+        StorageReference postPhotosRef = storageReference.child("postPhotos").child(postID);
+        UploadTask uploadTask = postPhotosRef.putBytes(data);
+        uploadTask.addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception exception) {
+                // Handle unsuccessful uploads
+                editListener.onEditFailure(exception.toString());
+            }
+        }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                // taskSnapshot.getMetadata() contains file metadata such as size, content-type, and download URL.
+                Uri downloadUrl = taskSnapshot.getDownloadUrl();
+
+                final Post post = new Post();
+                post.setDescription(description);
+                post.setLocation(location);
+                post.setPhotoURL(downloadUrl.toString());
+                post.setPostID(postID);
+
+                activity.getmDatabase().child("Users").child(userID).addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        User u = dataSnapshot.getValue(User.class);
+                        post.setUser(u);
+                        databaseReference.child(postID).setValue(post);
+                        editListener.onEditSuccess(post);
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+                        editListener.onEditFailure(databaseError.getMessage());
+                    }
+                });
+            }
+        });
+    }
+
+    @Override
+    public void deletePostOnFirebase(BaseActivity activity, String postID) {
 
     }
 

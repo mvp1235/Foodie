@@ -3,6 +3,12 @@ package com.example.mvp.foodie.models;
 import java.util.ArrayList;
 import java.util.Calendar;
 
+import static com.example.mvp.foodie.UtilHelper.SECONDS_IN_DAY;
+import static com.example.mvp.foodie.UtilHelper.SECONDS_IN_HOUR;
+import static com.example.mvp.foodie.UtilHelper.SECONDS_IN_MINUTE;
+import static com.example.mvp.foodie.UtilHelper.SECONDS_IN_MONTH;
+import static com.example.mvp.foodie.UtilHelper.SECONDS_IN_YEAR;
+
 public class Post {
     private String postID;
     private String description, photoURL, location;
@@ -33,17 +39,11 @@ public class Post {
         //number of difference in seconds
         timeDifference /= 1000;
 
-        int secondsInAYear = 31536000;
-        int secondsInAMonth = 2592000;
-        int secondsInADay = 86400;
-        int secondsInAnHour = 3600;
-        int secondsInAMinute = 60;
-
-        long numYears = timeDifference / secondsInAYear;
-        long numMonths = timeDifference / secondsInAMonth;
-        long numDays = timeDifference / secondsInADay;
-        long numHours = timeDifference / secondsInAnHour;
-        long numMinutes = timeDifference / secondsInAMinute;
+        long numYears = timeDifference / SECONDS_IN_YEAR;
+        long numMonths = timeDifference / SECONDS_IN_MONTH;
+        long numDays = timeDifference / SECONDS_IN_DAY;
+        long numHours = timeDifference / SECONDS_IN_HOUR;
+        long numMinutes = timeDifference / SECONDS_IN_MINUTE;
 
         if (numYears >= 1) {
             time = numYears + " yr ago";

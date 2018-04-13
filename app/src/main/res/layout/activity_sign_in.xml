@@ -57,13 +57,13 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/usernameBlock_id"
+            android:hint="@string/username"
             android:layout_alignParentTop="true">
 
             <android.support.v7.widget.AppCompatEditText
                 android:layout_height="wrap_content"
                 android:layout_width="match_parent"
                 android:id="@+id/usernameText_id"
-                android:hint="@string/username"
                 android:drawableLeft="@drawable/account"
                 android:drawableStart="@drawable/account"
                 android:inputType="text" />
@@ -75,6 +75,7 @@
             android:layout_height="wrap_content"
             android:id="@+id/passwordBlock_id"
             android:layout_below="@id/usernameBlock_id"
+            android:hint="@string/password"
             app:passwordToggleEnabled="true">
 
             <android.support.v7.widget.AppCompatEditText
@@ -83,8 +84,7 @@
                 android:id="@+id/passwordText_id"
                 android:drawableLeft="@drawable/password"
                 android:drawableStart="@drawable/password"
-                android:inputType="textPassword"
-                android:hint="@string/password"/>
+                android:inputType="textPassword"/>
 
         </android.support.design.widget.TextInputLayout>
 

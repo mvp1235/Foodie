@@ -14,19 +14,35 @@ public interface PostContract {
         void onPostFailed(String error);
     }
 
+    interface EditView {
+        void onLocationPickedSuccess(Intent intent);
+        void onLocationPickedFailure(String error);
+        void onPostEditSuccess(Post post);
+        void onPostEditFailure(String error);
+    }
+
     interface Presenter {
         void getLocation(BaseActivity activity, String providedLocation);
         void uploadPost(BaseActivity activity, ImageView imageView, String description, String location, String userID);
+        void editPost(BaseActivity activity, ImageView imageView, String description, String location, String userID, String postID);
+        void deletePost(BaseActivity activity, String postID);
     }
 
     interface Interactor {
         void performGetLocation(BaseActivity activity, String providedLocation);
         void uploadPostToFirebaseStorage(BaseActivity activity, ImageView imageView, String description, String location, String userID);
+        void editPostOnFirebase(BaseActivity activity, ImageView imageView, String description, String location, String userID, String postID);
+        void deletePostOnFirebase(BaseActivity activity, String postID);
     }
 
     interface onPostCreateListener {
         void onPostSuccess(Post post);
         void onPostFailure(String error);
+    }
+
+    interface onPostEditListener {
+        void onEditSuccess(Post post);
+        void onEditFailure(String error);
     }
 
     interface onLocationPickedListener {

@@ -38,7 +38,10 @@
         <activity
             android:name=".post.NewPostActivity"
             android:label="@string/newPost" />
-        <activity android:name=".comment.PostCommentsActivity" />
+        <activity android:name=".comment.PostCommentsActivity"
+            android:label="@string/comments"/>
+        <activity android:name=".post.EditPostActivity"
+            android:label="@string/edit_post"></activity>
     </application>
 
 </manifest>

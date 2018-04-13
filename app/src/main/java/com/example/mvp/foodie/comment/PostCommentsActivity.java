@@ -22,6 +22,8 @@ import com.example.mvp.foodie.models.User;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.example.mvp.foodie.UtilHelper.POST_ID;
+
 public class PostCommentsActivity extends BaseActivity implements CommentContract.View {
     private AppCompatEditText commentET;
     private AppCompatButton postBtn;
@@ -42,7 +44,7 @@ public class PostCommentsActivity extends BaseActivity implements CommentContrac
 
     private void initViews() {
         Intent intent = getIntent();
-        String currentPostID = intent.getStringExtra("POST_ID");
+        String currentPostID = intent.getStringExtra(POST_ID);
 
         recyclerView = findViewById(R.id.recyclerView_id);
         commentET = findViewById(R.id.commentText_id);
@@ -69,7 +71,7 @@ public class PostCommentsActivity extends BaseActivity implements CommentContrac
             public void onClick(View v) {
                 String comment = commentET.getText().toString();
                 if (!TextUtils.isEmpty(comment)) {
-                    presenter.postComment(PostCommentsActivity.this, getIntent().getStringExtra("POST_ID"), comment, getmAuth().getCurrentUser().getUid());
+                    presenter.postComment(PostCommentsActivity.this, getIntent().getStringExtra(POST_ID), comment, getmAuth().getCurrentUser().getUid());
                 }
             }
         });

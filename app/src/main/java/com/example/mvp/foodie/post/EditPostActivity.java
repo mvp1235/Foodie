@@ -7,18 +7,14 @@ import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Build;
-import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AppCompatActivity;
+import android.os.Bundle;
 import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.AppCompatEditText;
 import android.support.v7.widget.AppCompatImageView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.Toast;
@@ -26,25 +22,29 @@ import android.widget.Toast;
 import com.example.mvp.foodie.BaseActivity;
 import com.example.mvp.foodie.R;
 import com.example.mvp.foodie.models.Post;
-import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
-import com.google.android.gms.common.GooglePlayServicesRepairableException;
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlaceAutocomplete;
-import com.google.android.gms.location.places.ui.PlaceSelectionListener;
 import com.google.android.gms.location.places.ui.SupportPlaceAutocompleteFragment;
+import com.squareup.picasso.Picasso;
 
 import static com.example.mvp.foodie.UtilHelper.PLACE_AUTOCOMPLETE_REQUEST_CODE;
+import static com.example.mvp.foodie.UtilHelper.POST_DESCRIPTION;
+import static com.example.mvp.foodie.UtilHelper.POST_ID;
+import static com.example.mvp.foodie.UtilHelper.POST_LOCATION;
+import static com.example.mvp.foodie.UtilHelper.POST_URL;
 import static com.example.mvp.foodie.UtilHelper.REQUEST_ALL;
 import static com.example.mvp.foodie.UtilHelper.REQUEST_GALLERY_PHOTO;
 import static com.example.mvp.foodie.UtilHelper.REQUEST_IMAGE_CAPTURE;
 import static com.example.mvp.foodie.UtilHelper.REQUEST_WRITE_EXTERNAL;
+import static com.example.mvp.foodie.UtilHelper.USER_ID;
 
-public class NewPostActivity extends BaseActivity implements PostContract.View {
+public class EditPostActivity extends BaseActivity implements PostContract.EditView {
+
     Toolbar toolbar;
     private AppCompatEditText descriptionET, locationET;
     private AppCompatImageView postImage;
-    private AppCompatButton postBtn;
+    private AppCompatButton editBtn;
 
     ProgressDialog mPrgressDialog;
     private AlertDialog photoActionDialog;
@@ -56,7 +56,7 @@ public class NewPostActivity extends BaseActivity implements PostContract.View {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_new_post);
+        setContentView(R.layout.activity_edit_post);
 
 
         initViews();
@@ -65,13 +65,25 @@ public class NewPostActivity extends BaseActivity implements PostContract.View {
     }
 
     private void initViews() {
-        toolbar = findViewById(R.id.new_post_toolbar);
+        Intent intent = getIntent();
+        String photoURL = intent.getStringExtra(POST_URL);
+        String postDescription = intent.getStringExtra(POST_DESCRIPTION);
+        String postLocation = intent.getStringExtra(POST_LOCATION);
+        String postID = intent.getStringExtra(POST_ID);
+        String userID = intent.getStringExtra(USER_ID);
+
+        toolbar = findViewById(R.id.edit_post_toolbar);
         setSupportActionBar(toolbar);
+        toolbar.setTitle(getResources().getString(R.string.edit_post));
 
         descriptionET = findViewById(R.id.description_id);
         locationET = findViewById(R.id.location_id);
-        postImage = findViewById(R.id.newPostPhoto_id);
-        postBtn = findViewById(R.id.postBtn_id);
+        postImage = findViewById(R.id.editPostPhoto_id);
+        editBtn = findViewById(R.id.editBtn_id);
+
+        Picasso.get().load(photoURL).into(postImage);
+        descriptionET.setText(postDescription);
+        locationET.setText(postLocation);
 
         autocompleteFragment = (SupportPlaceAutocompleteFragment)
                 getSupportFragmentManager().findFragmentById(R.id.place_autocomplete_fragment);
@@ -89,19 +101,20 @@ public class NewPostActivity extends BaseActivity implements PostContract.View {
             }
         });
 
-        postBtn.setOnClickListener(new View.OnClickListener() {
+        editBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mPrgressDialog.setMessage("Editi post...");
+                mPrgressDialog.setMessage("Editing post...");
                 mPrgressDialog.show();
-                presenter.uploadPost(NewPostActivity.this, postImage, descriptionET.getText().toString(), locationET.getText().toString(), getmAuth().getCurrentUser().getUid());
+                presenter.editPost(EditPostActivity.this, postImage, descriptionET.getText().toString(),
+                        locationET.getText().toString(), getmAuth().getCurrentUser().getUid(), getIntent().getStringExtra("POST_ID"));
             }
         });
 
         locationET.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                presenter.getLocation(NewPostActivity.this, locationET.getText().toString());
+                presenter.getLocation(EditPostActivity.this, locationET.getText().toString());
             }
         });
     }
@@ -268,13 +281,6 @@ public class NewPostActivity extends BaseActivity implements PostContract.View {
     }
 
     @Override
-    public void onPostFailed(String error) {
-        mPrgressDialog.hide();
-        Toast.makeText(this, error, Toast.LENGTH_SHORT).show();
-        finish();
-    }
-
-    @Override
     public void onLocationPickedSuccess(Intent intent) {
         startActivityForResult(intent, PLACE_AUTOCOMPLETE_REQUEST_CODE);
     }
@@ -285,9 +291,17 @@ public class NewPostActivity extends BaseActivity implements PostContract.View {
     }
 
     @Override
-    public void onPostCreated(Post post) {
+    public void onPostEditSuccess(Post post) {
         mPrgressDialog.hide();
-        Toast.makeText(this, "Post successfully created.", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "Post edited successfully.", Toast.LENGTH_SHORT).show();
         finish();
     }
+
+    @Override
+    public void onPostEditFailure(String error) {
+        mPrgressDialog.hide();
+        Toast.makeText(this, error, Toast.LENGTH_SHORT).show();
+        finish();
+    }
+
 }

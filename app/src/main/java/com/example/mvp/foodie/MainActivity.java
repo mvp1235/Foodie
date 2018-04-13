@@ -28,7 +28,7 @@ import com.example.mvp.foodie.profile.ProfileActivity;
 import com.google.firebase.auth.FirebaseAuth;
 import com.squareup.picasso.Picasso;
 
-import static com.example.mvp.foodie.signin.SignInActivity.RESULT_CLOSE_ALL;
+import static com.example.mvp.foodie.UtilHelper.RESULT_CLOSE_ALL;
 
 
 public class MainActivity extends BaseActivity implements NavigationView.OnNavigationItemSelectedListener, DrawerContract.View {

@@ -26,13 +26,13 @@ import com.squareup.picasso.Picasso;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class ProfileActivity extends BaseActivity implements ProfileContract.View, ProfileContract.onUploadListener {
+import static com.example.mvp.foodie.UtilHelper.REQUEST_ALL;
+import static com.example.mvp.foodie.UtilHelper.REQUEST_EDIT_PROFILE;
+import static com.example.mvp.foodie.UtilHelper.REQUEST_GALLERY_PHOTO;
+import static com.example.mvp.foodie.UtilHelper.REQUEST_IMAGE_CAPTURE;
+import static com.example.mvp.foodie.UtilHelper.REQUEST_WRITE_EXTERNAL;
 
-    private static final int REQUEST_GALLERY_PHOTO = 200;
-    private static final int REQUEST_IMAGE_CAPTURE = 201;
-    private static final int REQUEST_ALL = 202;
-    private static final int REQUEST_WRITE_EXTERNAL = 203;
-    private static final int EDIT_PROFILE = 204;
+public class ProfileActivity extends BaseActivity implements ProfileContract.View, ProfileContract.onUploadListener {
 
     public static final String EMAIL = "Email Address";
     public static final String FULL_NAME = "Full name";
@@ -113,7 +113,7 @@ public class ProfileActivity extends BaseActivity implements ProfileContract.Vie
         } else if (requestCode == REQUEST_GALLERY_PHOTO && resultCode == RESULT_OK) {
             Uri imageUri = data.getData();
             presenter.uploadGalleryPhotoTo(this, imageUri, getmAuth().getCurrentUser().getUid());
-        } else if (requestCode == EDIT_PROFILE && resultCode == RESULT_OK) {
+        } else if (requestCode == REQUEST_EDIT_PROFILE && resultCode == RESULT_OK) {
             String fullName = data.getStringExtra(FULL_NAME);
             String email = data.getStringExtra(EMAIL);
 
@@ -253,7 +253,7 @@ public class ProfileActivity extends BaseActivity implements ProfileContract.Vie
                 Intent intent = new Intent(this, EditProfileActivity.class);
                 intent.putExtra(FULL_NAME, name.getText().toString());
                 intent.putExtra(EMAIL, email.getText().toString());
-                startActivityForResult(intent, EDIT_PROFILE);
+                startActivityForResult(intent, REQUEST_EDIT_PROFILE);
                 break;
         }
 
