@@ -45,12 +45,11 @@ public class PostRecyclerAdapter extends RecyclerView.Adapter<PostViewHolder>{
     @Override
     public void onBindViewHolder(final PostViewHolder holder, int position) {
         final Post post = posts.get(position);
-        post.updatePostDuration();
 
         holder.name.setText(post.getUser().getFullName());
         Picasso.get().load(post.getUser().getProfileURL()).into(holder.userProfile);
         holder.location.setText(post.getLocation());
-        holder.time.setText(post.getTime());
+        holder.time.setText(post.getPostDuration());
         holder.description.setText(post.getDescription());
         Picasso.get().load(post.getPhotoURL()).into(holder.postPhoto);
         holder.numComments.setText(post.getCommentCount());
@@ -62,9 +61,9 @@ public class PostRecyclerAdapter extends RecyclerView.Adapter<PostViewHolder>{
         holder.interestsLL.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //increment or decrement interests count here, as well as toggle heart icons
-                holder.postHeart.setImageResource(R.drawable.heart_filled);
-                handleInterestClicked(holder, post.getPostID(), (((BaseActivity)context).getmAuth().getCurrentUser().getUid()));
+            //increment or decrement interests count here, as well as toggle heart icons
+            holder.postHeart.setImageResource(R.drawable.heart_filled);
+            handleInterestClicked(holder, post.getPostID(), (((BaseActivity)context).getmAuth().getCurrentUser().getUid()));
             }
         });
 
@@ -72,8 +71,6 @@ public class PostRecyclerAdapter extends RecyclerView.Adapter<PostViewHolder>{
             @Override
             public void onClick(View v) {
             //Show all comments available for the specific post here
-//            holder.postHeart.setImageResource(R.drawable.heart_unfilled);
-
             Intent intent = new Intent(context, PostCommentsActivity.class);
             intent.putExtra("POST_ID", post.getPostID());
             context.startActivity(intent);
@@ -83,7 +80,7 @@ public class PostRecyclerAdapter extends RecyclerView.Adapter<PostViewHolder>{
         holder.numGoing.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //increment or decrement interests number for the specific post here
+            //increment or decrement interests number for the specific post here
 
             }
         });

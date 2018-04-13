@@ -43,36 +43,4 @@ public class PostViewHolder extends RecyclerView.ViewHolder{
         goingLL = itemView.findViewById(R.id.goingSection_id);
 
     }
-
-    public static class CommentRecyclerAdapter extends RecyclerView.Adapter<CommentViewHolder> {
-
-        private Context context;
-        private List<Comment> comments;
-
-        public CommentRecyclerAdapter(Context context, List<Comment> comments) {
-            this.context = context;
-            this.comments = comments;
-        }
-
-        @Override
-        public CommentViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.comment_item_layout, parent, false);
-            return new CommentViewHolder(view);
-        }
-
-        @Override
-        public void onBindViewHolder(CommentViewHolder holder, int position) {
-            Comment comment = comments.get(position);
-
-            holder.userName.setText(comment.getUser().getFullName());
-            Picasso.get().load(comment.getUser().getProfileURL()).into(holder.profilePhoto);
-            holder.commentText.setText(comment.getContent());
-
-        }
-
-        @Override
-        public int getItemCount() {
-            return comments.size();
-        }
-    }
 }

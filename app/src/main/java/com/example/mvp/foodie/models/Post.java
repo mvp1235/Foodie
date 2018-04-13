@@ -5,7 +5,7 @@ import java.util.Calendar;
 
 public class Post {
     private String postID;
-    private String description, time, photoURL, location;
+    private String description, photoURL, location;
     private long createdTime;
     private User user;
     private ArrayList<Comment> comments;
@@ -19,14 +19,14 @@ public class Post {
         interestIDs = new ArrayList<>();
         goingIDs = new ArrayList<>();
 
-        time = "Just now";
         photoURL = "https://i.ytimg.com/vi/mEBFswpYms4/maxresdefault.jpg";
         location = "San Jose, CA";
 
         this.user = new User();
     };
 
-    public void updatePostDuration() {
+    public String getPostDuration() {
+        String time = "";
         long currentTime = Calendar.getInstance().getTimeInMillis();
         long timeDifference = currentTime - createdTime;
 
@@ -58,18 +58,19 @@ public class Post {
         } else {
             time = "Just now";
         }
+        return time;
     }
 
     public String getCommentCount() {
-        return comments.size() + " Comments";
+        return comments.size() + "";
     }
 
     public String getInterestCount() {
-        return interestIDs.size() + " Interests";
+        return interestIDs.size() + "";
     }
 
     public String getGoingCount() {
-        return goingIDs.size() + " Going";
+        return goingIDs.size() + "";
     }
 
     public String getLocation() {
@@ -86,14 +87,6 @@ public class Post {
 
     public void setDescription(String description) {
         this.description = description;
-    }
-
-    public String getTime() {
-        return time;
-    }
-
-    public void setTime(String time) {
-        this.time = time;
     }
 
     public String getPhotoURL() {
