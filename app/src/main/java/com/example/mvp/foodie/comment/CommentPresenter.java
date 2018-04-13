@@ -26,8 +26,8 @@ public class CommentPresenter implements CommentContract.Presenter, CommentContr
     }
 
     @Override
-    public void onPostSuccess(Comment comment) {
-        view.onCommentSuccess(comment);
+    public void onPostSuccess(List<Comment> comments) {
+        view.onCommentSuccess(comments);
     }
 
     @Override

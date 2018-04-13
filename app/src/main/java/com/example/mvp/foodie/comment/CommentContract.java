@@ -10,7 +10,7 @@ public interface CommentContract {
     interface View {
         void onCommentsLoadSuccess(List<Comment> comments);
         void onCommentsLoadFailure(String error);
-        void onCommentSuccess(Comment comment);
+        void onCommentSuccess(List<Comment> comments);
         void onCommentFailure(String error);
     }
 
@@ -25,7 +25,7 @@ public interface CommentContract {
     }
 
     interface onPostListener {
-        void onPostSuccess(Comment comment);
+        void onPostSuccess(List<Comment> comments);
         void onPostFailure(String error);
     }
 

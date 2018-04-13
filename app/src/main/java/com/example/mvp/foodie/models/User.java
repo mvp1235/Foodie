@@ -12,13 +12,11 @@ public class User {
     private int postCount;
     private int friendCount;
     private List<String> postIDs;
-    private List<String> commentsIDs;
 
     public User(){
         postCount = 0;
         friendCount = 0;
         postIDs = new ArrayList<>();
-        commentsIDs = new ArrayList<>();
     };
 
     public String getuID() {
@@ -105,11 +103,4 @@ public class User {
         this.postIDs = postIDs;
     }
 
-    public List<String> getCommentsIDs() {
-        return commentsIDs;
-    }
-
-    public void setCommentsIDs(List<String> commentsIDs) {
-        this.commentsIDs = commentsIDs;
-    }
 }

@@ -23,11 +23,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class PostCommentsActivity extends BaseActivity implements CommentContract.View {
-    private RecyclerView recyclerView;
-    private List<Comment> comments;
-
     private AppCompatEditText commentET;
     private AppCompatButton postBtn;
+
+    private RecyclerView recyclerView;
+    private CommentRecyclerAdapter adapter;
 
     private CommentPresenter presenter;
 
@@ -36,6 +36,11 @@ public class PostCommentsActivity extends BaseActivity implements CommentContrac
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_post_comments);
 
+        initViews();
+        setUpListeners();
+    }
+
+    private void initViews() {
         Intent intent = getIntent();
         String currentPostID = intent.getStringExtra("POST_ID");
 
@@ -43,14 +48,19 @@ public class PostCommentsActivity extends BaseActivity implements CommentContrac
         commentET = findViewById(R.id.commentText_id);
         postBtn = findViewById(R.id.postBtn_id);
 
-        comments = new ArrayList<>();
+
+        adapter = new CommentRecyclerAdapter(this, new ArrayList<Comment>());
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
+        recyclerView.setLayoutManager(linearLayoutManager);
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setAdapter(adapter);
+        DividerItemDecoration mDividerItemDecoration = new DividerItemDecoration(recyclerView.getContext(),
+                linearLayoutManager.getOrientation());
+        recyclerView.addItemDecoration(mDividerItemDecoration);
+
 
         presenter = new CommentPresenter(this);
-
         presenter.loadComments(this, currentPostID);
-
-        setUpListeners();
-
     }
 
     private void setUpListeners() {
@@ -67,18 +77,8 @@ public class PostCommentsActivity extends BaseActivity implements CommentContrac
 
     @Override
     public void onCommentsLoadSuccess(List<Comment> comments) {
-        this.comments = comments;
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
-        recyclerView.setLayoutManager(linearLayoutManager);
-
-        recyclerView.setHasFixedSize(true);
-
-        recyclerView.setAdapter(new CommentRecyclerAdapter(this, comments));
-
-        DividerItemDecoration mDividerItemDecoration = new DividerItemDecoration(recyclerView.getContext(),
-                linearLayoutManager.getOrientation());
-
-        recyclerView.addItemDecoration(mDividerItemDecoration);
+        adapter.setComments(comments);
+        adapter.notifyDataSetChanged();
     }
 
     @Override
@@ -87,11 +87,10 @@ public class PostCommentsActivity extends BaseActivity implements CommentContrac
     }
 
     @Override
-    public void onCommentSuccess(Comment comment) {
+    public void onCommentSuccess(List<Comment> comments) {
         commentET.setText("");
-        comments.add(comment);
-        recyclerView.setAdapter(new CommentRecyclerAdapter(this, comments));
-        recyclerView.invalidate();
+        adapter.setComments(comments);
+        adapter.notifyDataSetChanged();
         recyclerView.scrollToPosition(comments.size()-1);
     }
 

@@ -24,12 +24,10 @@ public class MainFeedFragment extends Fragment implements MainFeedContract.View 
     private PostRecyclerAdapter adapter;
     RecyclerView recyclerView;
 
-
     public MainFeedFragment() {
         // Required empty public constructor
 
     }
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,

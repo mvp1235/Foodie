@@ -28,6 +28,10 @@ public class CommentRecyclerAdapter extends RecyclerView.Adapter<CommentViewHold
         return new CommentViewHolder(view);
     }
 
+    void setComments(List<Comment> comments) {
+        this.comments = comments;
+    }
+
     @Override
     public void onBindViewHolder(CommentViewHolder holder, int position) {
         Comment comment = comments.get(position);

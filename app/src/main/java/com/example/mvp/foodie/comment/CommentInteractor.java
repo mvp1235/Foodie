@@ -64,7 +64,7 @@ public class CommentInteractor implements CommentContract.Interactor {
                             Post post = dataSnapshot.getValue(Post.class);
                             post.addComment(comment);
                             databaseReference.child("Posts").child(postID).setValue(post);
-                            postListener.onPostSuccess(comment);
+                            postListener.onPostSuccess(post.getComments());
                         }
 
                         @Override
