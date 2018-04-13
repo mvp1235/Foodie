@@ -10,8 +10,9 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import static com.example.mvp.foodie.profile.ProfileActivity.EMAIL;
-import static com.example.mvp.foodie.profile.ProfileActivity.FULL_NAME;
+import static com.example.mvp.foodie.UtilHelper.EMAIL;
+import static com.example.mvp.foodie.UtilHelper.FULL_NAME;
+
 
 public class EditProfilePresenter implements ProfileContract.EditPresenter {
     private ProfileContract.EditView view;

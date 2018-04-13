@@ -26,6 +26,8 @@ import com.squareup.picasso.Picasso;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
+import static com.example.mvp.foodie.UtilHelper.EMAIL;
+import static com.example.mvp.foodie.UtilHelper.FULL_NAME;
 import static com.example.mvp.foodie.UtilHelper.REQUEST_ALL;
 import static com.example.mvp.foodie.UtilHelper.REQUEST_EDIT_PROFILE;
 import static com.example.mvp.foodie.UtilHelper.REQUEST_GALLERY_PHOTO;
@@ -33,11 +35,6 @@ import static com.example.mvp.foodie.UtilHelper.REQUEST_IMAGE_CAPTURE;
 import static com.example.mvp.foodie.UtilHelper.REQUEST_WRITE_EXTERNAL;
 
 public class ProfileActivity extends BaseActivity implements ProfileContract.View, ProfileContract.onUploadListener {
-
-    public static final String EMAIL = "Email Address";
-    public static final String FULL_NAME = "Full name";
-
-
     Toolbar toolbar;
     private AppCompatTextView name, email, location, postCount, friendCount;
     private CircleImageView profileImage;

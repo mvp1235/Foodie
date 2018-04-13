@@ -107,7 +107,7 @@ public class EditPostActivity extends BaseActivity implements PostContract.EditV
                 mPrgressDialog.setMessage("Editing post...");
                 mPrgressDialog.show();
                 presenter.editPost(EditPostActivity.this, postImage, descriptionET.getText().toString(),
-                        locationET.getText().toString(), getmAuth().getCurrentUser().getUid(), getIntent().getStringExtra("POST_ID"));
+                        locationET.getText().toString(), getmAuth().getCurrentUser().getUid(), getIntent().getStringExtra(POST_ID));
             }
         });
 

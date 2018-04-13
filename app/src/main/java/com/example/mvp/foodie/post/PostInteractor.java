@@ -145,21 +145,31 @@ public class PostInteractor implements PostContract.Interactor {
             @Override
             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                 // taskSnapshot.getMetadata() contains file metadata such as size, content-type, and download URL.
-                Uri downloadUrl = taskSnapshot.getDownloadUrl();
+                final Uri downloadUrl = taskSnapshot.getDownloadUrl();
 
-                final Post post = new Post();
-                post.setDescription(description);
-                post.setLocation(location);
-                post.setPhotoURL(downloadUrl.toString());
-                post.setPostID(postID);
-
-                activity.getmDatabase().child("Users").child(userID).addListenerForSingleValueEvent(new ValueEventListener() {
+                activity.getmDatabase().child("Posts").child(postID).addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
-                        User u = dataSnapshot.getValue(User.class);
-                        post.setUser(u);
-                        databaseReference.child(postID).setValue(post);
-                        editListener.onEditSuccess(post);
+                        final Post post = dataSnapshot.getValue(Post.class);
+                        post.setDescription(description);
+                        post.setLocation(location);
+                        post.setPhotoURL(downloadUrl.toString());
+                        post.setPostID(postID);
+
+                        activity.getmDatabase().child("Users").child(userID).addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(DataSnapshot dataSnapshot) {
+                                User u = dataSnapshot.getValue(User.class);
+                                post.setUser(u);
+                                databaseReference.child(postID).setValue(post);
+                                editListener.onEditSuccess(post);
+                            }
+
+                            @Override
+                            public void onCancelled(DatabaseError databaseError) {
+                                editListener.onEditFailure(databaseError.getMessage());
+                            }
+                        });
                     }
 
                     @Override
@@ -167,6 +177,7 @@ public class PostInteractor implements PostContract.Interactor {
                         editListener.onEditFailure(databaseError.getMessage());
                     }
                 });
+
             }
         });
     }

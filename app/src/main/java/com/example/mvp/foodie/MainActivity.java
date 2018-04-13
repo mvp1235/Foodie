@@ -40,6 +40,8 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
 
     MenuItem searchMenu, addPostMenu, sendMessageMenu;
 
+    private DrawerContract.Presenter presenter;
+
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
 
@@ -78,8 +80,6 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
             return true;
         }
     };
-
-    private DrawerContract.Presenter presenter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

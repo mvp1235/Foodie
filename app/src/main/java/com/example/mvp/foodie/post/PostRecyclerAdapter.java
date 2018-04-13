@@ -81,7 +81,7 @@ public class PostRecyclerAdapter extends RecyclerView.Adapter<PostViewHolder>{
             public void onClick(View v) {
             //Show all comments available for the specific post here
             Intent intent = new Intent(context, PostCommentsActivity.class);
-            intent.putExtra("POST_ID", post.getPostID());
+            intent.putExtra(POST_ID, post.getPostID());
             context.startActivity(intent);
             }
         });
