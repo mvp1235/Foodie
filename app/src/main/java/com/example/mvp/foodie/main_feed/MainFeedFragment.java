@@ -15,12 +15,15 @@ import com.example.mvp.foodie.R;
 import com.example.mvp.foodie.post.PostRecyclerAdapter;
 import com.example.mvp.foodie.models.Post;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class MainFeedFragment extends Fragment implements MainFeedContract.View {
 
     private MainFeedContract.Presenter presenter;
+    private PostRecyclerAdapter adapter;
     RecyclerView recyclerView;
+
 
     public MainFeedFragment() {
         // Required empty public constructor
@@ -36,6 +39,18 @@ public class MainFeedFragment extends Fragment implements MainFeedContract.View 
 
         recyclerView = view.findViewById(R.id.recyclerView_id);
 
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
+        recyclerView.setLayoutManager(linearLayoutManager);
+
+        adapter = new PostRecyclerAdapter(getContext(), new ArrayList<Post>());
+
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setAdapter(adapter);
+
+        DividerItemDecoration mDividerItemDecoration = new DividerItemDecoration(recyclerView.getContext(),
+                linearLayoutManager.getOrientation());
+
+        recyclerView.addItemDecoration(mDividerItemDecoration);
 
         presenter = new MainFeedPresenter(this);
         presenter.loadPosts();
@@ -51,20 +66,13 @@ public class MainFeedFragment extends Fragment implements MainFeedContract.View 
 
     @Override
     public void onPostsLoadedSuccess(List<Post> posts) {
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
-        recyclerView.setLayoutManager(linearLayoutManager);
-
-        recyclerView.setHasFixedSize(true);
-        recyclerView.setAdapter(new PostRecyclerAdapter(getContext(), posts));
-
-        DividerItemDecoration mDividerItemDecoration = new DividerItemDecoration(recyclerView.getContext(),
-                linearLayoutManager.getOrientation());
-
-        recyclerView.addItemDecoration(mDividerItemDecoration);
+        adapter.setPosts(posts);
+        adapter.notifyDataSetChanged();
     }
 
     @Override
     public void onPostsLoadedFailure(String error) {
         Toast.makeText(getContext(), error, Toast.LENGTH_SHORT).show();
     }
+
 }
