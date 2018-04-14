@@ -1,7 +1,9 @@
 package com.example.mvp.foodie.post;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.AppCompatImageView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -128,7 +130,6 @@ public class PostRecyclerAdapter extends RecyclerView.Adapter<PostViewHolder>{
         }
 
 
-
     }
 
     private void showPostPopupMenu(final Post post, PostViewHolder holder) {
@@ -148,12 +149,26 @@ public class PostRecyclerAdapter extends RecyclerView.Adapter<PostViewHolder>{
                     ((BaseActivity) context).startActivityForResult(intent, REQUEST_EDIT_POST);
 
                 } else {
-                    deletePost(post.getPostID(), post.getUserID());
+                    showDeleteConfirmationDialog(post);
                 }
                 return false;
             }
         });
         popupMenu.show();
+    }
+
+    private void showDeleteConfirmationDialog(final Post post) {
+        new AlertDialog.Builder(context)
+                .setMessage("Are you sure you want to delete this post?")
+                .setCancelable(false)
+                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        deletePost(post.getPostID(), post.getUserID());
+                    }
+                })
+                .setNegativeButton("No", null)
+                .show();
     }
 
     @Override
@@ -206,6 +221,8 @@ public class PostRecyclerAdapter extends RecyclerView.Adapter<PostViewHolder>{
 
                 //Delete post
                 postRef.child(postID).removeValue();
+
+                Toast.makeText(context, "Post deleted...", Toast.LENGTH_SHORT).show();
             }
 
             @Override
