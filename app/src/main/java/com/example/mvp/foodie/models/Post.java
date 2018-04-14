@@ -14,14 +14,14 @@ public class Post {
     private String description, photoURL, location;
     private long createdTime;
     private String userID;
-    private ArrayList<Comment> comments;
+    private ArrayList<String> commentIDs;
     private ArrayList<String> interestIDs;
     private ArrayList<String> goingIDs;
 
     public Post(){
         this.postID = postID;
         createdTime = Calendar.getInstance().getTimeInMillis();
-        comments = new ArrayList<>();
+        commentIDs = new ArrayList<>();
         interestIDs = new ArrayList<>();
         goingIDs = new ArrayList<>();
 
@@ -61,7 +61,7 @@ public class Post {
     }
 
     public String getCommentCount() {
-        return comments.size() + "";
+        return commentIDs.size() + "";
     }
 
     public String getInterestCount() {
@@ -96,21 +96,21 @@ public class Post {
         this.photoURL = photoURL;
     }
 
-    public ArrayList<Comment> getComments() {
-        return comments;
+    public ArrayList<String> getCommentIDs() {
+        return commentIDs;
     }
 
-    public void setComments(ArrayList<Comment> comments) {
-        this.comments = comments;
+    public void setComments(ArrayList<String> commentIDs) {
+        this.commentIDs = commentIDs;
     }
 
-    public void addComment(Comment comment) {
-        this.comments.add(comment);
+    public void addCommentID(String commentID) {
+        this.commentIDs.add(commentID);
     }
 
-    public void removeComment(Comment comment) {
-        if (this.comments.contains(comment))
-            this.comments.remove(comment);
+    public void removeComment(String commentID) {
+        if (this.commentIDs.contains(commentID))
+            this.commentIDs.remove(commentID);
     }
 
     public ArrayList<String> getInterestIDs() {

@@ -8,9 +8,9 @@ import java.util.List;
 
 public interface CommentContract {
     interface View {
-        void onCommentsLoadSuccess(List<Comment> comments);
+        void onCommentsLoadSuccess(Comment comment);
         void onCommentsLoadFailure(String error);
-        void onCommentSuccess(List<Comment> comments);
+        void onCommentSuccess(Comment comment);
         void onCommentFailure(String error);
     }
 
@@ -25,12 +25,12 @@ public interface CommentContract {
     }
 
     interface onPostListener {
-        void onPostSuccess(List<Comment> comments);
+        void onPostSuccess(Comment comment);
         void onPostFailure(String error);
     }
 
     interface onLoadListener {
-        void onLoadSuccess(List<Comment> comments);
+        void onLoadSuccess(Comment comment);
         void onLoadFailure(String error);
     }
 

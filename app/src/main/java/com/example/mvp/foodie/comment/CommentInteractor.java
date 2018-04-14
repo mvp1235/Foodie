@@ -9,6 +9,9 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.ArrayList;
+import java.util.List;
+
 
 public class CommentInteractor implements CommentContract.Interactor {
     private CommentContract.onPostListener postListener;
@@ -22,13 +25,31 @@ public class CommentInteractor implements CommentContract.Interactor {
 
     @Override
     public void loadCommentsFromFirebase(BaseActivity activity, String postID) {
-        final DatabaseReference databaseReference = activity.getmDatabase();
+        final DatabaseReference postRef = activity.getmDatabase().child("Posts");
+        final DatabaseReference commentRef = activity.getmDatabase().child("Comments");
 
-        databaseReference.child("Posts").child(postID).addListenerForSingleValueEvent(new ValueEventListener() {
+        postRef.child(postID).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 Post post = dataSnapshot.getValue(Post.class);
-                loadListener.onLoadSuccess(post.getComments());
+
+                List<String> commentIDs = post.getCommentIDs();
+
+                for (String cID: commentIDs) {
+                    commentRef.child(cID).addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            Comment c = dataSnapshot.getValue(Comment.class);
+                            loadListener.onLoadSuccess(c);
+                        }
+
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+
+                        }
+                    });
+                }
+
             }
 
             @Override
@@ -42,36 +63,34 @@ public class CommentInteractor implements CommentContract.Interactor {
 
     @Override
     public void postCommentToFirebase(BaseActivity activity, final String postID, final String commentText, final String userID) {
-
         if (activity == null || commentText == null || userID == null) {
             postListener.onPostFailure("Failed to post the comment. Please try again later.");
         } else {
-            final DatabaseReference databaseReference = activity.getmDatabase();
+            final DatabaseReference userRef = activity.getmDatabase().child("Users");
+            final DatabaseReference commentRef = activity.getmDatabase().child("Comments");
+            final DatabaseReference postRef = activity.getmDatabase().child("Posts");
 
-            databaseReference.child("Users").child(userID).addListenerForSingleValueEvent(new ValueEventListener() {
+            postRef.child(postID).addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
-                    final String newCommentID = databaseReference.push().getKey();
-                    final User currentUser = dataSnapshot.getValue(User.class);
-                    databaseReference.child("Posts").child(postID).addListenerForSingleValueEvent(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(DataSnapshot dataSnapshot) {
-                            Comment comment = new Comment();
-                            comment.setcID(newCommentID);
-                            comment.setContent(commentText);
-                            comment.setUser(currentUser);
+                    final String newCommentID = commentRef.push().getKey();
 
-                            Post post = dataSnapshot.getValue(Post.class);
-                            post.addComment(comment);
-                            databaseReference.child("Posts").child(postID).setValue(post);
-                            postListener.onPostSuccess(post.getComments());
-                        }
+                    //Construct the new comment object
+                    Comment comment = new Comment();
+                    comment.setcID(newCommentID);
+                    comment.setContent(commentText);
+                    comment.setUserID(userID);
 
-                        @Override
-                        public void onCancelled(DatabaseError databaseError) {
-                            postListener.onPostFailure(databaseError.getMessage());
-                        }
-                    });
+                    //Update post database
+                    Post post = dataSnapshot.getValue(Post.class);
+                    post.addCommentID(comment.getcID());
+                    postRef.child(postID).setValue(post);
+
+                    //add comment to Comments database
+                    commentRef.child(comment.getcID()).setValue(comment);
+
+                    //notify presenter
+                    postListener.onPostSuccess(comment);
                 }
 
                 @Override

@@ -33,6 +33,8 @@ public class PostCommentsActivity extends BaseActivity implements CommentContrac
 
     private CommentPresenter presenter;
 
+    private List<Comment> commentList;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -51,7 +53,8 @@ public class PostCommentsActivity extends BaseActivity implements CommentContrac
         postBtn = findViewById(R.id.postBtn_id);
 
 
-        adapter = new CommentRecyclerAdapter(this, new ArrayList<Comment>());
+        commentList = new ArrayList<>();
+        adapter = new CommentRecyclerAdapter(this, commentList);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(linearLayoutManager);
         recyclerView.setHasFixedSize(true);
@@ -78,9 +81,8 @@ public class PostCommentsActivity extends BaseActivity implements CommentContrac
     }
 
     @Override
-    public void onCommentsLoadSuccess(List<Comment> comments) {
-        adapter.setComments(comments);
-        adapter.notifyDataSetChanged();
+    public void onCommentsLoadSuccess(Comment comment) {
+        adapter.addComment(comment);
     }
 
     @Override
@@ -89,11 +91,10 @@ public class PostCommentsActivity extends BaseActivity implements CommentContrac
     }
 
     @Override
-    public void onCommentSuccess(List<Comment> comments) {
+    public void onCommentSuccess(Comment comment) {
         commentET.setText("");
-        adapter.setComments(comments);
-        adapter.notifyDataSetChanged();
-        recyclerView.scrollToPosition(comments.size()-1);
+        adapter.addComment(comment);
+        recyclerView.scrollToPosition(commentList.size()-1);
     }
 
     @Override

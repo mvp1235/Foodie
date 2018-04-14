@@ -137,7 +137,7 @@ public class PostRecyclerAdapter extends RecyclerView.Adapter<PostViewHolder>{
                     ((BaseActivity) context).startActivityForResult(intent, REQUEST_EDIT_POST);
 
                 } else {
-                    
+
                     Toast.makeText(context, "Delete", Toast.LENGTH_SHORT).show();
                 }
                 return false;

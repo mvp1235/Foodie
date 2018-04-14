@@ -26,8 +26,8 @@ public class CommentPresenter implements CommentContract.Presenter, CommentContr
     }
 
     @Override
-    public void onPostSuccess(List<Comment> comments) {
-        view.onCommentSuccess(comments);
+    public void onPostSuccess(Comment comment) {
+        view.onCommentSuccess(comment);
     }
 
     @Override
@@ -36,8 +36,8 @@ public class CommentPresenter implements CommentContract.Presenter, CommentContr
     }
 
     @Override
-    public void onLoadSuccess(List<Comment> comments) {
-        view.onCommentsLoadSuccess(comments);
+    public void onLoadSuccess(Comment comment) {
+        view.onCommentsLoadSuccess(comment);
     }
 
     @Override
