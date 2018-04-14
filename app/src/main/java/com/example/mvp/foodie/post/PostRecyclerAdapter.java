@@ -148,8 +148,7 @@ public class PostRecyclerAdapter extends RecyclerView.Adapter<PostViewHolder>{
                     ((BaseActivity) context).startActivityForResult(intent, REQUEST_EDIT_POST);
 
                 } else {
-
-                    Toast.makeText(context, "Delete", Toast.LENGTH_SHORT).show();
+                    deletePost(post.getPostID(), post.getUserID());
                 }
                 return false;
             }
@@ -160,6 +159,60 @@ public class PostRecyclerAdapter extends RecyclerView.Adapter<PostViewHolder>{
     @Override
     public int getItemCount() {
         return posts.size();
+    }
+
+    private void deletePost(final String postID, final String userID) {
+        final DatabaseReference postRef = ((BaseActivity)context).getmDatabase().child("Posts");
+        final DatabaseReference userRef = ((BaseActivity)context).getmDatabase().child("Users");
+        final DatabaseReference commentRef = ((BaseActivity)context).getmDatabase().child("Comments");
+
+        //Delete Post
+        postRef.child(postID).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                Post post = dataSnapshot.getValue(Post.class);
+
+                List<String> commentIDs = post.getCommentIDs();
+
+                //Delete comments from post
+                for (final String id : commentIDs) {
+                    commentRef.child(id).addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            commentRef.child(id).removeValue();
+                        }
+
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+
+                        }
+                    });
+                }
+
+                //Delete postIDs in user
+                userRef.child(userID).addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        User u = dataSnapshot.getValue(User.class);
+                        u.deletePostID(postID);
+                        userRef.child(userID).setValue(u);
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+
+                //Delete post
+                postRef.child(postID).removeValue();
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
     }
 
     private void userLikedPost(final AppCompatImageView heart, final String postID, final String userID) {
