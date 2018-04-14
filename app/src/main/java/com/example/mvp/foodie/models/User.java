@@ -9,14 +9,12 @@ public class User {
     private String lastName;
     private String profileURL;
     private String email;
-    private int postCount;
-    private int friendCount;
     private List<String> postIDs;
+    private List<String> friendIDs;
 
     public User(){
-        postCount = 0;
-        friendCount = 0;
         postIDs = new ArrayList<>();
+        friendIDs = new ArrayList<>();
     };
 
     public String getuID() {
@@ -60,36 +58,11 @@ public class User {
     }
 
     public int getPostCount() {
-        return postCount;
-    }
-
-    public void setPostCount(int postCount) {
-        this.postCount = postCount;
+        return postIDs.size();
     }
 
     public int getFriendCount() {
-        return friendCount;
-    }
-
-    public void setFriendCount(int friendCount) {
-        this.friendCount = friendCount;
-    }
-
-    public void incrementPostCount() {
-        postCount++;
-    }
-
-    public void decrementPostCount() {
-        if (postCount > 0)
-            postCount--;
-    }
-
-    public void incrementFriendCount() {
-        friendCount++;
-    }
-
-    public void decrementFriendCount() {
-        friendCount--;
+        return friendIDs.size();
     }
 
     public String getFullName() {
@@ -114,4 +87,21 @@ public class User {
             postIDs.remove(postID);
     }
 
+    public List<String> getFriendIDs() {
+        return friendIDs;
+    }
+
+    public void setFriendIDs(List<String> friendIDs) {
+        this.friendIDs = friendIDs;
+    }
+
+    public void addFriendID(String friendID) {
+        if (!friendIDs.contains(friendID))
+            friendIDs.add(friendID);
+    }
+
+    public void deleteFriendID(String friendID) {
+        if(friendIDs.contains(friendID))
+            friendIDs.remove(friendID);
+    }
 }

@@ -105,8 +105,8 @@ public class PostInteractor implements PostContract.Interactor {
                         User u = dataSnapshot.getValue(User.class);
 
                         //Update user database
-                        u.incrementPostCount();
-                        userRef.child(userID).setValue(u);
+                        u.addPostID(newPostID);
+                        userRef.child(u.getuID()).setValue(u);
 
                         //Update post database
                         post.setUserID(u.getuID());
