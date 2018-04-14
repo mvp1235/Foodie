@@ -87,7 +87,6 @@ public class CommentInteractor implements CommentContract.Interactor {
         if (activity == null || commentText == null || userID == null) {
             postListener.onPostFailure("Failed to post the comment. Please try again later.");
         } else {
-            final DatabaseReference userRef = activity.getmDatabase().child("Users");
             final DatabaseReference commentRef = activity.getmDatabase().child("Comments");
             final DatabaseReference postRef = activity.getmDatabase().child("Posts");
 
@@ -113,6 +112,7 @@ public class CommentInteractor implements CommentContract.Interactor {
 
                     //notify presenter
                     postListener.onPostSuccess(comment);
+
                 }
 
                 @Override
