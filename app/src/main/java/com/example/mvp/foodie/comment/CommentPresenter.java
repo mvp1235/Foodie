@@ -6,13 +6,18 @@ import com.example.mvp.foodie.models.User;
 
 import java.util.List;
 
-public class CommentPresenter implements CommentContract.Presenter, CommentContract.onPostListener, CommentContract.onLoadListener {
+public class CommentPresenter implements CommentContract.Presenter, CommentContract.onPostListener, CommentContract.onLoadListener, CommentContract.onEditListener {
     private CommentContract.View view;
     private CommentContract.Interactor interactor;
 
     public CommentPresenter(CommentContract.View view) {
         this.view = view;
-        interactor = new CommentInteractor(this, this);
+        interactor = new CommentInteractor(this, this, this);
+    }
+
+    @Override
+    public void editComment(BaseActivity activity, String commentID, String newContent) {
+        interactor.editCommentOnFirebase(activity, commentID, newContent);
     }
 
     @Override
@@ -45,4 +50,13 @@ public class CommentPresenter implements CommentContract.Presenter, CommentContr
         view.onCommentsLoadFailure(error);
     }
 
+    @Override
+    public void onEditSuccess(Comment comment) {
+        view.onCommentEditSuccess(comment);
+    }
+
+    @Override
+    public void onEditFailure(String error) {
+        view.onCommentEditFailure(error);
+    }
 }

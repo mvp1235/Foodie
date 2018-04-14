@@ -3,6 +3,7 @@ package com.example.mvp.foodie.comment;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -39,10 +40,25 @@ public class CommentRecyclerAdapter extends RecyclerView.Adapter<CommentViewHold
         this.notifyDataSetChanged();
     }
 
-    public void removeComment(Comment c) {
-        if (comments.contains(c)) {
-            comments.add(c);
-            this.notifyDataSetChanged();
+    public void removeComment(String commentID) {
+        for (int i=0; i<comments.size(); i++) {
+            String currentCommentID = comments.get(i).getcID();
+            if (currentCommentID.equals(commentID)) {
+                comments.remove(i);
+                break;
+            }
+        }
+        this.notifyDataSetChanged();
+    }
+
+    public void replaceComment(Comment c) {
+        for (int i=0; i<comments.size(); i++) {
+            String currentCommentID = comments.get(i).getcID();
+            if (currentCommentID.equals(c.getcID())) {
+                comments.set(i, c);
+                this.notifyDataSetChanged();
+                break;
+            }
         }
     }
 
@@ -93,11 +109,18 @@ public class CommentRecyclerAdapter extends RecyclerView.Adapter<CommentViewHold
             public boolean onMenuItemClick(MenuItem item) {
                 if (item.getTitle().toString().equals("Delete")) {
                     showDeleteConfirmationDialog(comment);
+                } else if (item.getTitle().toString().equals("Edit")){
+                    showEditCommentDialog(comment.getContent(), comment.getcID());
                 }
                 return false;
             }
         });
         popupMenu.show();
+    }
+
+    private void showEditCommentDialog(String commentText, String commentID) {
+        DialogFragment dialog = EditCommentDialogFragment.newInstance(commentText, commentID);
+        dialog.show(((PostCommentsActivity)context).getSupportFragmentManager(), "EditCommentDialogFragment");
     }
 
     private void showDeleteConfirmationDialog(final Comment comment) {
@@ -129,6 +152,10 @@ public class CommentRecyclerAdapter extends RecyclerView.Adapter<CommentViewHold
 
                 //Delete the comment
                 commentRef.child(commentID).removeValue();
+
+                //Update adapter
+                removeComment(commentID);
+
             }
 
             @Override

@@ -70,6 +70,8 @@
     <string name="delete">Delete</string>
     <string name="comments">Comments</string>
     <string name="edit_post">Edit Post</string>
+    <string name="cancel">Cancel</string>
+    <string name="edit_comment">Edit Comment</string>
 
 
 </resources>

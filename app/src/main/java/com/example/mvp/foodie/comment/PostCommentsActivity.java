@@ -2,6 +2,7 @@ package com.example.mvp.foodie.comment;
 
 import android.app.Service;
 import android.content.Intent;
+import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.AppCompatButton;
@@ -24,7 +25,7 @@ import java.util.List;
 
 import static com.example.mvp.foodie.UtilHelper.POST_ID;
 
-public class PostCommentsActivity extends BaseActivity implements CommentContract.View {
+public class PostCommentsActivity extends BaseActivity implements CommentContract.View, EditCommentDialogFragment.EditListener {
     private AppCompatEditText commentET;
     private AppCompatButton postBtn;
 
@@ -101,4 +102,20 @@ public class PostCommentsActivity extends BaseActivity implements CommentContrac
     public void onCommentFailure(String error) {
         Toast.makeText(this, error, Toast.LENGTH_SHORT).show();
     }
+
+    @Override
+    public void onCommentEditSuccess(Comment comment) {
+        adapter.replaceComment(comment);
+    }
+
+    @Override
+    public void onCommentEditFailure(String error) {
+        Toast.makeText(this, error, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onSaveClick(String commentText, String commentID) {
+        presenter.editComment(this, commentID, commentText);
+    }
+
 }

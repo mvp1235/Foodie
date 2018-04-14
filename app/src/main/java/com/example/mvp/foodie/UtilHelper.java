@@ -9,6 +9,8 @@ public class UtilHelper {
     public static final String INITIAL_QUERY = "initial_query";
     public static final String EMAIL = "Email Address";
     public static final String FULL_NAME = "Full Name";
+    public static final String COMMENT_TEXT = "Comment Text";
+    public static final String COMMENT_ID = "Comment ID";
 
 
 

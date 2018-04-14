@@ -16,11 +16,33 @@ import java.util.List;
 public class CommentInteractor implements CommentContract.Interactor {
     private CommentContract.onPostListener postListener;
     private CommentContract.onLoadListener loadListener;
+    private CommentContract.onEditListener editListener;
 
 
-    public CommentInteractor(CommentContract.onPostListener postListener, CommentContract.onLoadListener loadListener) {
+    public CommentInteractor(CommentContract.onPostListener postListener, CommentContract.onLoadListener loadListener, CommentContract.onEditListener editListener) {
         this.postListener = postListener;
         this.loadListener = loadListener;
+        this.editListener = editListener;
+    }
+
+    @Override
+    public void editCommentOnFirebase(BaseActivity activity, final String commentID, final String newContent) {
+        final DatabaseReference commentRef = activity.getmDatabase().child("Comments");
+
+        commentRef.child(commentID).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                Comment comment = dataSnapshot.getValue(Comment.class);
+                comment.setContent(newContent + " \n(edited)");
+                commentRef.child(commentID).setValue(comment);
+                editListener.onEditSuccess(comment);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                editListener.onEditFailure(databaseError.getMessage());
+            }
+        });
     }
 
     @Override
@@ -45,11 +67,10 @@ public class CommentInteractor implements CommentContract.Interactor {
 
                         @Override
                         public void onCancelled(DatabaseError databaseError) {
-
+                            loadListener.onLoadFailure(databaseError.getMessage());
                         }
                     });
                 }
-
             }
 
             @Override

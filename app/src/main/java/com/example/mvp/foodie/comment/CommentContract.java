@@ -12,14 +12,19 @@ public interface CommentContract {
         void onCommentsLoadFailure(String error);
         void onCommentSuccess(Comment comment);
         void onCommentFailure(String error);
+        void onCommentEditSuccess(Comment comment);
+        void onCommentEditFailure(String error);
     }
 
+
     interface Presenter {
+        void editComment(BaseActivity activity, String commentID, String newContent);
         void loadComments(BaseActivity activity, String postID);
         void postComment(BaseActivity activity, String postID, String commentText, String userID);
     }
 
     interface Interactor {
+        void editCommentOnFirebase(BaseActivity activity, String commentID, String newContent);
         void loadCommentsFromFirebase(BaseActivity activity, String postID);
         void postCommentToFirebase(BaseActivity activity, String postID, String commentText, String userID);
     }
@@ -34,4 +39,8 @@ public interface CommentContract {
         void onLoadFailure(String error);
     }
 
+    interface onEditListener {
+        void onEditSuccess(Comment comment);
+        void onEditFailure(String error);
+    }
 }
