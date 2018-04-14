@@ -7,6 +7,7 @@ public class Comment {
     private String content;
     private long createdTime;
     private String userID;
+    private String postID;
 
     public Comment() {
         createdTime = Calendar.getInstance().getTimeInMillis();
@@ -42,5 +43,13 @@ public class Comment {
 
     public void setUserID(String userID) {
         this.userID = userID;
+    }
+
+    public String getPostID() {
+        return postID;
+    }
+
+    public void setPostID(String postID) {
+        this.postID = postID;
     }
 }

@@ -22,13 +22,22 @@
         android:textStyle="bold"
         android:text="Huy Nguyen" />
 
-    <android.support.v7.widget.AppCompatTextView
-        android:id="@+id/commentText_id"
+    <android.support.v7.widget.AppCompatImageButton
+        android:id="@+id/commentMenu_id"
+        style="?android:attr/actionOverflowButtonStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_toRightOf="@+id/userProfile_id"
-        android:layout_toEndOf="@+id/userProfile_id"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true" />
+
+    <android.support.v7.widget.AppCompatTextView
+        android:id="@+id/commentText_id"
+        android:layout_width="305dp"
+        android:layout_height="wrap_content"
         android:layout_below="@+id/commentUserName_id"
+        android:layout_toEndOf="@+id/userProfile_id"
+        android:layout_toRightOf="@+id/userProfile_id"
         android:text="I'm definitely coming!! dasdasdkasdjkas djaskdjlas jdaklasas djaslkjas djk dsdjasdljasdlasj ;sj dkljasd k kkk ask djk jaskdas dkljasdkl jasdkl jasdkl jasdkljasdklasjdkl ajks dj!" />
 
 </RelativeLayout>

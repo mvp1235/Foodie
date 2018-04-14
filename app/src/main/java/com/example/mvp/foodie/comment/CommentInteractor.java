@@ -80,6 +80,7 @@ public class CommentInteractor implements CommentContract.Interactor {
                     comment.setcID(newCommentID);
                     comment.setContent(commentText);
                     comment.setUserID(userID);
+                    comment.setPostID(postID);
 
                     //Update post database
                     Post post = dataSnapshot.getValue(Post.class);

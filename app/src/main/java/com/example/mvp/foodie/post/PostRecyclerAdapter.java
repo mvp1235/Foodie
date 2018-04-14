@@ -86,7 +86,6 @@ public class PostRecyclerAdapter extends RecyclerView.Adapter<PostViewHolder>{
         holder.numInterests.setText(post.getInterestCount());
         userLikedPost(holder.postHeart, post.getPostID(), (((BaseActivity)context).getmAuth().getCurrentUser().getUid()));
 
-
         holder.interestsLL.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

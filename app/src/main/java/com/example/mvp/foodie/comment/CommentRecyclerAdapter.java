@@ -1,14 +1,20 @@
 package com.example.mvp.foodie.comment;
 
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.PopupMenu;
 
 import com.example.mvp.foodie.BaseActivity;
 import com.example.mvp.foodie.R;
 import com.example.mvp.foodie.models.Comment;
+import com.example.mvp.foodie.models.Post;
 import com.example.mvp.foodie.models.User;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -46,7 +52,7 @@ public class CommentRecyclerAdapter extends RecyclerView.Adapter<CommentViewHold
         return new CommentViewHolder(view);
     }
 
-    void setComments(List<Comment> comments) {
+    public void setComments(List<Comment> comments) {
         this.comments = comments;
         this.notifyDataSetChanged();
     }
@@ -56,6 +62,80 @@ public class CommentRecyclerAdapter extends RecyclerView.Adapter<CommentViewHold
         Comment comment = comments.get(position);
         holder.commentText.setText(comment.getContent());
         setUserInfo(holder, comment.getUserID());
+        addMenuButton(comment, holder);
+    }
+
+    private void addMenuButton(final Comment comment, final CommentViewHolder holder) {
+        String currentUserID = ((BaseActivity)context).getmAuth().getCurrentUser().getUid();
+        String commentUserID = comment.getUserID();
+
+        if (currentUserID.equals(commentUserID)) {
+            holder.menuBtn.setVisibility(View.VISIBLE);
+
+            holder.menuBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    showPostPopupMenu(comment, holder);
+                }
+            });
+
+        } else {
+            holder.menuBtn.setVisibility(View.INVISIBLE);
+        }
+    }
+
+    private void showPostPopupMenu(final Comment comment, CommentViewHolder holder) {
+        PopupMenu popupMenu = new PopupMenu(context, holder.menuBtn);
+        popupMenu.getMenuInflater().inflate(R.menu.comment_option_menu_items, popupMenu.getMenu());
+
+        popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                if (item.getTitle().toString().equals("Delete")) {
+                    showDeleteConfirmationDialog(comment);
+                }
+                return false;
+            }
+        });
+        popupMenu.show();
+    }
+
+    private void showDeleteConfirmationDialog(final Comment comment) {
+        new AlertDialog.Builder(context)
+                .setMessage("Are you sure you want to delete this comment?")
+                .setCancelable(false)
+                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        deleteComment(comment.getPostID(), comment.getcID());
+                    }
+                })
+                .setNegativeButton("No", null)
+                .show();
+    }
+
+    private void deleteComment(final String postID, final String commentID) {
+        final DatabaseReference postRef = ((BaseActivity)context).getmDatabase().child("Posts");
+        final DatabaseReference commentRef = ((BaseActivity)context).getmDatabase().child("Comments");
+
+        postRef.child(postID).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+
+                //Delete comment ref ID from post
+                Post post = dataSnapshot.getValue(Post.class);
+                post.removeCommentID(commentID);
+                postRef.child(postID).setValue(post);
+
+                //Delete the comment
+                commentRef.child(commentID).removeValue();
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
     }
 
     private void setUserInfo(final CommentViewHolder holder, final String userID) {

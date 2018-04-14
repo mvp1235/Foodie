@@ -108,7 +108,7 @@ public class Post {
         this.commentIDs.add(commentID);
     }
 
-    public void removeComment(String commentID) {
+    public void removeCommentID(String commentID) {
         if (this.commentIDs.contains(commentID))
             this.commentIDs.remove(commentID);
     }
