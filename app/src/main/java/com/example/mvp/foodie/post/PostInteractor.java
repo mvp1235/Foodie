@@ -25,6 +25,7 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 import java.io.ByteArrayOutputStream;
+import java.util.Calendar;
 
 import static com.example.mvp.foodie.UtilHelper.INITIAL_QUERY;
 
@@ -160,6 +161,7 @@ public class PostInteractor implements PostContract.Interactor {
                         post.setDescription(description);
                         post.setLocation(location);
                         post.setPhotoURL(downloadUrl.toString());
+                        post.setCreatedTime(Calendar.getInstance().getTimeInMillis());  //update createdTime
 
                         databaseReference.child(postID).setValue(post);
                         editListener.onEditSuccess(post);

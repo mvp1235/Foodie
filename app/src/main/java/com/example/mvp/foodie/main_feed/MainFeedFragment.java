@@ -65,7 +65,6 @@ public class MainFeedFragment extends Fragment implements MainFeedContract.View 
     @Override
     public void onPostsLoadedSuccess(List<Post> posts) {
         adapter.setPosts(posts);
-        adapter.notifyDataSetChanged();
     }
 
     @Override

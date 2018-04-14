@@ -43,6 +43,7 @@ public class PostRecyclerAdapter extends RecyclerView.Adapter<PostViewHolder>{
 
     public void setPosts(List<Post> posts) {
         this.posts = posts;
+        this.notifyDataSetChanged();
     }
 
     @Override
@@ -111,12 +112,22 @@ public class PostRecyclerAdapter extends RecyclerView.Adapter<PostViewHolder>{
             }
         });
 
-        holder.menuBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        String postOwnerID = post.getUserID();
+        String currentUserID = ((BaseActivity)context).getmAuth().getCurrentUser().getUid();
+
+        if (postOwnerID.equals(currentUserID)) {
+            holder.menuBtn.setVisibility(View.VISIBLE);
+            holder.menuBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
                 showPostPopupMenu(post, holder);
-            }
-        });
+                }
+            });
+        } else {
+            holder.menuBtn.setVisibility(View.GONE);
+        }
+
+
 
     }
 

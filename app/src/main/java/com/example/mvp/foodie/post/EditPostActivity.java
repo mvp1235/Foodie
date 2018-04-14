@@ -294,6 +294,7 @@ public class EditPostActivity extends BaseActivity implements PostContract.EditV
     public void onPostEditSuccess(Post post) {
         mPrgressDialog.hide();
         Toast.makeText(this, "Post edited successfully.", Toast.LENGTH_SHORT).show();
+        setResult(RESULT_OK);
         finish();
     }
 
