@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.graphics.Bitmap;
 import android.net.Uri;
 
+import com.example.mvp.foodie.BaseActivity;
 import com.google.firebase.auth.FirebaseUser;
 
 public interface SignUpContract {
@@ -13,12 +14,12 @@ public interface SignUpContract {
     }
 
     interface Presenter {
-        void signUp(Activity activity, String firstName, String lastName, String email, String password);
+        void signUp(BaseActivity activity, String firstName, String lastName, String email, String password);
     }
 
     interface Interactor {
-        void performFirebaseSignUp(Activity activity, String firstName, String lastName, String email, String password);
-        void performUserDataStoring(Activity activity, String firstName, String lastName, String email);
+        void performFirebaseSignUp(BaseActivity activity, String firstName, String lastName, String email, String password);
+        void performUserDataStoring(BaseActivity activity, String firstName, String lastName, String email);
 
     }
 

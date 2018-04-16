@@ -1,9 +1,6 @@
 package com.example.mvp.foodie.signin;
 
-import android.app.Activity;
-import android.graphics.Bitmap;
-import android.net.Uri;
-
+import com.example.mvp.foodie.BaseActivity;
 import com.google.firebase.auth.FirebaseUser;
 
 public interface SignInContract {
@@ -14,12 +11,12 @@ public interface SignInContract {
     }
 
     interface Presenter {
-        void signIn(Activity activity, String email, String password);
+        void signIn(BaseActivity activity, String email, String password);
         void checkFirebaseAuth();
     }
 
     interface Interactor {
-        void performFirebaseSignIn(Activity activity, String email, String password);
+        void performFirebaseSignIn(BaseActivity activity, String email, String password);
     }
 
     interface onSignInListener{

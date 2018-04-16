@@ -1,7 +1,7 @@
 package com.example.mvp.foodie.signin;
 
-import android.app.Activity;
 
+import com.example.mvp.foodie.BaseActivity;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
@@ -17,7 +17,7 @@ public class SignInPresenter implements SignInContract.Presenter, SignInContract
     }
 
     @Override
-    public void signIn(Activity activity, String email, String password) {
+    public void signIn(BaseActivity activity, String email, String password) {
         signInInteractor.performFirebaseSignIn(activity, email, password);
     }
 

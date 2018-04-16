@@ -1,7 +1,6 @@
 package com.example.mvp.foodie.signup;
 
-import android.app.Activity;
-
+import com.example.mvp.foodie.BaseActivity;
 import com.google.firebase.auth.FirebaseUser;
 
 public class SignUpPresenter implements SignUpContract.Presenter, SignUpContract.onSignUpListener{
@@ -14,7 +13,7 @@ public class SignUpPresenter implements SignUpContract.Presenter, SignUpContract
     }
 
     @Override
-    public void signUp(Activity activity, String firstName, String lastName, String email, String password) {
+    public void signUp(BaseActivity activity, String firstName, String lastName, String email, String password) {
         firstName = firstName.substring(0,1).toUpperCase() + firstName.substring(1).toLowerCase();
         lastName = lastName.substring(0,1).toUpperCase() + lastName.substring(1).toLowerCase();
         interactor.performFirebaseSignUp(activity, firstName, lastName, email, password);
