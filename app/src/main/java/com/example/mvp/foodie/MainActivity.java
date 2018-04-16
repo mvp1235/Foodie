@@ -26,6 +26,11 @@ import com.example.mvp.foodie.navigation_drawer.DrawerPresenter;
 import com.example.mvp.foodie.post.NewPostActivity;
 import com.example.mvp.foodie.profile.ProfileActivity;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.iid.FirebaseInstanceId;
 import com.squareup.picasso.Picasso;
 
 import static com.example.mvp.foodie.UtilHelper.RESULT_CLOSE_ALL;
@@ -162,6 +167,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
                 .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
+                        removeTokenIDFromDatabaseUponLogout(getmAuth().getCurrentUser().getUid(), FirebaseInstanceId.getInstance().getToken());
                         getmAuth().signOut();
                         setFirebaseUser(null);
                         setResult(RESULT_CLOSE_ALL);
@@ -170,6 +176,23 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
                 })
                 .setNegativeButton("No", null)
                 .show();
+    }
+
+    private void removeTokenIDFromDatabaseUponLogout(final String userID, final String tokenID) {
+        final DatabaseReference userRef = getmDatabase().child("Users");
+        userRef.child(userID).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                User u = dataSnapshot.getValue(User.class);
+                u.removeTokenID(tokenID);
+                userRef.child(userID).setValue(u);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
     }
 
     /**

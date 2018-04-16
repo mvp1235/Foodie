@@ -17,6 +17,7 @@ public class Post {
     private ArrayList<String> commentIDs;
     private ArrayList<String> interestIDs;
     private ArrayList<String> goingIDs;
+    private ArrayList<String> subscribedTokenIDs;
 
     public Post(){
         this.postID = postID;
@@ -24,6 +25,7 @@ public class Post {
         commentIDs = new ArrayList<>();
         interestIDs = new ArrayList<>();
         goingIDs = new ArrayList<>();
+        subscribedTokenIDs = new ArrayList<>();
 
         photoURL = "https://i.ytimg.com/vi/mEBFswpYms4/maxresdefault.jpg";
         location = "San Jose, CA";
@@ -169,5 +171,27 @@ public class Post {
 
     public void setUserID(String userID) {
         this.userID = userID;
+    }
+
+    public void setCommentIDs(ArrayList<String> commentIDs) {
+        this.commentIDs = commentIDs;
+    }
+
+    public ArrayList<String> getSubscribedTokenIDs() {
+        return subscribedTokenIDs;
+    }
+
+    public void setSubscribedTokenIDs(ArrayList<String> subscribedTokenIDs) {
+        this.subscribedTokenIDs = subscribedTokenIDs;
+    }
+
+    public void addTokenID(String tokenID) {
+        if (!subscribedTokenIDs.contains(tokenID))
+            subscribedTokenIDs.add(tokenID);
+    }
+
+    public void removeTokenID(String tokenID) {
+        if (subscribedTokenIDs.contains(tokenID))
+            subscribedTokenIDs.remove(tokenID);
     }
 }
