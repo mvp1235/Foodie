@@ -11,6 +11,7 @@ import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.AppCompatTextView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -29,15 +30,20 @@ import de.hdodenhof.circleimageview.CircleImageView;
 import static com.example.mvp.foodie.UtilHelper.EMAIL;
 import static com.example.mvp.foodie.UtilHelper.FULL_NAME;
 import static com.example.mvp.foodie.UtilHelper.REQUEST_ALL;
+import static com.example.mvp.foodie.UtilHelper.REQUEST_CODE;
 import static com.example.mvp.foodie.UtilHelper.REQUEST_EDIT_PROFILE;
 import static com.example.mvp.foodie.UtilHelper.REQUEST_GALLERY_PHOTO;
 import static com.example.mvp.foodie.UtilHelper.REQUEST_IMAGE_CAPTURE;
 import static com.example.mvp.foodie.UtilHelper.REQUEST_WRITE_EXTERNAL;
+import static com.example.mvp.foodie.UtilHelper.USER_ID;
+import static com.example.mvp.foodie.UtilHelper.VIEW_MY_PROFILE;
+import static com.example.mvp.foodie.UtilHelper.VIEW_OTHER_PROFILE;
 
 public class ProfileActivity extends BaseActivity implements ProfileContract.View, ProfileContract.onUploadListener {
     Toolbar toolbar;
     private AppCompatTextView name, email, location, postCount, friendCount;
     private CircleImageView profileImage;
+    private AppCompatButton addFriendBtn, unFriendBtn, acceptBtn, declineBtn;
 
     private AlertDialog photoActionDialog;
 
@@ -52,8 +58,36 @@ public class ProfileActivity extends BaseActivity implements ProfileContract.Vie
         getPermissions();
         setUpListeners();
         presenter = new ProfilePresenter(this);
-        presenter.loadDataFromFirebase(getmAuth().getCurrentUser().getUid());
+        loadData();
 
+    }
+
+    private void loadData() {
+        Intent intent = getIntent();
+        if (intent.getIntExtra(REQUEST_CODE, 0) == VIEW_MY_PROFILE) {
+            presenter.loadDataFromFirebase(getmAuth().getCurrentUser().getUid());
+
+            //Show/Hide appropriate fields
+            //Hide all irrelevant field
+            addFriendBtn.setVisibility(View.GONE);
+            unFriendBtn.setVisibility(View.GONE);
+            acceptBtn.setVisibility(View.GONE);
+            declineBtn.setVisibility(View.GONE);
+
+        } else if (intent.getIntExtra(REQUEST_CODE, 0) == VIEW_OTHER_PROFILE) {
+            presenter.loadDataFromFirebase(intent.getStringExtra(USER_ID));
+
+
+
+            //Show/Hide appropriate fields
+            //Hide all irrelevant field
+            addFriendBtn.setVisibility(View.VISIBLE);
+            unFriendBtn.setVisibility(View.GONE);
+            acceptBtn.setVisibility(View.GONE);
+            declineBtn.setVisibility(View.GONE);
+        } else {
+            Toast.makeText(this, "There is a problem with the server. Please reload the application.", Toast.LENGTH_SHORT).show();
+        }
     }
 
     private void getPermissions() {
@@ -90,15 +124,24 @@ public class ProfileActivity extends BaseActivity implements ProfileContract.Vie
         postCount = findViewById(R.id.profilePostCount_id);
         friendCount = findViewById(R.id.profileFriendCount_id);
         profileImage = findViewById(R.id.profilePhoto_id);
+
+        addFriendBtn = findViewById(R.id.addFriendBtn_id);
+        unFriendBtn = findViewById(R.id.unFriendBtn_id);
+        acceptBtn = findViewById(R.id.acceptRequestBtn_id);
+        declineBtn = findViewById(R.id.removeRequestBtn_id);
     }
 
     private void setUpListeners() {
-        profileImage.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showPhotoActionDialog();
-            }
-        });
+        //only allow user to change profile photo if they are viewing their own profile
+        if (getIntent().getStringExtra(USER_ID).equals(getmAuth().getCurrentUser().getUid())) {
+            profileImage.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    showPhotoActionDialog();
+                }
+            });
+        }
+
     }
 
     @Override
@@ -236,6 +279,13 @@ public class ProfileActivity extends BaseActivity implements ProfileContract.Vie
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.profile_toolbar_items, menu);
+        MenuItem editMenu = menu.findItem(R.id.profile_edit);
+
+        //If viewing other's profile, hide edit menu to prevent you from editing other people's profile
+        if (getIntent().getIntExtra(REQUEST_CODE, 0) == VIEW_OTHER_PROFILE) {
+            if (!getIntent().getStringExtra(USER_ID).equals(getmAuth().getCurrentUser().getUid()))
+                editMenu.setVisible(false);
+        }
         return true;
     }
 

@@ -33,7 +33,9 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.squareup.picasso.Picasso;
 
+import static com.example.mvp.foodie.UtilHelper.REQUEST_CODE;
 import static com.example.mvp.foodie.UtilHelper.RESULT_CLOSE_ALL;
+import static com.example.mvp.foodie.UtilHelper.VIEW_MY_PROFILE;
 
 
 public class MainActivity extends BaseActivity implements NavigationView.OnNavigationItemSelectedListener, DrawerContract.View {
@@ -142,7 +144,8 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         switch (id) {
             case R.id.profile_id:
                 intent = new Intent(MainActivity.this, ProfileActivity.class);
-                startActivity(intent);
+                intent.putExtra(REQUEST_CODE, VIEW_MY_PROFILE);
+                startActivityForResult(intent, VIEW_MY_PROFILE);
                 break;
             case R.id.settings_id:
 

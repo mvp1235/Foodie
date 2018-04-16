@@ -74,6 +74,10 @@
     <string name="edit_post">Edit Post</string>
     <string name="cancel">Cancel</string>
     <string name="edit_comment">Edit Comment</string>
+    <string name="add_friend">Add Friend</string>
+    <string name="unfriend">Unfriend</string>
+    <string name="accept_request">Accept Request</string>
+    <string name="decline_request">Decline Request</string>
 
 
 </resources>

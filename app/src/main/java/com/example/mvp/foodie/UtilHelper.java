@@ -11,6 +11,8 @@ public class UtilHelper {
     public static final String FULL_NAME = "Full Name";
     public static final String COMMENT_TEXT = "Comment Text";
     public static final String COMMENT_ID = "Comment ID";
+    public static final String REQUEST_CODE = "Request Code";
+
 
 
 
@@ -23,6 +25,9 @@ public class UtilHelper {
     public static final int REQUEST_EDIT_PROFILE = 2006;
     public static final int REQUEST_VIEW_FEED = 2007;
     public static final int RESULT_CLOSE_ALL = 2008;
+    public static final int VIEW_MY_PROFILE = 2009;
+    public static final int VIEW_OTHER_PROFILE = 2010;
+
 
 
     public static int SECONDS_IN_YEAR = 31536000;

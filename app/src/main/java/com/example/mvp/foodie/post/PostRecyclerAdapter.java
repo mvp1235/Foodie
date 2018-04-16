@@ -18,6 +18,8 @@ import com.example.mvp.foodie.R;
 import com.example.mvp.foodie.comment.PostCommentsActivity;
 import com.example.mvp.foodie.models.Post;
 import com.example.mvp.foodie.models.User;
+import com.example.mvp.foodie.profile.ProfileActivity;
+import com.example.mvp.foodie.signin.SignInActivity;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -30,8 +32,10 @@ import static com.example.mvp.foodie.UtilHelper.POST_DESCRIPTION;
 import static com.example.mvp.foodie.UtilHelper.POST_ID;
 import static com.example.mvp.foodie.UtilHelper.POST_LOCATION;
 import static com.example.mvp.foodie.UtilHelper.POST_URL;
+import static com.example.mvp.foodie.UtilHelper.REQUEST_CODE;
 import static com.example.mvp.foodie.UtilHelper.REQUEST_EDIT_POST;
 import static com.example.mvp.foodie.UtilHelper.USER_ID;
+import static com.example.mvp.foodie.UtilHelper.VIEW_OTHER_PROFILE;
 
 public class PostRecyclerAdapter extends RecyclerView.Adapter<PostViewHolder>{
 
@@ -73,7 +77,7 @@ public class PostRecyclerAdapter extends RecyclerView.Adapter<PostViewHolder>{
     }
 
     @Override
-    public void onBindViewHolder(final PostViewHolder holder, int position) {
+    public void onBindViewHolder(final PostViewHolder holder, final int position) {
         final Post post = posts.get(position);
 
         setUserInfo(post.getUserID(), holder);
@@ -113,6 +117,13 @@ public class PostRecyclerAdapter extends RecyclerView.Adapter<PostViewHolder>{
             }
         });
 
+        holder.userProfile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                viewUserProfile(post.getUserID());
+            }
+        });
+
         String postOwnerID = post.getUserID();
         String currentUserID = ((BaseActivity)context).getmAuth().getCurrentUser().getUid();
 
@@ -129,6 +140,13 @@ public class PostRecyclerAdapter extends RecyclerView.Adapter<PostViewHolder>{
         }
 
 
+    }
+
+    private void viewUserProfile(String userID) {
+        Intent intent = new Intent(context, ProfileActivity.class);
+        intent.putExtra(REQUEST_CODE, VIEW_OTHER_PROFILE);
+        intent.putExtra(USER_ID, userID);
+        ((BaseActivity)context).startActivityForResult(intent, VIEW_OTHER_PROFILE);
     }
 
     private void showPostPopupMenu(final Post post, PostViewHolder holder) {
