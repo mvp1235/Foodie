@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_marginBottom="10dp"
-    android:orientation="horizontal">
+    android:layout_width="match_parent" android:layout_height="match_parent"
+    android:layout_margin="10dp">
 
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/notificationPhoto_id"
@@ -11,6 +9,7 @@
         android:layout_height="50dp"
         android:layout_alignParentTop="true"
         android:layout_marginRight="10dp"
+        android:layout_marginEnd="10dp"
         android:src="@drawable/camera" />
 
     <android.support.v7.widget.AppCompatTextView
@@ -22,22 +21,23 @@
         android:textStyle="bold"
         android:text="Huy Nguyen" />
 
-    <android.support.v7.widget.AppCompatImageButton
-        android:id="@+id/commentMenu_id"
-        style="?android:attr/actionOverflowButtonStyle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
-        android:layout_centerVertical="true" />
 
     <android.support.v7.widget.AppCompatTextView
-        android:id="@+id/commentText_id"
+        android:id="@+id/notificationContent_id"
         android:layout_width="305dp"
         android:layout_height="wrap_content"
         android:layout_below="@+id/notificationUserName_id"
         android:layout_toEndOf="@+id/notificationPhoto_id"
         android:layout_toRightOf="@+id/notificationPhoto_id"
-        android:text="I'm definitely coming!! dasdasdkasdjkas djaskdjlas jdaklasas djaslkjas djk dsdjasdljasdlasj ;sj dkljasd k kkk ask djk jaskdas dkljasdkl jasdkl jasdkl jasdkljasdklasjdkl ajks dj!" />
+        android:text="sent you a friend request" />
+
+    <TextView
+        android:id="@+id/notificationTime_id"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/notificationUserName_id"
+        android:text="12m" />
 
 </RelativeLayout>

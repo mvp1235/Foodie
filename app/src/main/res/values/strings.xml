@@ -78,6 +78,7 @@
     <string name="unfriend">Unfriend</string>
     <string name="accept_request">Accept Request</string>
     <string name="decline_request">Decline Request</string>
+    <string name="cancel_request">Cancel Request</string>
 
 
 </resources>

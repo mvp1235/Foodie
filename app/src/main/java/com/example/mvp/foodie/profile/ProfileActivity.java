@@ -22,7 +22,12 @@ import android.widget.Toast;
 
 import com.example.mvp.foodie.BaseActivity;
 import com.example.mvp.foodie.R;
+import com.example.mvp.foodie.models.Notification;
 import com.example.mvp.foodie.models.User;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -77,11 +82,12 @@ public class ProfileActivity extends BaseActivity implements ProfileContract.Vie
         } else if (intent.getIntExtra(REQUEST_CODE, 0) == VIEW_OTHER_PROFILE) {
             presenter.loadDataFromFirebase(intent.getStringExtra(USER_ID));
 
-
-
             //Show/Hide appropriate fields
             //Hide all irrelevant field
-            addFriendBtn.setVisibility(View.VISIBLE);
+            if(!intent.getStringExtra(USER_ID).equals(getmAuth().getCurrentUser().getUid()))
+                addFriendBtn.setVisibility(View.VISIBLE);
+            else
+                addFriendBtn.setVisibility(View.GONE);
             unFriendBtn.setVisibility(View.GONE);
             acceptBtn.setVisibility(View.GONE);
             declineBtn.setVisibility(View.GONE);
@@ -132,15 +138,84 @@ public class ProfileActivity extends BaseActivity implements ProfileContract.Vie
     }
 
     private void setUpListeners() {
+        final Intent receivedIntent = getIntent();
         //only allow user to change profile photo if they are viewing their own profile
-        if (getIntent().getStringExtra(USER_ID).equals(getmAuth().getCurrentUser().getUid())) {
+        if (receivedIntent.getIntExtra(REQUEST_CODE, 0) == VIEW_MY_PROFILE) {
             profileImage.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     showPhotoActionDialog();
                 }
             });
+        } else if (receivedIntent.getStringExtra(USER_ID).equals(getmAuth().getCurrentUser().getUid())) {
+            profileImage.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    showPhotoActionDialog();
+                }
+            });
+
         }
+
+        addFriendBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (addFriendBtn.getText().toString().equalsIgnoreCase("Add Friend")) {
+                    addFriendBtn.setText(R.string.cancel_request);
+                    sendFriendRequest(getmAuth().getCurrentUser().getUid(), receivedIntent.getStringExtra(USER_ID));
+                } else {
+                    addFriendBtn.setText(R.string.add_friend);
+                }
+
+            }
+        });
+
+
+
+    }
+
+    private void sendFriendRequest(String fromID, final String toID) {
+        final DatabaseReference notificationRef = getmDatabase().child("Notifications");
+        final DatabaseReference userRef = getmDatabase().child("Users");
+        final String newNotificationID = notificationRef.push().getKey();
+
+        final Notification notification = new Notification();
+        notification.setContent("sent you a friend request.");
+        notification.setnID(newNotificationID);
+
+        userRef.child(fromID).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                //Obtain fromUser data to store in notification
+                User fromUser = dataSnapshot.getValue(User.class);
+                notification.setPhotoURL(fromUser.getProfileURL());
+                notification.setUserName(fromUser.getFullName());
+
+                //Save notification to user's notification list
+                userRef.child(toID).addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        User toUser = dataSnapshot.getValue(User.class);
+                        toUser.addNotification(notification);
+                        userRef.child(toID).setValue(toUser);
+
+                        //Save friend request notification to Notifications database
+                        notificationRef.child(newNotificationID).setValue(notification);
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
 
     }
 

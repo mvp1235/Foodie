@@ -12,11 +12,14 @@ public class User {
     private List<String> postIDs;
     private List<String> friendIDs;
     private List<String> tokenIDs;
+    private List<Notification> notifications;
 
     public User(){
         postIDs = new ArrayList<>();
         friendIDs = new ArrayList<>();
         tokenIDs = new ArrayList<>();
+        notifications = new ArrayList<>();
+
     };
 
     public String getuID() {
@@ -87,6 +90,24 @@ public class User {
     public void deletePostID(String postID) {
         if(postIDs.contains(postID))
             postIDs.remove(postID);
+    }
+
+    public List<Notification> getNotifications() {
+        return notifications;
+    }
+
+    public void setNotifications(List<Notification> notifications) {
+        this.notifications = notifications;
+    }
+
+    public void addNotification(Notification notification) {
+        if (!notifications.contains(notification))
+            notifications.add(notification);
+    }
+
+    public void deletePostID(Notification notification) {
+        if(notifications.contains(notification))
+            notifications.remove(notification);
     }
 
     public List<String> getFriendIDs() {

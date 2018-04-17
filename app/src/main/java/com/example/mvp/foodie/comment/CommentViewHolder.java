@@ -17,8 +17,8 @@ public class CommentViewHolder extends RecyclerView.ViewHolder {
     public CommentViewHolder(View itemView) {
         super(itemView);
 
-        profilePhoto = itemView.findViewById(R.id.userProfile_id);
-        userName = itemView.findViewById(R.id.commentUserName_id);
+        profilePhoto = itemView.findViewById(R.id.notificationPhoto_id);
+        userName = itemView.findViewById(R.id.notificationUserName_id);
         commentText = itemView.findViewById(R.id.commentText_id);
         menuBtn = itemView.findViewById(R.id.commentMenu_id);
     }

@@ -1,7 +1,6 @@
 package com.example.mvp.foodie.models;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 
 import static com.example.mvp.foodie.UtilHelper.SECONDS_IN_DAY;
 import static com.example.mvp.foodie.UtilHelper.SECONDS_IN_HOUR;
@@ -21,7 +20,7 @@ public class Post {
 
     public Post(){
         this.postID = postID;
-        createdTime = Calendar.getInstance().getTimeInMillis();
+        createdTime = System.currentTimeMillis();
         commentIDs = new ArrayList<>();
         interestIDs = new ArrayList<>();
         goingIDs = new ArrayList<>();
@@ -34,7 +33,7 @@ public class Post {
 
     public String getPostDuration() {
         String time = "";
-        long currentTime = Calendar.getInstance().getTimeInMillis();
+        long currentTime = System.currentTimeMillis();
         long timeDifference = currentTime - createdTime;
 
         //number of difference in seconds

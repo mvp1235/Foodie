@@ -23,6 +23,7 @@ import com.example.mvp.foodie.main_feed.MainFeedFragment;
 import com.example.mvp.foodie.models.User;
 import com.example.mvp.foodie.navigation_drawer.DrawerContract;
 import com.example.mvp.foodie.navigation_drawer.DrawerPresenter;
+import com.example.mvp.foodie.notification.NotificationFragment;
 import com.example.mvp.foodie.post.NewPostActivity;
 import com.example.mvp.foodie.profile.ProfileActivity;
 import com.google.firebase.auth.FirebaseAuth;

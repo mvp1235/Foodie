@@ -1,19 +1,12 @@
 package com.example.mvp.foodie.post;
 
-import android.content.Context;
+
 import android.support.v7.widget.AppCompatImageButton;
 import android.support.v7.widget.RecyclerView;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
 import com.example.mvp.foodie.R;
-import com.example.mvp.foodie.comment.CommentViewHolder;
-import com.example.mvp.foodie.models.Comment;
-import com.squareup.picasso.Picasso;
-
-import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 

@@ -10,7 +10,7 @@ public class Comment {
     private String postID;
 
     public Comment() {
-        createdTime = Calendar.getInstance().getTimeInMillis();
+        createdTime = System.currentTimeMillis();
     }
 
     public String getcID() {
