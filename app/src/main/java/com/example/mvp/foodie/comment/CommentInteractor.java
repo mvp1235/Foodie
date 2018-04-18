@@ -1,7 +1,10 @@
 package com.example.mvp.foodie.comment;
 
+import android.util.Log;
+
 import com.example.mvp.foodie.BaseActivity;
 import com.example.mvp.foodie.models.Comment;
+import com.example.mvp.foodie.models.Notification;
 import com.example.mvp.foodie.models.Post;
 import com.example.mvp.foodie.models.User;
 import com.google.firebase.database.DataSnapshot;
@@ -10,7 +13,9 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 
 public class CommentInteractor implements CommentContract.Interactor {
@@ -83,8 +88,8 @@ public class CommentInteractor implements CommentContract.Interactor {
 
 
     @Override
-    public void postCommentToFirebase(BaseActivity activity, final String postID, final String commentText, final String userID) {
-        if (activity == null || commentText == null || userID == null) {
+    public void postCommentToFirebase(final BaseActivity activity, final String postID, final String commentText, final String commenterID) {
+        if (activity == null || commentText == null || commenterID == null) {
             postListener.onPostFailure("Failed to post the comment. Please try again later.");
         } else {
             final DatabaseReference commentRef = activity.getmDatabase().child("Comments");
@@ -99,16 +104,20 @@ public class CommentInteractor implements CommentContract.Interactor {
                     Comment comment = new Comment();
                     comment.setcID(newCommentID);
                     comment.setContent(commentText);
-                    comment.setUserID(userID);
+                    comment.setUserID(commenterID);
                     comment.setPostID(postID);
 
                     //Update post database
                     Post post = dataSnapshot.getValue(Post.class);
                     post.addCommentID(comment.getcID());
+                    post.addSubscriberID(commenterID);
                     postRef.child(postID).setValue(post);
 
                     //add comment to Comments database
                     commentRef.child(comment.getcID()).setValue(comment);
+
+                    //Add comment notification
+                    addCommentNotification(activity, postID, post.getUserID(), commenterID, post.getSubscribedUserIDs());
 
                     //notify presenter
                     postListener.onPostSuccess(comment);
@@ -122,6 +131,65 @@ public class CommentInteractor implements CommentContract.Interactor {
             });
 
         }
+
+    }
+
+    private void addCommentNotification(BaseActivity activity, final String postID, final String postOwnerID, final String commenterID, final ArrayList<String> subscribedIDs) {
+        final DatabaseReference notificationRef = activity.getmDatabase().child("Notifications");
+        final DatabaseReference userRef = activity.getmDatabase().child("Users");
+
+        final String newNotificationID = notificationRef.push().getKey();
+
+        final Notification notification = new Notification();
+        notification.setnID(newNotificationID);
+        notification.setFromUserID(commenterID);
+        notification.setPostID(postID);
+
+        userRef.child(commenterID).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                User commentUser = dataSnapshot.getValue(User.class);
+                notification.setUserName(commentUser.getFullName());
+                notification.setPhotoURL(commentUser.getProfileURL());
+
+                for (final String subID : subscribedIDs) {
+                    //Only post notification for subscribers who is not the actual commenter
+                    if (!subID.equals(commenterID)) {
+                        userRef.child(subID).addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(DataSnapshot dataSnapshot) {
+                                final User subscribedUser = dataSnapshot.getValue(User.class);
+
+                                if (subscribedUser.getuID().equals(postOwnerID))
+                                    notification.setContent("commented on your post.");
+                                else
+                                    notification.setContent("commented on a post you previously commented on.");
+
+                                subscribedUser.addNotification(notification);
+                                userRef.child(subID).setValue(subscribedUser);
+
+                                notificationRef.child(newNotificationID).setValue(notification);
+
+                            }
+
+                            @Override
+                            public void onCancelled(DatabaseError databaseError) {
+
+                            }
+                        });
+                    }
+
+                }
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+
 
     }
 }

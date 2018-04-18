@@ -99,6 +99,7 @@ public class PostInteractor implements PostContract.Interactor {
                 post.setLocation(location);
                 post.setPhotoURL(downloadUrl.toString());
                 post.setPostID(newPostID);
+                post.addSubscriberID(userID);
 
                 userRef.child(userID).addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override

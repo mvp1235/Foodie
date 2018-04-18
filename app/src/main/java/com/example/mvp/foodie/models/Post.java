@@ -1,6 +1,8 @@
 package com.example.mvp.foodie.models;
 
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 
 import static com.example.mvp.foodie.UtilHelper.SECONDS_IN_DAY;
 import static com.example.mvp.foodie.UtilHelper.SECONDS_IN_HOUR;
@@ -15,6 +17,7 @@ public class Post {
     private String userID;
     private ArrayList<String> commentIDs;
     private ArrayList<String> interestIDs;
+    private ArrayList<String> subscribedUserIDs;
 
     //Used for notifications
     private ArrayList<String> subscribedTokenIDs;
@@ -25,11 +28,27 @@ public class Post {
         commentIDs = new ArrayList<>();
         interestIDs = new ArrayList<>();
         subscribedTokenIDs = new ArrayList<>();
-
-        photoURL = "https://i.ytimg.com/vi/mEBFswpYms4/maxresdefault.jpg";
-        location = "San Jose, CA";
+        subscribedUserIDs = new ArrayList<>();
 
     };
+
+    public ArrayList<String> getSubscribedUserIDs() {
+        return subscribedUserIDs;
+    }
+
+    public void setSubscribedUserIDs(ArrayList<String> subscribedUserIDs) {
+        this.subscribedUserIDs = subscribedUserIDs;
+    }
+
+    public void addSubscriberID(String userID) {
+        if (!subscribedUserIDs.contains(userID))
+            subscribedUserIDs.add(userID);
+    }
+
+    public void removeSubscriberID(String userID) {
+        if (subscribedUserIDs.contains(userID))
+            subscribedUserIDs.remove(userID);
+    }
 
     public String getPostDuration() {
         String time = "";

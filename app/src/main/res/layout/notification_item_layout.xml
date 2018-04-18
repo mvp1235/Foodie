@@ -24,7 +24,7 @@
 
     <android.support.v7.widget.AppCompatTextView
         android:id="@+id/notificationContent_id"
-        android:layout_width="305dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/notificationUserName_id"
         android:layout_toEndOf="@+id/notificationPhoto_id"
@@ -37,7 +37,12 @@
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
-        android:layout_below="@+id/notificationUserName_id"
-        android:text="12m" />
+        android:layout_alignParentTop="true"
+        android:text="12 min ago"
+        android:textAllCaps="false"
+        android:textColor="@color/colorPrimary"
+        android:textStyle="bold"
+         />
+
 
 </RelativeLayout>
