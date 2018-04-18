@@ -357,21 +357,18 @@ public class PostRecyclerAdapter extends RecyclerView.Adapter<PostViewHolder>{
 
     private void removeLikeNotification(final String postID, final String ownerID, final String userID) {
         final DatabaseReference userRef = ((BaseActivity)context).getmDatabase().child("Users");
-        final DatabaseReference postRef = ((BaseActivity)context).getmDatabase().child("Posts");
-        final DatabaseReference notificationRef = ((BaseActivity)context).getmDatabase().child("Notifications");
 
         userRef.child(ownerID).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 final User postOwner = dataSnapshot.getValue(User.class);
 
-                String notificationID = "";
                 List<Notification> ownerNotifications = postOwner.getNotifications();
                 for (int i=0; i<ownerNotifications.size(); i++) {
                     Notification n = postOwner.getNotifications().get(i);
 
+                    //Traverse through only like notifications
                     if (n.getContent().equals("liked your post.") && n.getFromUserID().equals(userID) && n.getPostID().equals(postID) && n.getToUserID().equals(postOwner.getuID())) {
-                        notificationID = n.getnID();
                         ownerNotifications.remove(n);
                         break;
                     }
@@ -380,8 +377,6 @@ public class PostRecyclerAdapter extends RecyclerView.Adapter<PostViewHolder>{
                 postOwner.setNotifications(ownerNotifications);
                 userRef.child(postOwner.getuID()).setValue(postOwner);
 
-                if (!TextUtils.isEmpty(notificationID))
-                    notificationRef.child(notificationID).removeValue();
 
             }
 
