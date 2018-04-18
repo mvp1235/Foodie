@@ -369,7 +369,8 @@ public class PostRecyclerAdapter extends RecyclerView.Adapter<PostViewHolder>{
                 List<Notification> ownerNotifications = postOwner.getNotifications();
                 for (int i=0; i<ownerNotifications.size(); i++) {
                     Notification n = postOwner.getNotifications().get(i);
-                    if (n.getFromUserID().equals(userID) && n.getPostID().equals(postID) && n.getToUserID().equals(postOwner.getuID())) {
+
+                    if (n.getContent().equals("liked your post.") && n.getFromUserID().equals(userID) && n.getPostID().equals(postID) && n.getToUserID().equals(postOwner.getuID())) {
                         notificationID = n.getnID();
                         ownerNotifications.remove(n);
                         break;
