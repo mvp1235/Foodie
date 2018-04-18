@@ -138,37 +138,40 @@ public class CommentInteractor implements CommentContract.Interactor {
         final DatabaseReference notificationRef = activity.getmDatabase().child("Notifications");
         final DatabaseReference userRef = activity.getmDatabase().child("Users");
 
-        final String newNotificationID = notificationRef.push().getKey();
-
-        final Notification notification = new Notification();
-        notification.setnID(newNotificationID);
-        notification.setFromUserID(commenterID);
-        notification.setPostID(postID);
 
         userRef.child(commenterID).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
+
                 User commentUser = dataSnapshot.getValue(User.class);
-                notification.setUserName(commentUser.getFullName());
-                notification.setPhotoURL(commentUser.getProfileURL());
 
                 for (final String subID : subscribedIDs) {
                     //Only post notification for subscribers who is not the actual commenter
                     if (!subID.equals(commenterID)) {
+
+                        final String newNotificationID = notificationRef.push().getKey();
+                        final Notification notification = new Notification();
+                        notification.setnID(newNotificationID);
+                        notification.setFromUserID(commenterID);
+                        notification.setPostID(postID);
+                        notification.setUserName(commentUser.getFullName());
+                        notification.setPhotoURL(commentUser.getProfileURL());
+
                         userRef.child(subID).addListenerForSingleValueEvent(new ValueEventListener() {
                             @Override
                             public void onDataChange(DataSnapshot dataSnapshot) {
                                 final User subscribedUser = dataSnapshot.getValue(User.class);
+                                notification.setToUserID(subscribedUser.getuID());
 
                                 if (subscribedUser.getuID().equals(postOwnerID))
                                     notification.setContent("commented on your post.");
                                 else
-                                    notification.setContent("commented on a post you previously commented on.");
+                                    notification.setContent("commented on a post you subscribed to.");
 
                                 subscribedUser.addNotification(notification);
                                 userRef.child(subID).setValue(subscribedUser);
 
-                                notificationRef.child(newNotificationID).setValue(notification);
+                                notificationRef.child(subscribedUser.getuID()).child(newNotificationID).setValue(notification);
 
                             }
 

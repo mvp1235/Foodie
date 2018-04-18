@@ -306,7 +306,7 @@ public class PostRecyclerAdapter extends RecyclerView.Adapter<PostViewHolder>{
         postRef.child(postID).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                Post currentPost = dataSnapshot.getValue(Post.class);
+                final Post currentPost = dataSnapshot.getValue(Post.class);
 
                 userRef.child(currentPost.getUserID()).addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
@@ -330,7 +330,7 @@ public class PostRecyclerAdapter extends RecyclerView.Adapter<PostViewHolder>{
                                 postOwner.addNotification(notification);
 
                                 userRef.child(postOwner.getuID()).setValue(postOwner);
-                                notificationRef.child(newNotificationID).setValue(notification);
+                                notificationRef.child(currentPost.getUserID()).child(newNotificationID).setValue(notification);
                             }
 
                             @Override
