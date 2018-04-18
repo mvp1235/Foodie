@@ -20,6 +20,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 
@@ -71,7 +72,10 @@ public class NotificationFragment extends Fragment {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 User u = dataSnapshot.getValue(User.class);
                 List<Notification> notifications = u.getNotifications();
-                adapter.setNotificationList(notifications);
+                if (notifications != null) {
+                    Collections.reverse(notifications);
+                    adapter.setNotificationList(notifications);
+                }
             }
 
             @Override

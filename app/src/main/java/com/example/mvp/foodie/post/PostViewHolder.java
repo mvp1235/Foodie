@@ -12,7 +12,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class PostViewHolder extends RecyclerView.ViewHolder{
 
-    public android.support.v7.widget.AppCompatTextView name, location, time, description, numGoing, numInterests, numComments;
+    public android.support.v7.widget.AppCompatTextView name, location, time, description, numInterests, numComments;
     public android.support.v7.widget.AppCompatImageView postPhoto, postHeart;
     public AppCompatImageButton menuBtn;
     public CircleImageView userProfile;
@@ -29,14 +29,12 @@ public class PostViewHolder extends RecyclerView.ViewHolder{
         menuBtn = itemView.findViewById(R.id.postMenu_id);
 
         numInterests = itemView.findViewById(R.id.postNumInterest_id);
-        numGoing = itemView.findViewById(R.id.postNumGoing_id);
         numComments = itemView.findViewById(R.id.postNumComments_id);
 
         postPhoto = itemView.findViewById(R.id.postPhoto_id);
         postHeart = itemView.findViewById(R.id.postInterests_id);
         interestsLL = itemView.findViewById(R.id.interestsSection);
         commentsLL = itemView.findViewById(R.id.commentsSection_id);
-        goingLL = itemView.findViewById(R.id.goingSection_id);
 
     }
 }

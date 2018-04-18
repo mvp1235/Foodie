@@ -56,10 +56,12 @@ public class NotificationRecyclerAdapter extends RecyclerView.Adapter<Notificati
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 Notification notification = dataSnapshot.getValue(Notification.class);
-                holder.content.setText(notification.getContent());
-                holder.userName.setText(notification.getUserName());
-                holder.time.setText(notification.getNotificationDuration());
-                Picasso.get().load(notification.getPhotoURL()).into(holder.photoURL);
+                if (notification != null) {
+                    holder.content.setText(notification.getContent());
+                    holder.userName.setText(notification.getUserName());
+                    holder.time.setText(notification.getNotificationDuration());
+                    Picasso.get().load(notification.getPhotoURL()).into(holder.photoURL);
+                }
             }
 
             @Override

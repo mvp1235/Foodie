@@ -13,11 +13,38 @@ public class Notification implements Comparable<Notification>{
     private String photoURL;
     private String userName;
     private String content;
+    private String postID;
+    private String fromUserID;
+    private String toUserID;
     private long createdTime;
 
     public Notification(){
         createdTime = System.currentTimeMillis();
     };
+
+    public String getPostID() {
+        return postID;
+    }
+
+    public void setPostID(String postID) {
+        this.postID = postID;
+    }
+
+    public String getFromUserID() {
+        return fromUserID;
+    }
+
+    public void setFromUserID(String fromUserID) {
+        this.fromUserID = fromUserID;
+    }
+
+    public String getToUserID() {
+        return toUserID;
+    }
+
+    public void setToUserID(String toUserID) {
+        this.toUserID = toUserID;
+    }
 
     public String getnID() {
         return nID;

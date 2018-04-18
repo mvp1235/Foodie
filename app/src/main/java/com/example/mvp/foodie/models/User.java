@@ -14,6 +14,7 @@ public class User {
     private List<String> tokenIDs;
     private List<Notification> notifications;
 
+
     public User(){
         postIDs = new ArrayList<>();
         friendIDs = new ArrayList<>();
@@ -105,7 +106,7 @@ public class User {
             notifications.add(notification);
     }
 
-    public void deletePostID(Notification notification) {
+    public void deleteNotification(Notification notification) {
         if(notifications.contains(notification))
             notifications.remove(notification);
     }
@@ -145,4 +146,5 @@ public class User {
         if (this.tokenIDs.contains(tokenID))
             this.tokenIDs.remove(tokenID);
     }
+
 }

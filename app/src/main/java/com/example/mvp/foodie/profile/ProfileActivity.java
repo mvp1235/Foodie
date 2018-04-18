@@ -9,7 +9,6 @@ import android.os.Build;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.AppCompatTextView;
@@ -94,6 +93,14 @@ public class ProfileActivity extends BaseActivity implements ProfileContract.Vie
         } else {
             Toast.makeText(this, "There is a problem with the server. Please reload the application.", Toast.LENGTH_SHORT).show();
         }
+
+        //FOR NOW, WON"T BE IMPLEMENTING FRIEND FEATURE
+        addFriendBtn.setVisibility(View.GONE);
+        unFriendBtn.setVisibility(View.GONE);
+        acceptBtn.setVisibility(View.GONE);
+        declineBtn.setVisibility(View.GONE);
+        ////////////////////////////////////////////////
+        //REMOVE THIS WHEN BACK TO IMPLEMENTING FRIEND FEATURE
     }
 
     private void getPermissions() {
@@ -157,24 +164,26 @@ public class ProfileActivity extends BaseActivity implements ProfileContract.Vie
 
         }
 
-        addFriendBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (addFriendBtn.getText().toString().equalsIgnoreCase("Add Friend")) {
-                    addFriendBtn.setText(R.string.cancel_request);
-                    sendFriendRequest(getmAuth().getCurrentUser().getUid(), receivedIntent.getStringExtra(USER_ID));
-                } else {
-                    addFriendBtn.setText(R.string.add_friend);
-                }
-
-            }
-        });
+//        addFriendBtn.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                if (addFriendBtn.getText().toString().equalsIgnoreCase("Add Friend")) {
+//                    addFriendBtn.setText(R.string.cancel_request);
+//                    sendFriendRequest(getmAuth().getCurrentUser().getUid(), receivedIntent.getStringExtra(USER_ID));
+//                } else {
+//                    addFriendBtn.setText(R.string.add_friend);
+//
+//                }
+//
+//            }
+//        });
 
 
 
     }
 
-    private void sendFriendRequest(String fromID, final String toID) {
+
+    private void sendFriendRequest(final String fromID, final String toID) {
         final DatabaseReference notificationRef = getmDatabase().child("Notifications");
         final DatabaseReference userRef = getmDatabase().child("Users");
         final String newNotificationID = notificationRef.push().getKey();
@@ -187,9 +196,10 @@ public class ProfileActivity extends BaseActivity implements ProfileContract.Vie
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 //Obtain fromUser data to store in notification
-                User fromUser = dataSnapshot.getValue(User.class);
+                final User fromUser = dataSnapshot.getValue(User.class);
                 notification.setPhotoURL(fromUser.getProfileURL());
                 notification.setUserName(fromUser.getFullName());
+
 
                 //Save notification to user's notification list
                 userRef.child(toID).addListenerForSingleValueEvent(new ValueEventListener() {
@@ -197,7 +207,9 @@ public class ProfileActivity extends BaseActivity implements ProfileContract.Vie
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         User toUser = dataSnapshot.getValue(User.class);
                         toUser.addNotification(notification);
+
                         userRef.child(toID).setValue(toUser);
+                        userRef.child(fromID).setValue(fromUser);
 
                         //Save friend request notification to Notifications database
                         notificationRef.child(newNotificationID).setValue(notification);

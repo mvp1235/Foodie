@@ -15,7 +15,8 @@ public class Post {
     private String userID;
     private ArrayList<String> commentIDs;
     private ArrayList<String> interestIDs;
-    private ArrayList<String> goingIDs;
+
+    //Used for notifications
     private ArrayList<String> subscribedTokenIDs;
 
     public Post(){
@@ -23,7 +24,6 @@ public class Post {
         createdTime = System.currentTimeMillis();
         commentIDs = new ArrayList<>();
         interestIDs = new ArrayList<>();
-        goingIDs = new ArrayList<>();
         subscribedTokenIDs = new ArrayList<>();
 
         photoURL = "https://i.ytimg.com/vi/mEBFswpYms4/maxresdefault.jpg";
@@ -45,33 +45,30 @@ public class Post {
         long numHours = timeDifference / SECONDS_IN_HOUR;
         long numMinutes = timeDifference / SECONDS_IN_MINUTE;
 
-        if (numYears >= 1) {
+        if (numYears >= 1)
             time = numYears + " yr ago";
-        } else if (numMonths >= 1) {
+        else if (numMonths >= 1)
             time = numMonths + " mo ago";
-        } else if (numDays >= 1) {
+        else if (numDays >= 1)
             time = numDays + " day ago";
-        } else if (numHours >= 1) {
+        else if (numHours >= 1)
             time = numHours + " hr ago";
-        } else if (numMinutes >= 1) {
+        else if (numMinutes >= 1)
             time = numMinutes + " min ago";
-        } else {
+        else
             time = "Just now";
-        }
+
         return time;
     }
 
     public String getCommentCount() {
-        return commentIDs.size() + "";
+        return commentIDs.size() + " Comments";
     }
 
     public String getInterestCount() {
-        return interestIDs.size() + "";
+        return interestIDs.size() + " Interests";
     }
 
-    public String getGoingCount() {
-        return goingIDs.size() + "";
-    }
 
     public String getLocation() {
         return location;
@@ -129,23 +126,6 @@ public class Post {
     public void removeInterestID(String interestID) {
         if (this.interestIDs.contains(interestID))
             this.interestIDs.remove(interestID);
-    }
-
-    public ArrayList<String> getGoingIDs() {
-        return goingIDs;
-    }
-
-    public void setGoingIDs(ArrayList<String> goingIDs) {
-        this.goingIDs = goingIDs;
-    }
-
-    public void addGoingID(String goingID) {
-        this.goingIDs.add(goingID);
-    }
-
-    public void removeGoingID(String goingID) {
-        if (this.goingIDs.contains(goingID))
-            this.goingIDs.remove(goingID);
     }
 
     public long getCreatedTime() {

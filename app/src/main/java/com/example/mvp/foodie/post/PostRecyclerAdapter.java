@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.AppCompatImageView;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -16,10 +17,10 @@ import android.widget.Toast;
 import com.example.mvp.foodie.BaseActivity;
 import com.example.mvp.foodie.R;
 import com.example.mvp.foodie.comment.PostCommentsActivity;
+import com.example.mvp.foodie.models.Notification;
 import com.example.mvp.foodie.models.Post;
 import com.example.mvp.foodie.models.User;
 import com.example.mvp.foodie.profile.ProfileActivity;
-import com.example.mvp.foodie.signin.SignInActivity;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -86,7 +87,6 @@ public class PostRecyclerAdapter extends RecyclerView.Adapter<PostViewHolder>{
         holder.description.setText(post.getDescription());
         Picasso.get().load(post.getPhotoURL()).into(holder.postPhoto);
         holder.numComments.setText(post.getCommentCount());
-        holder.numGoing.setText(post.getGoingCount());
         holder.numInterests.setText(post.getInterestCount());
         userLikedPost(holder.postHeart, post.getPostID(), (((BaseActivity)context).getmAuth().getCurrentUser().getUid()));
 
@@ -95,7 +95,7 @@ public class PostRecyclerAdapter extends RecyclerView.Adapter<PostViewHolder>{
             public void onClick(View v) {
             //increment or decrement interests count here, as well as toggle heart icons
             holder.postHeart.setImageResource(R.drawable.heart_filled);
-            handleInterestClicked(holder, post.getPostID(), (((BaseActivity)context).getmAuth().getCurrentUser().getUid()));
+            handleInterestClicked(holder, post.getPostID(), post.getUserID(), (((BaseActivity)context).getmAuth().getCurrentUser().getUid()));
             }
         });
 
@@ -109,13 +109,6 @@ public class PostRecyclerAdapter extends RecyclerView.Adapter<PostViewHolder>{
             }
         });
 
-        holder.numGoing.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-            //increment or decrement interests number for the specific post here
-
-            }
-        });
 
         holder.userProfile.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -269,7 +262,7 @@ public class PostRecyclerAdapter extends RecyclerView.Adapter<PostViewHolder>{
         });
     }
 
-    private void handleInterestClicked(final PostViewHolder holder, final String postID, final String userID) {
+    private void handleInterestClicked(final PostViewHolder holder, final String postID, final String ownerID, final String userID) {
         final DatabaseReference databaseReference = ((BaseActivity)context).getmDatabase();
 
         databaseReference.child("Posts").child(postID).addListenerForSingleValueEvent(new ValueEventListener() {
@@ -280,9 +273,17 @@ public class PostRecyclerAdapter extends RecyclerView.Adapter<PostViewHolder>{
                     post.addInterestID(userID);
                     holder.postHeart.setImageResource(R.drawable.heart_filled);
 
+                    //If post owner like his/her own post, no need to post notification
+                    if (!ownerID.equals(userID))
+                        addNewPostLikeNotification(postID, userID);
+
                 } else {
                     post.removeInterestID(userID);
                     holder.postHeart.setImageResource(R.drawable.heart_unfilled);
+
+                    //If post owner unlike his/her own post, no need to remove notification
+                    if (!ownerID.equals(userID))
+                        removeLikeNotification(postID, ownerID, userID);
                 }
                 databaseReference.child("Posts").child(postID).setValue(post);
 
@@ -294,4 +295,101 @@ public class PostRecyclerAdapter extends RecyclerView.Adapter<PostViewHolder>{
             }
         });
     }
+
+    private void addNewPostLikeNotification(final String postID, final String userID) {
+        final DatabaseReference userRef = ((BaseActivity)context).getmDatabase().child("Users");
+        final DatabaseReference postRef = ((BaseActivity)context).getmDatabase().child("Posts");
+        final DatabaseReference notificationRef = ((BaseActivity)context).getmDatabase().child("Notifications");
+
+        final String newNotificationID = notificationRef.push().getKey();
+
+        postRef.child(postID).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                Post currentPost = dataSnapshot.getValue(Post.class);
+
+                userRef.child(currentPost.getUserID()).addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        final User postOwner = dataSnapshot.getValue(User.class);
+
+                        userRef.child(userID).addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(DataSnapshot dataSnapshot) {
+                                User likedUser = dataSnapshot.getValue(User.class);
+
+                                Notification notification = new Notification();
+                                notification.setnID(newNotificationID);
+                                notification.setContent("liked your post.");
+                                notification.setUserName(likedUser.getFullName());
+                                notification.setPhotoURL(likedUser.getProfileURL());
+                                notification.setPostID(postID);
+                                notification.setFromUserID(userID);
+                                notification.setToUserID(postOwner.getuID());
+
+                                postOwner.addNotification(notification);
+
+                                userRef.child(postOwner.getuID()).setValue(postOwner);
+                                notificationRef.child(newNotificationID).setValue(notification);
+                            }
+
+                            @Override
+                            public void onCancelled(DatabaseError databaseError) {
+
+                            }
+                        });
+
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    private void removeLikeNotification(final String postID, final String ownerID, final String userID) {
+        final DatabaseReference userRef = ((BaseActivity)context).getmDatabase().child("Users");
+        final DatabaseReference postRef = ((BaseActivity)context).getmDatabase().child("Posts");
+        final DatabaseReference notificationRef = ((BaseActivity)context).getmDatabase().child("Notifications");
+
+        userRef.child(ownerID).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                final User postOwner = dataSnapshot.getValue(User.class);
+
+                String notificationID = "";
+                List<Notification> ownerNotifications = postOwner.getNotifications();
+                for (int i=0; i<ownerNotifications.size(); i++) {
+                    Notification n = postOwner.getNotifications().get(i);
+                    if (n.getFromUserID().equals(userID) && n.getPostID().equals(postID) && n.getToUserID().equals(postOwner.getuID())) {
+                        notificationID = n.getnID();
+                        ownerNotifications.remove(n);
+                        break;
+                    }
+                }
+
+                postOwner.setNotifications(ownerNotifications);
+                userRef.child(postOwner.getuID()).setValue(postOwner);
+
+                if (!TextUtils.isEmpty(notificationID))
+                    notificationRef.child(notificationID).removeValue();
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+
 }
