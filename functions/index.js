@@ -20,7 +20,7 @@ exports.sendLikeNotifications = functions.database.ref('/Notifications/{user_id}
       
       return Promise.all([fromUser, deviceToken]).then(result => {
     	  const from_user = result[0].val();
-    	  const token_id = result[0].val();
+    	  const token_id = result[1].val();
     	  
     	  console.log('New like notification from user: ', from_user.uID);
     	  
