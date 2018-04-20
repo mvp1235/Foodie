@@ -188,7 +188,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 User u = dataSnapshot.getValue(User.class);
-                u.removeTokenID(tokenID);
+                u.setTokenID("");
                 userRef.child(userID).setValue(u);
             }
 

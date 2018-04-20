@@ -49,7 +49,7 @@ public class SignUpInteractor implements SignUpContract.Interactor {
         user.setFirstName(firstName);
         user.setLastName(lastName);
         user.setEmail(emailAddress);
-        user.addTokenID(FirebaseInstanceId.getInstance().getToken());
+        user.setTokenID(FirebaseInstanceId.getInstance().getToken());
 
         mDatabase.child("Users").child(mAuth.getCurrentUser().getUid()).setValue(user);
     }
