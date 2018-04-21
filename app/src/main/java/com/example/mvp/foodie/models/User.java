@@ -11,12 +11,13 @@ public class User {
     private String email;
     private List<String> postIDs;
     private List<String> friendIDs;
-    private String tokenID;
+    private List<String> tokenIDs;
 
 
     public User(){
         postIDs = new ArrayList<>();
         friendIDs = new ArrayList<>();
+        tokenIDs = new ArrayList<>();
     };
 
     public String getuID() {
@@ -107,11 +108,21 @@ public class User {
             friendIDs.remove(friendID);
     }
 
-    public String getTokenID() {
-        return tokenID;
+    public List<String> getTokenIDs() {
+        return tokenIDs;
     }
 
-    public void setTokenID(String tokenID) {
-        this.tokenID = tokenID;
+    public void setTokenIDs(List<String> tokenIDs) {
+        this.tokenIDs = tokenIDs;
+    }
+
+    public void addTokenID(String tokenID) {
+        if(!tokenIDs.contains(tokenID))
+            tokenIDs.add(tokenID);
+    }
+
+    public void removeTokenID(String tokenID) {
+        if (tokenIDs.contains(tokenID))
+            tokenIDs.remove(tokenID);
     }
 }

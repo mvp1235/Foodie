@@ -44,7 +44,7 @@ public class SignInInteractor implements SignInContract.Interactor {
                             @Override
                             public void onDataChange(DataSnapshot dataSnapshot) {
                                 User u = dataSnapshot.getValue(User.class);
-                                u.setTokenID(tokenID);
+                                u.addTokenID(tokenID);
 
                                 userRef.child(user.getUid()).setValue(u);
                             }

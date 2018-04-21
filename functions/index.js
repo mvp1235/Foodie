@@ -9,20 +9,24 @@ exports.sendLikeNotifications = functions.database.ref('/Notifications/{user_id}
       const user_id = context.params.user_id;
       const notification_id = context.params.notification_id;
       
-      console.log('We have a notification to send to: ', user_id);
-      
       if (!change.after.val()) {
     	  return console.log('A notification has been deleted from the database: ', notification_id);
       }
       
-      const fromUser = admin.database().ref(`/Users/${user_id}`).once('value');
-      const deviceToken = admin.database().ref(`/Users/${user_id}/tokenID`).once('value');
+      const toUser = admin.database().ref(`/Users/${user_id}`).once('value');
+      const deviceTokens = admin.database().ref(`/Users/${user_id}/tokenIDs`).once('value');
       
-      return Promise.all([fromUser, deviceToken]).then(result => {
+      return Promise.all([toUser, deviceTokens]).then(result => {
     	  const from_user = result[0].val();
-    	  const token_id = result[1].val();
+    	  const token_ids = result[1].val();
     	  
-    	  console.log('New like notification from user: ', from_user.uID);
+    	  console.log('New like notification to user: ', from_user.uID);
+    	  
+    	  if(!result[1].hasChildren()) {
+    		  return console.log('There are no notification tokens to send to.');
+    	  }
+    	  
+    	  console.log('There are ', result[1].numChildren(), ' tokens to send notifications to.');
     	  
     	  const payload = {
 			  notification: {
@@ -32,8 +36,8 @@ exports.sendLikeNotifications = functions.database.ref('/Notifications/{user_id}
 			  }
 	      };
     	  
-    	  return admin.messaging().sendToDevice(token_id, payload).then(response => {
-	    	  return console.log("Like Notification sent.");
+    	  return admin.messaging().sendToDevice(token_ids, payload).then(response => {
+	    	  return console.log("Like Notifications sent.");
 	      });
       });
       
