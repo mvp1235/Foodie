@@ -12,9 +12,6 @@ import android.view.ViewGroup;
 import com.example.mvp.foodie.BaseActivity;
 import com.example.mvp.foodie.R;
 import com.example.mvp.foodie.models.Notification;
-import com.example.mvp.foodie.models.NotificationList;
-import com.example.mvp.foodie.models.User;
-import com.example.mvp.foodie.post.PostRecyclerAdapter;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -71,12 +68,18 @@ public class NotificationFragment extends Fragment {
         notificationRef.child(userID).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                NotificationList notificationList = dataSnapshot.getValue(NotificationList.class);
-                List<Notification> notifications = notificationList.getNotificationList();
-                if (notifications != null) {
+                List<Notification> notifications = new ArrayList<>();
+
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    Notification n = snapshot.getValue(Notification.class);
+                    notifications.add(n);
+                }
+
+                if (notifications.size() > 0) {
                     Collections.reverse(notifications);
                     adapter.setNotificationList(notifications);
                 }
+
             }
 
             @Override

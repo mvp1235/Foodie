@@ -154,6 +154,7 @@ public class CommentInteractor implements CommentContract.Interactor {
                         notification.setnID(newNotificationID);
                         notification.setFromUserID(commenterID);
                         notification.setPostID(postID);
+                        notification.setType("comment");
                         notification.setUserName(commentUser.getFullName());
                         notification.setPhotoURL(commentUser.getProfileURL());
 

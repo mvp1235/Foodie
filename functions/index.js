@@ -7,10 +7,11 @@ admin.initializeApp(functions.config().firebase);
 exports.sendLikeNotifications = functions.database.ref('/Notifications/{user_id}/{notification_id}')
 	.onCreate((snapshot, context) => {
       const to_user_id = context.params.user_id;
-      const from_user_id = snapshot.val().fromUserID;
+      const notification = snapshot.val();
       const notification_id = context.params.notification_id;
+      const from_user_id = notification.fromUserID;
       
-//      if (!change.after.val()) {
+//      if (!snapshot.after.val()) {
 //    	  return console.log('A notification has been deleted from the database: ', notification_id);
 //      }
       
@@ -25,23 +26,40 @@ exports.sendLikeNotifications = functions.database.ref('/Notifications/{user_id}
     	  
     	  console.log('New like notification to user: ', to_user.uID);
     	  
-    	  if(!result[1].hasChildren()) {
+    	  if(!result[2].hasChildren()) {
     		  return console.log('There are no notification tokens to send to.');
     	  }
     	  
-    	  console.log('There are ', result[1].numChildren(), ' tokens to send notifications to.');
+    	  console.log('There are ', result[2].numChildren(), ' tokens to send notifications to.');
     	  
-    	  const payload = {
-			  notification: {
-				  title: "Like Notification",
-				  body: `${from_user.fullName} liked your post.`,
-				  icon: "default"
-			  }
-	      };
-    	  
-    	  return admin.messaging().sendToDevice(token_ids, payload).then(response => {
-	    	  return console.log("Like Notifications sent.");
-	      });
+    	  console.log('Notification: ', notification.type);
+    	  if (notification.type === 'like') {
+	    	  const payload = {
+				  notification: {
+					  title: "Foodie",
+					  body: `${from_user.fullName} ${notification.content}`,
+					  icon: `${from_user.profileURL}`
+				  }
+		      };
+	    	  
+	    	  return admin.messaging().sendToDevice(token_ids, payload).then(response => {
+		    	  return console.log("Like Notifications sent.");
+		      });
+	      } else if (notification.type === 'comment') {
+	    	  const payload = {
+				  notification: {
+					  title: "Foodie",
+					  body: `${from_user.fullName} ${notification.content}`,
+					  icon: `${from_user.profileURL}`
+				  }
+		      };
+	    	  
+	    	  return admin.messaging().sendToDevice(token_ids, payload).then(response => {
+		    	  return console.log("Comment Notifications sent.");
+		      });
+	      } else {
+	    	  return console.log("Not valid notification")
+	      }
       });
       
 	});

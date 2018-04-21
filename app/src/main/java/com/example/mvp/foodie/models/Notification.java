@@ -12,6 +12,7 @@ public class Notification implements Comparable<Notification>{
     private String nID;
     private String photoURL;
     private String userName;
+    private String type;
     private String content;
     private String postID;
     private String fromUserID;
@@ -28,6 +29,14 @@ public class Notification implements Comparable<Notification>{
 
     public void setPostID(String postID) {
         this.postID = postID;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 
     public String getFromUserID() {
