@@ -168,9 +168,6 @@ public class CommentInteractor implements CommentContract.Interactor {
                                 else
                                     notification.setContent("commented on a post you subscribed to.");
 
-                                subscribedUser.addNotification(notification);
-                                userRef.child(subID).setValue(subscribedUser);
-
                                 notificationRef.child(subscribedUser.getuID()).child(newNotificationID).setValue(notification);
 
                             }

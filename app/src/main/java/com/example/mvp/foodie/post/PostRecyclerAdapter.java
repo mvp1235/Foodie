@@ -18,6 +18,7 @@ import com.example.mvp.foodie.BaseActivity;
 import com.example.mvp.foodie.R;
 import com.example.mvp.foodie.comment.PostCommentsActivity;
 import com.example.mvp.foodie.models.Notification;
+import com.example.mvp.foodie.models.NotificationList;
 import com.example.mvp.foodie.models.Post;
 import com.example.mvp.foodie.models.User;
 import com.example.mvp.foodie.profile.ProfileActivity;
@@ -327,9 +328,6 @@ public class PostRecyclerAdapter extends RecyclerView.Adapter<PostViewHolder>{
                                 notification.setFromUserID(userID);
                                 notification.setToUserID(postOwner.getuID());
 
-                                postOwner.addNotification(notification);
-
-                                userRef.child(postOwner.getuID()).setValue(postOwner);
                                 notificationRef.child(currentPost.getUserID()).child(newNotificationID).setValue(notification);
                             }
 
@@ -357,27 +355,28 @@ public class PostRecyclerAdapter extends RecyclerView.Adapter<PostViewHolder>{
 
     private void removeLikeNotification(final String postID, final String ownerID, final String userID) {
         final DatabaseReference userRef = ((BaseActivity)context).getmDatabase().child("Users");
+        final DatabaseReference notificationRef = ((BaseActivity)context).getmDatabase().child("Notifications");
 
-        userRef.child(ownerID).addListenerForSingleValueEvent(new ValueEventListener() {
+        notificationRef.child(ownerID).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                final User postOwner = dataSnapshot.getValue(User.class);
+                final NotificationList notificationList = dataSnapshot.getValue(NotificationList.class);
 
-                List<Notification> ownerNotifications = postOwner.getNotifications();
+                List<Notification> ownerNotifications = notificationList.getNotificationList();
                 for (int i=0; i<ownerNotifications.size(); i++) {
-                    Notification n = postOwner.getNotifications().get(i);
+                    Notification n = ownerNotifications.get(i);
 
                     //Traverse through only like notifications
-                    if (n.getContent().equals("liked your post.") && n.getFromUserID().equals(userID) && n.getPostID().equals(postID) && n.getToUserID().equals(postOwner.getuID())) {
+                    if (n != null && n.getContent().equals("liked your post.")
+                            && n.getFromUserID().equals(userID) && n.getPostID().equals(postID)
+                            && n.getToUserID().equals(ownerID)) {
                         ownerNotifications.remove(n);
                         break;
                     }
                 }
 
-                postOwner.setNotifications(ownerNotifications);
-                userRef.child(postOwner.getuID()).setValue(postOwner);
-
-
+                notificationList.setNotificationList(ownerNotifications);
+                notificationRef.child(ownerID).setValue(notificationList);
             }
 
             @Override

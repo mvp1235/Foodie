@@ -192,42 +192,6 @@ public class ProfileActivity extends BaseActivity implements ProfileContract.Vie
         notification.setContent("sent you a friend request.");
         notification.setnID(newNotificationID);
 
-        userRef.child(fromID).addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                //Obtain fromUser data to store in notification
-                final User fromUser = dataSnapshot.getValue(User.class);
-                notification.setPhotoURL(fromUser.getProfileURL());
-                notification.setUserName(fromUser.getFullName());
-
-
-                //Save notification to user's notification list
-                userRef.child(toID).addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                        User toUser = dataSnapshot.getValue(User.class);
-                        toUser.addNotification(notification);
-
-                        userRef.child(toID).setValue(toUser);
-                        userRef.child(fromID).setValue(fromUser);
-
-                        //Save friend request notification to Notifications database
-                        notificationRef.child(newNotificationID).setValue(notification);
-                    }
-
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
-
-                    }
-                });
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
-
 
     }
 
