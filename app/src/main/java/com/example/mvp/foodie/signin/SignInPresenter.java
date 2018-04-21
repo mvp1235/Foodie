@@ -15,7 +15,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.iid.FirebaseInstanceId;
 
-public class SignInPresenter implements SignInContract.Presenter, SignInContract.onSignInListener {
+public class SignInPresenter implements SignInContract.Presenter {
     private SignInContract.View signinView;
     private FirebaseAuth mAuth;
 
@@ -76,15 +76,5 @@ public class SignInPresenter implements SignInContract.Presenter, SignInContract
     public void checkFirebaseAuth() {
         if (mAuth.getCurrentUser() != null)
             signinView.isLoggedIn(mAuth.getCurrentUser());
-    }
-
-    @Override
-    public void onSuccess(FirebaseUser firebaseUser) {
-        signinView.onSignInSuccess(firebaseUser);
-    }
-
-    @Override
-    public void onFailure(String message) {
-        signinView.onSignInFailure(message);
     }
 }

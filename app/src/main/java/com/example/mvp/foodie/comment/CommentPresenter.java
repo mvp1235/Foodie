@@ -58,7 +58,7 @@ public class CommentPresenter implements CommentContract.Presenter {
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
                             Comment c = dataSnapshot.getValue(Comment.class);
-
+                            view.onCommentsLoadSuccess(c);
                         }
 
                         @Override
