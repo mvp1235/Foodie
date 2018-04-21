@@ -368,7 +368,7 @@ public class PostRecyclerAdapter extends RecyclerView.Adapter<PostViewHolder>{
                         break;
                     }
                 }
-                
+
             }
 
             @Override

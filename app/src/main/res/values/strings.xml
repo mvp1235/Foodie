@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">Foodie</string>
-    <string name="default_notification_channel_id">Tvac_CH_01</string>
+    <string name="default_notification_channel_id">Foodie</string>
     <string name="default_notification_description">Default Description</string>
     <string name="sign_in">Sign In</string>
     <string name="sign_up">Sign Up</string>
