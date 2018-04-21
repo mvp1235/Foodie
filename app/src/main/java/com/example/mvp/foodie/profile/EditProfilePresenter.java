@@ -3,6 +3,7 @@ package com.example.mvp.foodie.profile;
 import android.app.Activity;
 import android.content.Intent;
 
+import com.example.mvp.foodie.BaseActivity;
 import com.example.mvp.foodie.models.User;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -39,7 +40,7 @@ public class EditProfilePresenter implements ProfileContract.EditPresenter {
     }
 
     @Override
-    public void edit(Activity activity, final String userID, final String firstName, final String lastName, final String email) {
+    public void edit(BaseActivity activity, final String userID, final String firstName, final String lastName, final String email) {
         userReference.child("Users").child(userID).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {

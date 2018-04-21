@@ -20,27 +20,7 @@ public interface CommentContract {
     interface Presenter {
         void editComment(BaseActivity activity, String commentID, String newContent);
         void loadComments(BaseActivity activity, String postID);
-        void postComment(BaseActivity activity, String postID, String commentText, String userID);
+        void postComment(BaseActivity activity, String postID, String commentText, String commenterID);
     }
 
-    interface Interactor {
-        void editCommentOnFirebase(BaseActivity activity, String commentID, String newContent);
-        void loadCommentsFromFirebase(BaseActivity activity, String postID);
-        void postCommentToFirebase(BaseActivity activity, String postID, String commentText, String userID);
-    }
-
-    interface onPostListener {
-        void onPostSuccess(Comment comment);
-        void onPostFailure(String error);
-    }
-
-    interface onLoadListener {
-        void onLoadSuccess(Comment comment);
-        void onLoadFailure(String error);
-    }
-
-    interface onEditListener {
-        void onEditSuccess(Comment comment);
-        void onEditFailure(String error);
-    }
 }

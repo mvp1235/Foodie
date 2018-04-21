@@ -43,7 +43,7 @@ import static com.example.mvp.foodie.UtilHelper.USER_ID;
 import static com.example.mvp.foodie.UtilHelper.VIEW_MY_PROFILE;
 import static com.example.mvp.foodie.UtilHelper.VIEW_OTHER_PROFILE;
 
-public class ProfileActivity extends BaseActivity implements ProfileContract.View, ProfileContract.onUploadListener {
+public class ProfileActivity extends BaseActivity implements ProfileContract.View {
     Toolbar toolbar;
     private AppCompatTextView name, email, location, postCount, friendCount;
     private CircleImageView profileImage;

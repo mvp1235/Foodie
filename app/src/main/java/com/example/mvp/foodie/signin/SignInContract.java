@@ -14,13 +14,4 @@ public interface SignInContract {
         void signIn(BaseActivity activity, String email, String password);
         void checkFirebaseAuth();
     }
-
-    interface Interactor {
-        void performFirebaseSignIn(BaseActivity activity, String email, String password);
-    }
-
-    interface onSignInListener{
-        void onSuccess(FirebaseUser firebaseUser);
-        void onFailure(String message);
-    }
 }

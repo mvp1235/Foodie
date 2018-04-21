@@ -8,29 +8,27 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.example.mvp.foodie.BaseActivity;
 import com.example.mvp.foodie.R;
 import com.example.mvp.foodie.models.Notification;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class NotificationFragment extends Fragment {
+public class NotificationFragment extends Fragment implements NotificationContract.View{
     private NotificationRecyclerAdapter adapter;
+    private NotificationContract.Presenter presenter;
     RecyclerView recyclerView;
 
     public NotificationFragment() {
         // Required empty public constructor
+        presenter = new NotificationPresenter(this);
     }
 
 
@@ -57,36 +55,19 @@ public class NotificationFragment extends Fragment {
 
         String userID = ((BaseActivity)getActivity()).getmAuth().getCurrentUser().getUid();
 
-        loadNotifications(userID);
+        presenter.loadNotifications((BaseActivity)getActivity(), userID);
 
         return view;
 
     }
 
-    private void loadNotifications(String userID) {
-        DatabaseReference notificationRef = ((BaseActivity)getActivity()).getmDatabase().child("Notifications");
-        notificationRef.child(userID).addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                List<Notification> notifications = new ArrayList<>();
-
-                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    Notification n = snapshot.getValue(Notification.class);
-                    notifications.add(n);
-                }
-
-                if (notifications.size() > 0) {
-                    Collections.reverse(notifications);
-                    adapter.setNotificationList(notifications);
-                }
-
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
+    @Override
+    public void onLoadSuccess(List<Notification> notifications) {
+        adapter.setNotificationList(notifications);
     }
 
+    @Override
+    public void onLoadFailure(String error) {
+        Toast.makeText(getContext(), error, Toast.LENGTH_SHORT).show();
+    }
 }

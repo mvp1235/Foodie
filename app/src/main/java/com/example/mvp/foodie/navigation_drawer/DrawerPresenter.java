@@ -1,28 +1,35 @@
 package com.example.mvp.foodie.navigation_drawer;
 
 import com.example.mvp.foodie.models.User;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
-public class DrawerPresenter implements DrawerContract.Presenter, DrawerContract.onLoadListener {
+public class DrawerPresenter implements DrawerContract.Presenter {
     private DrawerContract.View view;
-    private DrawerContract.Interactor interactor;
+    private DatabaseReference userReference;
 
     public DrawerPresenter(DrawerContract.View view) {
         this.view = view;
-        interactor = new DrawerInteractor(this);
+        userReference = FirebaseDatabase.getInstance().getReference();
     }
 
     @Override
     public void loadData(String userID) {
-        interactor.performLoadData(userID);
+        userReference.child("Users").child(userID).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                User user = dataSnapshot.getValue(User.class);
+                view.onLoadDataSuccess(user);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                view.onLoadDataFailure(databaseError.getMessage());
+            }
+        });
     }
 
-    @Override
-    public void onLoadSuccess(User user) {
-        view.onLoadDataSuccess(user);
-    }
-
-    @Override
-    public void onLoadFailure(String error) {
-        view.onLoadDataFailure(error);
-    }
 }

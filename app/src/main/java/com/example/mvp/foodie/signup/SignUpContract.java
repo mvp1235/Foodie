@@ -17,14 +17,4 @@ public interface SignUpContract {
         void signUp(BaseActivity activity, String firstName, String lastName, String email, String password);
     }
 
-    interface Interactor {
-        void performFirebaseSignUp(BaseActivity activity, String firstName, String lastName, String email, String password);
-        void performUserDataStoring(BaseActivity activity, String firstName, String lastName, String email);
-
-    }
-
-    interface onSignUpListener{
-        void onSuccess(FirebaseUser firebaseUser);
-        void onFailure(String message);
-    }
 }

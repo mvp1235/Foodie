@@ -28,25 +28,4 @@ public interface PostContract {
         void deletePost(BaseActivity activity, String postID);
     }
 
-    interface Interactor {
-        void performGetLocation(BaseActivity activity, String providedLocation);
-        void uploadPostToFirebaseStorage(BaseActivity activity, ImageView imageView, String description, String location, String userID);
-        void editPostOnFirebase(BaseActivity activity, ImageView imageView, String description, String location, String userID, String postID);
-        void deletePostOnFirebase(BaseActivity activity, String postID);
-    }
-
-    interface onPostCreateListener {
-        void onPostSuccess(Post post);
-        void onPostFailure(String error);
-    }
-
-    interface onPostEditListener {
-        void onEditSuccess(Post post);
-        void onEditFailure(String error);
-    }
-
-    interface onLocationPickedListener {
-        void onLocationPickedSuccess(Intent intent);
-        void onLocationPickedFailure(String error);
-    }
 }

@@ -6,6 +6,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.example.mvp.foodie.BaseActivity;
 import com.example.mvp.foodie.R;
@@ -18,10 +19,11 @@ import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
-public class NotificationRecyclerAdapter extends RecyclerView.Adapter<NotificationViewHolder> {
+public class NotificationRecyclerAdapter extends RecyclerView.Adapter<NotificationViewHolder>{
 
     private Context context;
     private List<Notification> notificationList;
+    private NotificationContract.Presenter presenter;
 
     public NotificationRecyclerAdapter(Context context, List<Notification> notificationList) {
         this.context = context;
@@ -66,7 +68,7 @@ public class NotificationRecyclerAdapter extends RecyclerView.Adapter<Notificati
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-
+                Toast.makeText(context, databaseError.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
     }
