@@ -1,11 +1,13 @@
 package com.example.mvp.foodie.profile;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.AppCompatEditText;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
@@ -15,6 +17,7 @@ import com.example.mvp.foodie.models.User;
 import com.google.firebase.auth.FirebaseAuth;
 
 import static com.example.mvp.foodie.UtilHelper.EMAIL;
+import static com.example.mvp.foodie.UtilHelper.FULL_NAME;
 
 
 public class EditProfileActivity extends BaseActivity implements ProfileContract.EditView {
@@ -38,6 +41,12 @@ public class EditProfileActivity extends BaseActivity implements ProfileContract
 
         presenter = new EditProfilePresenter(this);
         presenter.loadData(getIntent());
+    }
+
+    @Override
+    protected void onDestroy() {
+        mPrgressDialog.dismiss();
+        super.onDestroy();
     }
 
     private void initViews() {
@@ -98,16 +107,24 @@ public class EditProfileActivity extends BaseActivity implements ProfileContract
     }
 
     @Override
-    public void onEditSuccess(User user) {
+    public void onEditSuccess(String successMessage, User user) {
         mPrgressDialog.hide();
-        Toast.makeText(this, R.string.editSuccessfully, Toast.LENGTH_SHORT).show();
+        Intent returnIntent = new Intent();
+        returnIntent.putExtra(FULL_NAME, user.getFullName());
+        returnIntent.putExtra(EMAIL, user.getEmail());
+        setResult(RESULT_OK, returnIntent);
+        Toast.makeText(this, successMessage, Toast.LENGTH_SHORT).show();
         finish();
     }
 
     @Override
     public void onEditFailure(String error) {
         mPrgressDialog.hide();
-        Toast.makeText(this, R.string.editFailed, Toast.LENGTH_SHORT).show();
+
+        if (error.contains("FirebaseAuthRecentLoginRequiredException"))
+            Toast.makeText(this, R.string.re_log_in_prompt, Toast.LENGTH_LONG).show();
+        else
+            Toast.makeText(this, error, Toast.LENGTH_LONG).show();
         finish();
     }
 

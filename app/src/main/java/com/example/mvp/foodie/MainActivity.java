@@ -121,6 +121,11 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
 
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        presenter.loadData(getmAuth().getCurrentUser().getUid());
+    }
 
     @Override
     public void onBackPressed() {

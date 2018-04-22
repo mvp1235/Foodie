@@ -84,6 +84,7 @@
     <string name="confirm_new_password">Confirm new password</string>
     <string name="confirm_password_error_prompt">Confirm password must be the same as new password</string>
     <string name="invalid_email_prompt">Not a valid email address.</string>
+    <string name="re_log_in_prompt">Please log out and sign in again to edit email address and/or password.</string>
 
 
 </resources>

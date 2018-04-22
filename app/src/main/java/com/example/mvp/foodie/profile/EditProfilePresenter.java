@@ -23,12 +23,10 @@ import static com.example.mvp.foodie.UtilHelper.FULL_NAME;
 public class EditProfilePresenter implements ProfileContract.EditPresenter {
     private ProfileContract.EditView view;
     private DatabaseReference userRef;
-    private FirebaseAuth mAuth;
 
     public EditProfilePresenter(ProfileContract.EditView view) {
         this.view = view;
         userRef = FirebaseDatabase.getInstance().getReference().child("Users");
-        mAuth = FirebaseAuth.getInstance();
     }
 
     @Override
@@ -62,25 +60,22 @@ public class EditProfilePresenter implements ProfileContract.EditPresenter {
 
                 //Update email and password if requested
                 if (currentUser != null) {
-                    updateEmail(currentUser, currentEmail, newEmail);
-                    updatePassword(currentUser, newPassword);
+                    updateEmailAndPassword(user, currentUser, currentEmail, newEmail, newPassword);
                 } else {
                     view.onEditFailure("There is currently no users logged in.");
                 }
-
 
             }
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-
+                view.onEditFailure(databaseError.getMessage());
             }
         });
     }
 
-
-    private void updateEmail(FirebaseUser currentUser, String currentEmail, String newEmail) {
-        //update email
+    private void updateEmailAndPassword(final User user, final FirebaseUser currentUser, String currentEmail, final String newEmail, final String newPassword) {
+        //update email if new email is in valid format and different than current email
         if (android.util.Patterns.EMAIL_ADDRESS.matcher(newEmail).matches()
                 && !currentEmail.equals(newEmail)) {
 
@@ -89,17 +84,39 @@ public class EditProfilePresenter implements ProfileContract.EditPresenter {
                         @Override
                         public void onComplete(@NonNull Task<Void> task) {
                             if (task.isSuccessful()) {
+                                user.setEmail(newEmail);
+                                //After successfully changed user auth email, update it accordingly in the database
+                                userRef.child(user.getuID()).setValue(user);
 
+                                //Updated email, next update password if requested
+                                if (!TextUtils.isEmpty(newPassword)) {
+                                    currentUser.updatePassword(newPassword)
+                                            .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                @Override
+                                                public void onComplete(@NonNull Task<Void> task) {
+                                                    if (task.isSuccessful()) {
+                                                        view.onEditSuccess("Email address and password has been updated successfully.", user);
+                                                    } else {
+                                                        view.onEditSuccess("Email address has been updated successfully.", user);
+                                                    }
+                                                }
+                                            });
+                                } else {    //Password change was not requested
+                                    view.onEditSuccess("Email address has been updated successfully.", user);
+                                }
                             } else {
                                 view.onEditFailure(task.getException().toString());
                             }
                         }
                     });
 
+        } else {    //Email has not been changed
+            //Update password if requested
+            updatePasswordOnly(user, currentUser, newPassword);
         }
     }
 
-    private void updatePassword(FirebaseUser currentUser, String newPassword) {
+    private void updatePasswordOnly(final User user, FirebaseUser currentUser, String newPassword) {
         //Update password
         if (!TextUtils.isEmpty(newPassword)) {
             currentUser.updatePassword(newPassword)
@@ -107,35 +124,17 @@ public class EditProfilePresenter implements ProfileContract.EditPresenter {
                         @Override
                         public void onComplete(@NonNull Task<Void> task) {
                             if (task.isSuccessful()) {
-
+                                view.onEditSuccess("Password has been updated successfully", user);
                             } else {
                                 view.onEditFailure(task.getException().toString());
                             }
                         }
                     });
+        } else {
+            //If email and password are both not requested for changes
+            userRef.child(user.getuID()).setValue(user);
+            view.onEditSuccess("User profile has been updated successfully.", user);
         }
     }
 
-
-//    @Override
-//    public void edit(BaseActivity activity, final String userID, final String firstName, final String lastName, final String email) {
-//        userReference.child("Users").child(userID).addListenerForSingleValueEvent(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(DataSnapshot dataSnapshot) {
-//                User user = dataSnapshot.getValue(User.class);
-//                if (user != null) {
-//                    user.setFirstName(firstName);
-//                    user.setLastName(lastName);
-//                    user.setEmail(email);
-//                    userReference.child("Users").child(userID).setValue(user);
-//                    view.onEditSuccess(user);
-//                }
-//            }
-//
-//            @Override
-//            public void onCancelled(DatabaseError databaseError) {
-//                view.onEditFailure(databaseError.getMessage());
-//            }
-//        });
-//    }
 }

@@ -45,7 +45,7 @@ import static com.example.mvp.foodie.UtilHelper.VIEW_OTHER_PROFILE;
 
 public class ProfileActivity extends BaseActivity implements ProfileContract.View {
     Toolbar toolbar;
-    private AppCompatTextView name, email, location, postCount, friendCount;
+    private AppCompatTextView nameTV, emailTV, locationTV, postCountTV, friendCountTV;
     private CircleImageView profileImage;
     private AppCompatButton addFriendBtn, unFriendBtn, acceptBtn, declineBtn;
 
@@ -131,11 +131,11 @@ public class ProfileActivity extends BaseActivity implements ProfileContract.Vie
         setSupportActionBar(toolbar);
         toolbar.setTitle(R.string.profile);
 
-        name = findViewById(R.id.profileName_id);
-        email = findViewById(R.id.profileEmail_id);
-        location = findViewById(R.id.profileLocation_id);
-        postCount = findViewById(R.id.profilePostCount_id);
-        friendCount = findViewById(R.id.profileFriendCount_id);
+        nameTV = findViewById(R.id.profileName_id);
+        emailTV = findViewById(R.id.profileEmail_id);
+        locationTV = findViewById(R.id.profileLocation_id);
+        postCountTV = findViewById(R.id.profilePostCount_id);
+        friendCountTV = findViewById(R.id.profileFriendCount_id);
         profileImage = findViewById(R.id.profilePhoto_id);
 
         addFriendBtn = findViewById(R.id.addFriendBtn_id);
@@ -207,8 +207,8 @@ public class ProfileActivity extends BaseActivity implements ProfileContract.Vie
         } else if (requestCode == REQUEST_EDIT_PROFILE && resultCode == RESULT_OK) {
             String fullName = data.getStringExtra(FULL_NAME);
             String email = data.getStringExtra(EMAIL);
-
-
+            nameTV.setText(fullName);
+            emailTV.setText(email);
         }
     }
 
@@ -348,8 +348,8 @@ public class ProfileActivity extends BaseActivity implements ProfileContract.Vie
         switch (id) {
             case R.id.profile_edit:
                 Intent intent = new Intent(this, EditProfileActivity.class);
-                intent.putExtra(FULL_NAME, name.getText().toString());
-                intent.putExtra(EMAIL, email.getText().toString());
+                intent.putExtra(FULL_NAME, nameTV.getText().toString());
+                intent.putExtra(EMAIL, emailTV.getText().toString());
                 startActivityForResult(intent, REQUEST_EDIT_PROFILE);
                 break;
         }
@@ -359,10 +359,10 @@ public class ProfileActivity extends BaseActivity implements ProfileContract.Vie
 
     @Override
     public void onLoadDataSuccess(User user) {
-        name.setText(user.getFullName());
-        email.setText(user.getEmail());
-        postCount.setText(user.getPostCount() + " posts");
-        friendCount.setText(user.getFriendCount() + " friends");
+        nameTV.setText(user.getFullName());
+        emailTV.setText(user.getEmail());
+        postCountTV.setText(user.getPostCount() + " posts");
+        friendCountTV.setText(user.getFriendCount() + " friends");
         if (user.getProfileURL() != null)
             Picasso.get().load(user.getProfileURL()).into(profileImage);
         else

@@ -16,7 +16,7 @@ public interface ProfileContract {
     }
 
     interface EditView {
-        void onEditSuccess(User user);
+        void onEditSuccess(String successMessage, User user);
         void onEditFailure(String error);
         void onLoadSuccess(String firstName, String lastName, String email);
         void onLoadFailure(String error);
