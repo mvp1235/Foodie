@@ -79,6 +79,11 @@
     <string name="accept_request">Accept Request</string>
     <string name="decline_request">Decline Request</string>
     <string name="cancel_request">Cancel Request</string>
+    <string name="current_password">Current password</string>
+    <string name="new_password">New password</string>
+    <string name="confirm_new_password">Confirm new password</string>
+    <string name="confirm_password_error_prompt">Confirm password must be the same as new password</string>
+    <string name="invalid_email_prompt">Not a valid email address.</string>
 
 
 </resources>

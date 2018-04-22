@@ -12,11 +12,14 @@ import android.widget.Toast;
 import com.example.mvp.foodie.BaseActivity;
 import com.example.mvp.foodie.R;
 import com.example.mvp.foodie.models.User;
+import com.google.firebase.auth.FirebaseAuth;
+
+import static com.example.mvp.foodie.UtilHelper.EMAIL;
 
 
-public class EditProfileActivity extends BaseActivity implements ProfileContract.EditView{
+public class EditProfileActivity extends BaseActivity implements ProfileContract.EditView {
 
-    private AppCompatEditText firstName, lastName, email;
+    private AppCompatEditText firstName, lastName, email, newPassword, confirmPassword;
     private AppCompatButton editBtn;
 
     Toolbar toolbar;
@@ -45,6 +48,8 @@ public class EditProfileActivity extends BaseActivity implements ProfileContract
         firstName = findViewById(R.id.firstNameText_id);
         lastName = findViewById(R.id.lastNameText_id);
         email = findViewById(R.id.emailText_id);
+        newPassword = findViewById(R.id.newPasswordText_id);
+        confirmPassword = findViewById(R.id.confirmPasswordText_id);
         editBtn = findViewById(R.id.editBtn_id);
         mPrgressDialog = new ProgressDialog(this);
     }
@@ -62,10 +67,17 @@ public class EditProfileActivity extends BaseActivity implements ProfileContract
         String firstNameInput = firstName.getText().toString();
         String lastNameInput = lastName.getText().toString();
         String emailInput = email.getText().toString();
+        String newPasswordInput = newPassword.getText().toString();
+        String confirmPasswordInput = confirmPassword.getText().toString();
 
-        if (!TextUtils.isEmpty(emailInput) && !TextUtils.isEmpty(firstNameInput)
-                && !TextUtils.isEmpty(firstNameInput) && !TextUtils.isEmpty(lastNameInput)) {
-            initEditProfile(firstNameInput, lastNameInput, emailInput);
+        if (!TextUtils.isEmpty(emailInput) && !TextUtils.isEmpty(firstNameInput) && !TextUtils.isEmpty(lastNameInput)) {
+            //New password and confirm password must be the same
+            if (!newPasswordInput.equals(confirmPasswordInput)) {
+                confirmPassword.setError(getString(R.string.confirm_password_error_prompt));
+            } else if (!android.util.Patterns.EMAIL_ADDRESS.matcher(emailInput).matches() ){
+                email.setError(getString(R.string.invalid_email_prompt));
+            } else//new password has already been confirmed to be the same
+                initEditProfile(firstNameInput, lastNameInput, emailInput, newPasswordInput);
         } else {
             if (TextUtils.isEmpty(firstNameInput))
                 firstName.setError(getString(R.string.firstNamePrompt));
@@ -77,10 +89,12 @@ public class EditProfileActivity extends BaseActivity implements ProfileContract
     }
 
 
-    private void initEditProfile(String firstName, String lastName, String email) {
+    private void initEditProfile(String firstName, String lastName, String newEmail, String newPassword) {
         mPrgressDialog.setMessage("Editing profile...");
         mPrgressDialog.show();
-        presenter.edit(this, getmAuth().getCurrentUser().getUid(), firstName, lastName, email);
+
+        String currentEmail = getIntent().getStringExtra(EMAIL);
+        presenter.updateUserProfile(this, firstName, lastName, currentEmail, newEmail, newPassword);
     }
 
     @Override

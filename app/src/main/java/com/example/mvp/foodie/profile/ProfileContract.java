@@ -1,6 +1,5 @@
 package com.example.mvp.foodie.profile;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
@@ -31,7 +30,8 @@ public interface ProfileContract {
 
     interface EditPresenter {
         void loadData(Intent intent);
-        void edit(BaseActivity activity, String userID, String firstName, String lastName, String email);
+        void updateUserProfile(BaseActivity activity, String firstName, String lastName, String currentEmail, String newEmail, String newPassword);
+
     }
 
 }
