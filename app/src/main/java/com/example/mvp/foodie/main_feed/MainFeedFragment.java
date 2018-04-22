@@ -30,6 +30,12 @@ public class MainFeedFragment extends Fragment implements MainFeedContract.View 
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        presenter.loadPosts();
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
