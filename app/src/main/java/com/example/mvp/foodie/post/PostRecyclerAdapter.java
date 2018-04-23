@@ -89,12 +89,19 @@ public class PostRecyclerAdapter extends RecyclerView.Adapter<PostViewHolder>{
         holder.numInterests.setText(post.getInterestCount());
         userLikedPost(holder.postHeart, post.getPostID(), (((BaseActivity)context).getmAuth().getCurrentUser().getUid()));
 
-        holder.interestsLL.setOnClickListener(new View.OnClickListener() {
+        holder.postHeart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
             //increment or decrement interests count here, as well as toggle heart icons
             holder.postHeart.setImageResource(R.drawable.heart_filled);
             handleInterestClicked(holder, post.getPostID(), post.getUserID(), (((BaseActivity)context).getmAuth().getCurrentUser().getUid()));
+            }
+        });
+
+        holder.numInterests.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
             }
         });
 
