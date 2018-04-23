@@ -14,7 +14,6 @@ import android.widget.PopupMenu;
 import android.widget.Toast;
 
 import com.example.mvp.foodie.BaseActivity;
-import com.example.mvp.foodie.DetailPostActivity;
 import com.example.mvp.foodie.R;
 import com.example.mvp.foodie.comment.PostCommentsActivity;
 import com.example.mvp.foodie.models.Notification;

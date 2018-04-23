@@ -1,12 +1,19 @@
 package com.example.mvp.foodie.post;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.support.annotation.NonNull;
+import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.AppCompatImageView;
+import android.support.v7.widget.AppCompatTextView;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.example.mvp.foodie.BaseActivity;
+import com.example.mvp.foodie.R;
+import com.example.mvp.foodie.models.Notification;
 import com.example.mvp.foodie.models.Post;
 import com.example.mvp.foodie.models.User;
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
@@ -21,8 +28,12 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.squareup.picasso.Picasso;
 
 import java.io.ByteArrayOutputStream;
+import java.util.List;
+
+import de.hdodenhof.circleimageview.CircleImageView;
 
 import static com.example.mvp.foodie.UtilHelper.INITIAL_QUERY;
 
@@ -30,6 +41,7 @@ public class PostPresenter implements PostContract.Presenter {
 
     private PostContract.View view;
     private PostContract.EditView editView;
+    private PostContract.DetailView detailView;
     private StorageReference storageReference;
 
 
@@ -40,6 +52,11 @@ public class PostPresenter implements PostContract.Presenter {
 
     public PostPresenter(PostContract.EditView editView) {
         this.editView = editView;
+        storageReference = FirebaseStorage.getInstance().getReference();
+    }
+
+    public PostPresenter(PostContract.DetailView detailView) {
+        this.detailView = detailView;
         storageReference = FirebaseStorage.getInstance().getReference();
     }
 
@@ -140,7 +157,7 @@ public class PostPresenter implements PostContract.Presenter {
         Bitmap bitmap = imageView.getDrawingCache();
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
-        byte[] data = baos.toByteArray();
+        final byte[] data = baos.toByteArray();
 
         final DatabaseReference databaseReference = activity.getmDatabase().child("Posts");
 //        final String newPostID = databaseReference.push().getKey();
@@ -152,6 +169,7 @@ public class PostPresenter implements PostContract.Presenter {
             public void onFailure(@NonNull Exception exception) {
                 // Handle unsuccessful uploads
                 editView.onPostEditFailure(exception.toString());
+
             }
         }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @Override
@@ -169,6 +187,7 @@ public class PostPresenter implements PostContract.Presenter {
                         post.setCreatedTime(System.currentTimeMillis());  //update createdTime
 
                         databaseReference.child(postID).setValue(post);
+
                         editView.onPostEditSuccess(post);
                     }
 
@@ -183,9 +202,217 @@ public class PostPresenter implements PostContract.Presenter {
     }
 
     @Override
-    public void deletePost(BaseActivity activity, String postID) {
+    public void deletePost(BaseActivity activity, final String postID, final String ownerID) {
+        final DatabaseReference postRef = activity.getmDatabase().child("Posts");
+        final DatabaseReference userRef = activity.getmDatabase().child("Users");
+        final DatabaseReference commentRef = activity.getmDatabase().child("Comments");
 
+        //Delete Post
+        postRef.child(postID).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                Post post = dataSnapshot.getValue(Post.class);
+
+                List<String> commentIDs = post.getCommentIDs();
+
+                //Delete comments from post
+                for (final String id : commentIDs) {
+                    commentRef.child(id).addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            commentRef.child(id).removeValue();
+                        }
+
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {}
+                    });
+                }
+
+                //Delete postIDs in user
+                userRef.child(ownerID).addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        User u = dataSnapshot.getValue(User.class);
+                        u.deletePostID(postID);
+                        userRef.child(ownerID).setValue(u);
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {}
+                });
+
+                //Delete post
+                postRef.child(postID).removeValue();
+
+                if (detailView != null)
+                    detailView.onPostDeleteSuccess("Post deleted successfully.");
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                if (detailView != null)
+                    detailView.onPostDeleteFailure(databaseError.getMessage());
+            }
+        });
     }
 
+    @Override
+    public void checkIfUserLikedPost(BaseActivity activity, Post post, final String userID, final AppCompatImageView postHeart) {
+        final DatabaseReference postRef = activity.getmDatabase().child("Posts");
+        postRef.child(post.getPostID()).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                Post post = dataSnapshot.getValue(Post.class);
+                if(!post.getInterestIDs().contains(userID)) {
+                    postHeart.setImageResource(R.drawable.heart_unfilled);
+                } else {
+                    postHeart.setImageResource(R.drawable.heart_filled);
+                }
+            }
 
+            @Override
+            public void onCancelled(DatabaseError databaseError) {}
+        });
+    }
+
+    @Override
+    public void loadUserInfo(BaseActivity activity, String userID, final CircleImageView userProfile, final AppCompatTextView nameTV) {
+        DatabaseReference userRef = activity.getmDatabase().child("Users");
+        userRef.child(userID).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                User u = dataSnapshot.getValue(User.class);
+                nameTV.setText(u.getFullName());
+                Picasso.get().load(u.getProfileURL()).into(userProfile);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    @Override
+    public void handleUserInterestClick(final BaseActivity activity, Post post, final String userID, final AppCompatImageView postHeart) {
+        final DatabaseReference postRef = activity.getmDatabase().child("Posts");
+
+        postRef.child(post.getPostID()).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                Post post = dataSnapshot.getValue(Post.class);
+                if(!post.getInterestIDs().contains(userID)) {
+                    post.addInterestID(userID);
+                    postHeart.setImageResource(R.drawable.heart_filled);
+
+                    //If post owner like his/her own post, no need to post notification
+                    if (!post.getUserID().equals(userID))
+                        addNewPostLikeNotification(activity, post.getPostID(), userID);
+
+
+                    detailView.incrementInterestCount(post.getInterestCount());
+
+                } else {
+                    post.removeInterestID(userID);
+                    postHeart.setImageResource(R.drawable.heart_unfilled);
+
+                    //If post owner unlike his/her own post, no need to remove notification
+                    if (!post.getUserID().equals(userID))
+                        removeLikeNotification(activity, post.getPostID(), post.getUserID(), userID);
+
+                    detailView.decrementInterestCount(post.getInterestCount());
+                }
+                postRef.child(post.getPostID()).setValue(post);
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                detailView.displayInterestCountChangeError(databaseError.getMessage());
+            }
+        });
+    }
+
+    private void addNewPostLikeNotification(BaseActivity activity, final String postID, final String userID) {
+        final DatabaseReference userRef = activity.getmDatabase().child("Users");
+        final DatabaseReference postRef = activity.getmDatabase().child("Posts");
+        final DatabaseReference notificationRef = activity.getmDatabase().child("Notifications");
+
+        final String newNotificationID = notificationRef.push().getKey();
+
+        postRef.child(postID).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                final Post currentPost = dataSnapshot.getValue(Post.class);
+
+                userRef.child(currentPost.getUserID()).addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        final User postOwner = dataSnapshot.getValue(User.class);
+
+                        userRef.child(userID).addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(DataSnapshot dataSnapshot) {
+                                User likedUser = dataSnapshot.getValue(User.class);
+
+                                Notification notification = new Notification();
+                                notification.setnID(newNotificationID);
+                                notification.setType("like");
+                                notification.setContent("liked your post.");
+                                notification.setUserName(likedUser.getFullName());
+                                notification.setPhotoURL(likedUser.getProfileURL());
+                                notification.setPostID(postID);
+                                notification.setFromUserID(userID);
+                                notification.setToUserID(postOwner.getuID());
+
+                                notificationRef.child(currentPost.getUserID()).child(newNotificationID).setValue(notification);
+                            }
+
+                            @Override
+                            public void onCancelled(DatabaseError databaseError) {
+
+                            }
+                        });
+
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    private void removeLikeNotification(BaseActivity activity, final String postID, final String ownerID, final String userID) {
+        final DatabaseReference notificationRef = activity.getmDatabase().child("Notifications");
+
+        notificationRef.child(ownerID).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    final Notification n = snapshot.getValue(Notification.class);
+                    if (n != null && n.getContent().equals("liked your post.")
+                            && n.getFromUserID().equals(userID) && n.getPostID().equals(postID)
+                            && n.getToUserID().equals(ownerID)) {
+                        notificationRef.child(ownerID).child(snapshot.getKey()).removeValue();
+                        break;
+                    }
+                }
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
 }

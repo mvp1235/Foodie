@@ -93,6 +93,12 @@ public class EditPostActivity extends BaseActivity implements PostContract.EditV
 
     }
 
+    @Override
+    protected void onDestroy() {
+        mPrgressDialog.dismiss();
+        super.onDestroy();
+    }
+
     private void setUpListeners() {
         postImage.setOnClickListener(new View.OnClickListener() {
             @Override
