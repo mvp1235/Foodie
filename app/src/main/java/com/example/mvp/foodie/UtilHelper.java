@@ -12,6 +12,8 @@ public class UtilHelper {
     public static final String COMMENT_TEXT = "Comment Text";
     public static final String COMMENT_ID = "Comment ID";
     public static final String REQUEST_CODE = "Request Code";
+    public static final String NUM_INTERESTS = "Interest count";
+    public static final String NUM_COMMENTS = "Comment count";
 
 
 
@@ -27,6 +29,8 @@ public class UtilHelper {
     public static final int RESULT_CLOSE_ALL = 2008;
     public static final int VIEW_MY_PROFILE = 2009;
     public static final int VIEW_OTHER_PROFILE = 2010;
+    public static final int REQUEST_DELETE_POST = 2011;
+
 
 
 

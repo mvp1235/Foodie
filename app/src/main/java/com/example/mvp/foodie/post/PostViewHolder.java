@@ -16,7 +16,7 @@ public class PostViewHolder extends RecyclerView.ViewHolder{
     public android.support.v7.widget.AppCompatImageView postPhoto, postHeart;
     public AppCompatImageButton menuBtn;
     public CircleImageView userProfile;
-    public LinearLayout interestsLL, commentsLL, goingLL;
+    public LinearLayout interestsLL, commentsLL;
 
     public PostViewHolder(View itemView) {
         super(itemView);

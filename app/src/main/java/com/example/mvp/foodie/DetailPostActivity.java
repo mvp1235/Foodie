@@ -1,25 +1,24 @@
-package com.example.mvp.foodie.post;
+package com.example.mvp.foodie;
 
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.app.AppCompatActivity;
+import android.os.Bundle;
+import android.support.v7.widget.AppCompatImageButton;
 import android.support.v7.widget.AppCompatImageView;
-import android.support.v7.widget.RecyclerView;
-import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.PopupMenu;
 import android.widget.Toast;
 
-import com.example.mvp.foodie.BaseActivity;
-import com.example.mvp.foodie.DetailPostActivity;
-import com.example.mvp.foodie.R;
 import com.example.mvp.foodie.comment.PostCommentsActivity;
 import com.example.mvp.foodie.models.Notification;
 import com.example.mvp.foodie.models.Post;
 import com.example.mvp.foodie.models.User;
+import com.example.mvp.foodie.post.EditPostActivity;
+import com.example.mvp.foodie.post.PostViewHolder;
 import com.example.mvp.foodie.profile.ProfileActivity;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -29,6 +28,8 @@ import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
+import de.hdodenhof.circleimageview.CircleImageView;
+
 import static com.example.mvp.foodie.UtilHelper.NUM_COMMENTS;
 import static com.example.mvp.foodie.UtilHelper.NUM_INTERESTS;
 import static com.example.mvp.foodie.UtilHelper.POST_DESCRIPTION;
@@ -36,40 +37,130 @@ import static com.example.mvp.foodie.UtilHelper.POST_ID;
 import static com.example.mvp.foodie.UtilHelper.POST_LOCATION;
 import static com.example.mvp.foodie.UtilHelper.POST_URL;
 import static com.example.mvp.foodie.UtilHelper.REQUEST_CODE;
+import static com.example.mvp.foodie.UtilHelper.REQUEST_DELETE_POST;
 import static com.example.mvp.foodie.UtilHelper.REQUEST_EDIT_POST;
 import static com.example.mvp.foodie.UtilHelper.USER_ID;
 import static com.example.mvp.foodie.UtilHelper.VIEW_OTHER_PROFILE;
 
-public class PostRecyclerAdapter extends RecyclerView.Adapter<PostViewHolder>{
+public class DetailPostActivity extends BaseActivity {
 
-    private Context context;
-    private List<Post> posts;
+    private android.support.v7.widget.AppCompatTextView name, location, time, description, numInterests, numComments;
+    private android.support.v7.widget.AppCompatImageView postPhoto, postHeart;
+    private AppCompatImageButton menuBtn;
+    private CircleImageView userProfile;
+    private LinearLayout interestsLL, commentsLL;
 
-    public PostRecyclerAdapter(Context context, List<Post> posts) {
-        this.context = context;
-        this.posts = posts;
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_detail_post);
+
+        Intent intent = getIntent();
+
+        final Post post = new Post();
+        post.setPostID(intent.getStringExtra(POST_ID));
+        post.setUserID(intent.getStringExtra(USER_ID));
+        post.setDescription(intent.getStringExtra(POST_DESCRIPTION));
+        post.setPhotoURL(intent.getStringExtra(POST_URL));
+        post.setLocation(intent.getStringExtra(POST_LOCATION));
+
+        String interestCount = intent.getStringExtra(NUM_INTERESTS);
+        String commentCount = intent.getStringExtra(NUM_COMMENTS);
+
+        initViews();
+
+        setUserInfo(post.getUserID());
+        location.setText(post.getLocation());
+        time.setText(post.getPostDuration());
+        description.setText(post.getDescription());
+        Picasso.get().load(post.getPhotoURL()).into(postPhoto);
+        numComments.setText(commentCount);
+        numInterests.setText(interestCount);
+        userLikedPost(post.getPostID(), getmAuth().getCurrentUser().getUid());
+
+
+        postHeart.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //increment or decrement interests count here, as well as toggle heart icons
+                handleInterestClicked(post.getPostID(), post.getUserID(), getmAuth().getCurrentUser().getUid());
+            }
+        });
+
+        numInterests.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+            }
+        });
+
+        commentsLL.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //Show all comments available for the specific post here
+                Intent intent = new Intent(DetailPostActivity.this, PostCommentsActivity.class);
+                intent.putExtra(POST_ID, post.getPostID());
+                startActivity(intent);
+            }
+        });
+
+
+        userProfile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                viewUserProfile(post.getUserID());
+            }
+        });
+
+        String postOwnerID = post.getUserID();
+        String currentUserID = getmAuth().getCurrentUser().getUid();
+
+        if (postOwnerID.equals(currentUserID)) {
+            menuBtn.setVisibility(View.VISIBLE);
+            menuBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    showPostPopupMenu(post);
+                }
+            });
+        } else {
+            menuBtn.setVisibility(View.GONE);
+        }
+
     }
 
-    public void setPosts(List<Post> posts) {
-        this.posts = posts;
-        this.notifyDataSetChanged();
+    private void initViews() {
+        userProfile = findViewById(R.id.userProfilePhoto_id);
+        name = findViewById(R.id.userName_id);
+        location = findViewById(R.id.postLocation_id);
+        time = findViewById(R.id.postTime_id);
+        description = findViewById(R.id.postDescription_id);
+        menuBtn = findViewById(R.id.postMenu_id);
+
+        numInterests = findViewById(R.id.postNumInterest_id);
+        numComments = findViewById(R.id.postNumComments_id);
+
+        postPhoto = findViewById(R.id.postPhoto_id);
+        postHeart = findViewById(R.id.postInterests_id);
+        interestsLL = findViewById(R.id.interestsSection);
+        commentsLL = findViewById(R.id.commentsSection_id);
     }
 
     @Override
-    public PostViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.feed_item_layout, parent, false);
-
-        return new PostViewHolder(view);
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == REQUEST_EDIT_POST && resultCode == RESULT_OK) {
+            finish();
+        }
     }
 
-    private void setUserInfo(String userID, final PostViewHolder holder) {
-        DatabaseReference userRef = ((BaseActivity)context).getmDatabase().child("Users");
+    private void setUserInfo(String userID) {
+        DatabaseReference userRef = getmDatabase().child("Users");
         userRef.child(userID).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 User u = dataSnapshot.getValue(User.class);
-                holder.name.setText(u.getFullName());
-                Picasso.get().load(u.getProfileURL()).into(holder.userProfile);
+                name.setText(u.getFullName());
+                Picasso.get().load(u.getProfileURL()).into(userProfile);
             }
 
             @Override
@@ -79,112 +170,28 @@ public class PostRecyclerAdapter extends RecyclerView.Adapter<PostViewHolder>{
         });
     }
 
-    @Override
-    public void onBindViewHolder(final PostViewHolder holder, final int position) {
-        final Post post = posts.get(position);
-
-        setUserInfo(post.getUserID(), holder);
-        holder.location.setText(post.getLocation());
-        holder.time.setText(post.getPostDuration());
-        holder.description.setText(post.getDescription());
-        Picasso.get().load(post.getPhotoURL()).into(holder.postPhoto);
-        holder.numComments.setText(post.getCommentCount());
-        holder.numInterests.setText(post.getInterestCount());
-        userLikedPost(holder.postHeart, post.getPostID(), (((BaseActivity)context).getmAuth().getCurrentUser().getUid()));
-
-
-        holder.description.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                viewDetailPost(post);
-            }
-        });
-
-        holder.postHeart.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-            //increment or decrement interests count here, as well as toggle heart icons
-            handleInterestClicked(holder, post.getPostID(), post.getUserID(), (((BaseActivity)context).getmAuth().getCurrentUser().getUid()));
-            }
-        });
-
-        holder.numInterests.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-            }
-        });
-
-        holder.commentsLL.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-            //Show all comments available for the specific post here
-            Intent intent = new Intent(context, PostCommentsActivity.class);
-            intent.putExtra(POST_ID, post.getPostID());
-            context.startActivity(intent);
-            }
-        });
-
-
-        holder.userProfile.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                viewUserProfile(post.getUserID());
-            }
-        });
-
-        String postOwnerID = post.getUserID();
-        String currentUserID = ((BaseActivity)context).getmAuth().getCurrentUser().getUid();
-
-        if (postOwnerID.equals(currentUserID)) {
-            holder.menuBtn.setVisibility(View.VISIBLE);
-            holder.menuBtn.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                showPostPopupMenu(post, holder);
-                }
-            });
-        } else {
-            holder.menuBtn.setVisibility(View.GONE);
-        }
-
-
-    }
-
-    private void viewDetailPost(Post post) {
-        Intent intent = new Intent(context, DetailPostActivity.class);
-        intent.putExtra(POST_ID, post.getPostID());
-        intent.putExtra(USER_ID, post.getUserID());
-        intent.putExtra(POST_DESCRIPTION, post.getDescription());
-        intent.putExtra(POST_URL, post.getPhotoURL());
-        intent.putExtra(POST_LOCATION, post.getLocation());
-        intent.putExtra(NUM_INTERESTS, post.getInterestCount());
-        intent.putExtra(NUM_COMMENTS, post.getCommentCount());
-        context.startActivity(intent);
-    }
-
     private void viewUserProfile(String userID) {
-        Intent intent = new Intent(context, ProfileActivity.class);
+        Intent intent = new Intent(this, ProfileActivity.class);
         intent.putExtra(REQUEST_CODE, VIEW_OTHER_PROFILE);
         intent.putExtra(USER_ID, userID);
-        ((BaseActivity)context).startActivityForResult(intent, VIEW_OTHER_PROFILE);
+        startActivityForResult(intent, VIEW_OTHER_PROFILE);
     }
 
-    private void showPostPopupMenu(final Post post, PostViewHolder holder) {
-        PopupMenu popupMenu = new PopupMenu(context, holder.menuBtn);
+    private void showPostPopupMenu(final Post post) {
+        PopupMenu popupMenu = new PopupMenu(this, menuBtn);
         popupMenu.getMenuInflater().inflate(R.menu.post_option_menu_items, popupMenu.getMenu());
 
         popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
                 if (item.getTitle().toString().equalsIgnoreCase("Edit")) {
-                    Intent intent = new Intent(context, EditPostActivity.class);
+                    Intent intent = new Intent(DetailPostActivity.this, EditPostActivity.class);
                     intent.putExtra(POST_ID, post.getPostID());
                     intent.putExtra(USER_ID, post.getUserID());
                     intent.putExtra(POST_DESCRIPTION, post.getDescription());
                     intent.putExtra(POST_URL, post.getPhotoURL());
                     intent.putExtra(POST_LOCATION, post.getLocation());
-                    ((BaseActivity) context).startActivityForResult(intent, REQUEST_EDIT_POST);
+                    startActivityForResult(intent, REQUEST_EDIT_POST);
 
                 } else {
                     showDeleteConfirmationDialog(post);
@@ -196,7 +203,7 @@ public class PostRecyclerAdapter extends RecyclerView.Adapter<PostViewHolder>{
     }
 
     private void showDeleteConfirmationDialog(final Post post) {
-        new AlertDialog.Builder(context)
+        new AlertDialog.Builder(this)
                 .setMessage("Are you sure you want to delete this post?")
                 .setCancelable(false)
                 .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
@@ -209,15 +216,10 @@ public class PostRecyclerAdapter extends RecyclerView.Adapter<PostViewHolder>{
                 .show();
     }
 
-    @Override
-    public int getItemCount() {
-        return posts.size();
-    }
-
     private void deletePost(final String postID, final String userID) {
-        final DatabaseReference postRef = ((BaseActivity)context).getmDatabase().child("Posts");
-        final DatabaseReference userRef = ((BaseActivity)context).getmDatabase().child("Users");
-        final DatabaseReference commentRef = ((BaseActivity)context).getmDatabase().child("Comments");
+        final DatabaseReference postRef = getmDatabase().child("Posts");
+        final DatabaseReference userRef = getmDatabase().child("Users");
+        final DatabaseReference commentRef = getmDatabase().child("Comments");
 
         //Delete Post
         postRef.child(postID).addListenerForSingleValueEvent(new ValueEventListener() {
@@ -260,7 +262,8 @@ public class PostRecyclerAdapter extends RecyclerView.Adapter<PostViewHolder>{
                 //Delete post
                 postRef.child(postID).removeValue();
 
-                Toast.makeText(context, "Post deleted...", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), "Post deleted...", Toast.LENGTH_SHORT).show();
+                finish();
             }
 
             @Override
@@ -270,28 +273,28 @@ public class PostRecyclerAdapter extends RecyclerView.Adapter<PostViewHolder>{
         });
     }
 
-    private void userLikedPost(final AppCompatImageView heart, final String postID, final String userID) {
-        final DatabaseReference databaseReference = ((BaseActivity)context).getmDatabase();
+    private void userLikedPost( final String postID, final String userID) {
+        final DatabaseReference databaseReference = getmDatabase();
         databaseReference.child("Posts").child(postID).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 Post post = dataSnapshot.getValue(Post.class);
                 if(!post.getInterestIDs().contains(userID)) {
-                    heart.setImageResource(R.drawable.heart_unfilled);
+                    postHeart.setImageResource(R.drawable.heart_unfilled);
                 } else {
-                    heart.setImageResource(R.drawable.heart_filled);
+                    postHeart.setImageResource(R.drawable.heart_filled);
                 }
             }
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-                Toast.makeText(context, databaseError.getMessage(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), databaseError.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
     }
 
-    private void handleInterestClicked(final PostViewHolder holder, final String postID, final String ownerID, final String userID) {
-        final DatabaseReference databaseReference = ((BaseActivity)context).getmDatabase();
+    private void handleInterestClicked(final String postID, final String ownerID, final String userID) {
+        final DatabaseReference databaseReference = getmDatabase();
 
         databaseReference.child("Posts").child(postID).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -299,7 +302,7 @@ public class PostRecyclerAdapter extends RecyclerView.Adapter<PostViewHolder>{
                 Post post = dataSnapshot.getValue(Post.class);
                 if(!post.getInterestIDs().contains(userID)) {
                     post.addInterestID(userID);
-                    holder.postHeart.setImageResource(R.drawable.heart_filled);
+                    postHeart.setImageResource(R.drawable.heart_filled);
 
                     //If post owner like his/her own post, no need to post notification
                     if (!ownerID.equals(userID))
@@ -307,7 +310,7 @@ public class PostRecyclerAdapter extends RecyclerView.Adapter<PostViewHolder>{
 
                 } else {
                     post.removeInterestID(userID);
-                    holder.postHeart.setImageResource(R.drawable.heart_unfilled);
+                    postHeart.setImageResource(R.drawable.heart_unfilled);
 
                     //If post owner unlike his/her own post, no need to remove notification
                     if (!ownerID.equals(userID))
@@ -319,15 +322,15 @@ public class PostRecyclerAdapter extends RecyclerView.Adapter<PostViewHolder>{
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-                Toast.makeText(context, databaseError.getMessage(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), databaseError.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
     }
 
     private void addNewPostLikeNotification(final String postID, final String userID) {
-        final DatabaseReference userRef = ((BaseActivity)context).getmDatabase().child("Users");
-        final DatabaseReference postRef = ((BaseActivity)context).getmDatabase().child("Posts");
-        final DatabaseReference notificationRef = ((BaseActivity)context).getmDatabase().child("Notifications");
+        final DatabaseReference userRef = getmDatabase().child("Users");
+        final DatabaseReference postRef = getmDatabase().child("Posts");
+        final DatabaseReference notificationRef = getmDatabase().child("Notifications");
 
         final String newNotificationID = notificationRef.push().getKey();
 
@@ -382,7 +385,7 @@ public class PostRecyclerAdapter extends RecyclerView.Adapter<PostViewHolder>{
     }
 
     private void removeLikeNotification(final String postID, final String ownerID, final String userID) {
-        final DatabaseReference notificationRef = ((BaseActivity)context).getmDatabase().child("Notifications");
+        final DatabaseReference notificationRef = getmDatabase().child("Notifications");
 
         notificationRef.child(ownerID).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -406,6 +409,4 @@ public class PostRecyclerAdapter extends RecyclerView.Adapter<PostViewHolder>{
             }
         });
     }
-
-
 }

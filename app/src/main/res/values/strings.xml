@@ -86,6 +86,12 @@
     <string name="confirm_password_error_prompt">Confirm password must be the same as new password</string>
     <string name="invalid_email_prompt">Not a valid email address.</string>
     <string name="re_log_in_prompt">Please log out and sign in again to edit email address and/or password.</string>
+    <string name="sample_interests">75 Interests</string>
+    <string name="sample_post_description">Best taco NA!!</string>
+    <string name="sample_post_time">6 min ago</string>
+    <string name="sample_post_location">San Jose, CA</string>
+    <string name="sample_user_name">Huy Nguyen</string>
+    <string name="sample_post_comments">10 Comments</string>
 
 
 </resources>
