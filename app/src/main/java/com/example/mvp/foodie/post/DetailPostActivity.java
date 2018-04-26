@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.support.v7.app.AlertDialog;
 import android.os.Bundle;
 import android.support.v7.widget.AppCompatImageButton;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -58,6 +59,7 @@ public class DetailPostActivity extends BaseActivity implements PostContract.Det
         Intent intent = getIntent();
         final String postID = intent.getStringExtra(POST_ID);
         final String postOwnerID = intent.getStringExtra(USER_ID);
+
 
         initViews();
 

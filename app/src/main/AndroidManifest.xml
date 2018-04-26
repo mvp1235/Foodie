@@ -53,7 +53,7 @@
 
         <activity android:name=".post.DetailPostActivity">
             <intent-filter>
-                <action android:name="com.example.mvp.foodie.COMMENT_NOTIFICATION_TARGET"/>
+                <action android:name="com.example.mvp.foodie.POST_NOTIFICATION_TARGET"/>
                 <category android:name="android.intent.category.DEFAULT"/>
             </intent-filter>
         </activity>

@@ -27,6 +27,8 @@ exports.sendLikeNotifications = functions.database.ref('/Notifications/{user_id}
     	  const token_ids = result[2].val();
     	  const current_post = result[3].val();
     	  
+    	  console.log("TEST: ", current_post);
+    	  
     	  console.log('New like notification to user: ', to_user.uID);
     	  
     	  if(!result[2].hasChildren()) {
@@ -45,7 +47,7 @@ exports.sendLikeNotifications = functions.database.ref('/Notifications/{user_id}
 					  click_action: "com.example.mvp.foodie.POST_NOTIFICATION_TARGET"
 				  },
 				  data: {
-					  post_id: `${notification.postID}`,
+					  post_id: `${current_post.postID}`,
 					  post_owner_id: `${current_post.userID}`
 				  }
 		      };
@@ -62,7 +64,7 @@ exports.sendLikeNotifications = functions.database.ref('/Notifications/{user_id}
 					  click_action: "com.example.mvp.foodie.POST_NOTIFICATION_TARGET"
 				  },
 				  data: {
-					  post_id: `${notification.postID}`,
+					  post_id: `${current_post.postID}`,
 					  post_owner_id: `${current_post.userID}`
 				  }
 		      };
