@@ -18,12 +18,14 @@ exports.sendLikeNotifications = functions.database.ref('/Notifications/{user_id}
       const toUser = admin.database().ref(`/Users/${to_user_id}`).once('value');
       const deviceTokens = admin.database().ref(`/Users/${to_user_id}/tokenIDs`).once('value');
       const fromUser = admin.database().ref(`/Users/${from_user_id}`).once('value');
+      const post = admin.database().ref(`/Posts/${notification.postID}`).once('value');
       
       
-      return Promise.all([toUser, fromUser, deviceTokens]).then(result => {
+      return Promise.all([toUser, fromUser, deviceTokens, post]).then(result => {
     	  const to_user = result[0].val();
     	  const from_user = result[1].val();
     	  const token_ids = result[2].val();
+    	  const current_post = result[3].val();
     	  
     	  console.log('New like notification to user: ', to_user.uID);
     	  
@@ -43,7 +45,8 @@ exports.sendLikeNotifications = functions.database.ref('/Notifications/{user_id}
 					  click_action: "com.example.mvp.foodie.POST_NOTIFICATION_TARGET"
 				  },
 				  data: {
-					  post_id: `${notification.postID}`
+					  post_id: `${notification.postID}`,
+					  post_owner_id: `${current_post.userID}`
 				  }
 		      };
 	    	  
@@ -59,7 +62,8 @@ exports.sendLikeNotifications = functions.database.ref('/Notifications/{user_id}
 					  click_action: "com.example.mvp.foodie.POST_NOTIFICATION_TARGET"
 				  },
 				  data: {
-					  post_id: `${notification.postID}`
+					  post_id: `${notification.postID}`,
+					  post_owner_id: `${current_post.userID}`
 				  }
 		      };
 	    	  

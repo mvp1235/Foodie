@@ -7,6 +7,7 @@ import android.support.v7.widget.AppCompatTextView;
 import android.widget.ImageView;
 import com.example.mvp.foodie.BaseActivity;
 import com.example.mvp.foodie.models.Post;
+import com.example.mvp.foodie.models.User;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -31,6 +32,10 @@ public interface PostContract {
         void incrementInterestCount(String incrementedCount);
         void decrementInterestCount(String decrementedCount);
         void displayInterestCountChangeError(String error);
+        void onLoadPostSuccess(Post post, User postOwner);
+        void onLoadPostFailure(String error);
+        void onUserLikedPost();
+        void onUserNotLikedPost();
     }
 
     interface Presenter {
@@ -38,9 +43,9 @@ public interface PostContract {
         void uploadPost(BaseActivity activity, ImageView imageView, String description, String location, String userID);
         void editPost(BaseActivity activity, ImageView imageView, String description, String location, String userID, String postID);
         void deletePost(BaseActivity activity, String postID, String ownerID);
-        void loadUserInfo(BaseActivity activity, String userID, CircleImageView imageView, AppCompatTextView nameTV);
-        void checkIfUserLikedPost(BaseActivity activity, Post post, String userID, AppCompatImageView postHeart);
-        void handleUserInterestClick(BaseActivity activity, Post post, String userID, AppCompatImageView postHeart);
+        void loadDetailPost(BaseActivity activity, String postID, String postOwnerID, String currentUserID);
+        void checkIfUserLikedPost(BaseActivity activity, String postID, String userID);
+        void handleUserInterestClick(BaseActivity activity, String postID, String userID);
     }
 
 }

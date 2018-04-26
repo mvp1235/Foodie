@@ -154,11 +154,6 @@ public class PostRecyclerAdapter extends RecyclerView.Adapter<PostViewHolder>{
         Intent intent = new Intent(context, DetailPostActivity.class);
         intent.putExtra(POST_ID, post.getPostID());
         intent.putExtra(USER_ID, post.getUserID());
-        intent.putExtra(POST_DESCRIPTION, post.getDescription());
-        intent.putExtra(POST_URL, post.getPhotoURL());
-        intent.putExtra(POST_LOCATION, post.getLocation());
-        intent.putExtra(NUM_INTERESTS, post.getInterestCount());
-        intent.putExtra(NUM_COMMENTS, post.getCommentCount());
         context.startActivity(intent);
     }
 

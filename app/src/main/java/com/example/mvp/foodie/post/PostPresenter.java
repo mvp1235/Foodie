@@ -257,16 +257,16 @@ public class PostPresenter implements PostContract.Presenter {
     }
 
     @Override
-    public void checkIfUserLikedPost(BaseActivity activity, Post post, final String userID, final AppCompatImageView postHeart) {
+    public void checkIfUserLikedPost(BaseActivity activity, String postID, final String userID) {
         final DatabaseReference postRef = activity.getmDatabase().child("Posts");
-        postRef.child(post.getPostID()).addListenerForSingleValueEvent(new ValueEventListener() {
+        postRef.child(postID).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 Post post = dataSnapshot.getValue(Post.class);
                 if(!post.getInterestIDs().contains(userID)) {
-                    postHeart.setImageResource(R.drawable.heart_unfilled);
+                    detailView.onUserNotLikedPost();
                 } else {
-                    postHeart.setImageResource(R.drawable.heart_filled);
+                    detailView.onUserLikedPost();
                 }
             }
 
@@ -276,34 +276,51 @@ public class PostPresenter implements PostContract.Presenter {
     }
 
     @Override
-    public void loadUserInfo(BaseActivity activity, String userID, final CircleImageView userProfile, final AppCompatTextView nameTV) {
-        DatabaseReference userRef = activity.getmDatabase().child("Users");
-        userRef.child(userID).addListenerForSingleValueEvent(new ValueEventListener() {
+    public void loadDetailPost(BaseActivity activity, String postID, String postOwnerID, String currentUserID) {
+        DatabaseReference postRef = activity.getmDatabase().child("Posts");
+        final DatabaseReference userRef = activity.getmDatabase().child("Users");
+
+        postRef.child(postID).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                User u = dataSnapshot.getValue(User.class);
-                nameTV.setText(u.getFullName());
-                Picasso.get().load(u.getProfileURL()).into(userProfile);
+                final Post post = dataSnapshot.getValue(Post.class);
+
+                String postOwnerID = post.getUserID();
+                userRef.child(postOwnerID).addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        User postOwner = dataSnapshot.getValue(User.class);
+                        detailView.onLoadPostSuccess(post, postOwner);
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+                        detailView.onLoadPostFailure(databaseError.getMessage());
+                    }
+                });
+
             }
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-
+                detailView.onLoadPostFailure(databaseError.getMessage());
             }
         });
     }
 
+
     @Override
-    public void handleUserInterestClick(final BaseActivity activity, Post post, final String userID, final AppCompatImageView postHeart) {
+    public void handleUserInterestClick(final BaseActivity activity, String postID, final String userID) {
         final DatabaseReference postRef = activity.getmDatabase().child("Posts");
 
-        postRef.child(post.getPostID()).addListenerForSingleValueEvent(new ValueEventListener() {
+        postRef.child(postID).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 Post post = dataSnapshot.getValue(Post.class);
                 if(!post.getInterestIDs().contains(userID)) {
                     post.addInterestID(userID);
-                    postHeart.setImageResource(R.drawable.heart_filled);
+
+                    detailView.onUserLikedPost();
 
                     //If post owner like his/her own post, no need to post notification
                     if (!post.getUserID().equals(userID))
@@ -314,7 +331,7 @@ public class PostPresenter implements PostContract.Presenter {
 
                 } else {
                     post.removeInterestID(userID);
-                    postHeart.setImageResource(R.drawable.heart_unfilled);
+                    detailView.onUserNotLikedPost();
 
                     //If post owner unlike his/her own post, no need to remove notification
                     if (!post.getUserID().equals(userID))

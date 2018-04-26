@@ -56,41 +56,27 @@ public class DetailPostActivity extends BaseActivity implements PostContract.Det
         setContentView(R.layout.activity_detail_post);
 
         Intent intent = getIntent();
-
-        final Post post = new Post();
-        post.setPostID(intent.getStringExtra(POST_ID));
-        post.setUserID(intent.getStringExtra(USER_ID));
-        post.setDescription(intent.getStringExtra(POST_DESCRIPTION));
-        post.setPhotoURL(intent.getStringExtra(POST_URL));
-        post.setLocation(intent.getStringExtra(POST_LOCATION));
-
-        String interestCount = intent.getStringExtra(NUM_INTERESTS);
-        String commentCount = intent.getStringExtra(NUM_COMMENTS);
+        final String postID = intent.getStringExtra(POST_ID);
+        final String postOwnerID = intent.getStringExtra(USER_ID);
 
         initViews();
 
-        location.setText(post.getLocation());
-        time.setText(post.getPostDuration());
-        description.setText(post.getDescription());
-        Picasso.get().load(post.getPhotoURL()).into(postPhoto);
-        numComments.setText(commentCount);
-        numInterests.setText(interestCount);
-
-        presenter.loadUserInfo(this, post.getUserID(), userProfile, name);
-        presenter.checkIfUserLikedPost(this, post, FirebaseAuth.getInstance().getCurrentUser().getUid(), postHeart);
+        presenter.loadDetailPost(this, postID, postOwnerID, FirebaseAuth.getInstance().getCurrentUser().getUid());
+        presenter.checkIfUserLikedPost(this, postID, FirebaseAuth.getInstance().getCurrentUser().getUid());
 
 
         postHeart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 //increment or decrement interests count here, as well as toggle heart icons
-                presenter.handleUserInterestClick(DetailPostActivity.this, post, FirebaseAuth.getInstance().getCurrentUser().getUid(), postHeart);
+                presenter.handleUserInterestClick(DetailPostActivity.this, postID, FirebaseAuth.getInstance().getCurrentUser().getUid());
             }
         });
 
         numInterests.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                //view list of all users who liked the post
 
             }
         });
@@ -100,7 +86,7 @@ public class DetailPostActivity extends BaseActivity implements PostContract.Det
             public void onClick(View v) {
                 //Show all comments available for the specific post here
                 Intent intent = new Intent(DetailPostActivity.this, PostCommentsActivity.class);
-                intent.putExtra(POST_ID, post.getPostID());
+                intent.putExtra(POST_ID, postID);
                 startActivity(intent);
             }
         });
@@ -109,11 +95,10 @@ public class DetailPostActivity extends BaseActivity implements PostContract.Det
         userProfile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                viewUserProfile(post.getUserID());
+                viewUserProfile(postOwnerID);
             }
         });
 
-        String postOwnerID = post.getUserID();
         String currentUserID = getmAuth().getCurrentUser().getUid();
 
         if (postOwnerID.equals(currentUserID)) {
@@ -121,7 +106,7 @@ public class DetailPostActivity extends BaseActivity implements PostContract.Det
             menuBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    showPostPopupMenu(post);
+                    showPostPopupMenu(postID, postOwnerID);
                 }
             });
         } else {
@@ -156,7 +141,7 @@ public class DetailPostActivity extends BaseActivity implements PostContract.Det
         startActivityForResult(intent, VIEW_OTHER_PROFILE);
     }
 
-    private void showPostPopupMenu(final Post post) {
+    private void showPostPopupMenu(final String postID, final String postOwnerID) {
         PopupMenu popupMenu = new PopupMenu(this, menuBtn);
         popupMenu.getMenuInflater().inflate(R.menu.post_option_menu_items, popupMenu.getMenu());
 
@@ -164,16 +149,28 @@ public class DetailPostActivity extends BaseActivity implements PostContract.Det
             @Override
             public boolean onMenuItemClick(MenuItem item) {
                 if (item.getTitle().toString().equalsIgnoreCase("Edit")) {
-                    Intent intent = new Intent(DetailPostActivity.this, EditPostActivity.class);
-                    intent.putExtra(POST_ID, post.getPostID());
-                    intent.putExtra(USER_ID, post.getUserID());
-                    intent.putExtra(POST_DESCRIPTION, post.getDescription());
-                    intent.putExtra(POST_URL, post.getPhotoURL());
-                    intent.putExtra(POST_LOCATION, post.getLocation());
-                    startActivityForResult(intent, REQUEST_EDIT_POST);
+                    final Intent intent = new Intent(DetailPostActivity.this, EditPostActivity.class);
+
+                    getmDatabase().child("Posts").child(postID).addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            Post post = dataSnapshot.getValue(Post.class);
+                            intent.putExtra(POST_ID, post.getPostID());
+                            intent.putExtra(USER_ID, post.getUserID());
+                            intent.putExtra(POST_DESCRIPTION, post.getDescription());
+                            intent.putExtra(POST_URL, post.getPhotoURL());
+                            intent.putExtra(POST_LOCATION, post.getLocation());
+                            startActivityForResult(intent, REQUEST_EDIT_POST);
+                        }
+
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+
+                        }
+                    });
 
                 } else {
-                    showDeleteConfirmationDialog(post);
+                    showDeleteConfirmationDialog(postID, postOwnerID);
                 }
                 return false;
             }
@@ -181,14 +178,14 @@ public class DetailPostActivity extends BaseActivity implements PostContract.Det
         popupMenu.show();
     }
 
-    private void showDeleteConfirmationDialog(final Post post) {
+    private void showDeleteConfirmationDialog(final String postID, final String postOwnerID) {
         new AlertDialog.Builder(this)
                 .setMessage("Are you sure you want to delete this post?")
                 .setCancelable(false)
                 .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        presenter.deletePost(DetailPostActivity.this, post.getPostID(), post.getUserID());
+                        presenter.deletePost(DetailPostActivity.this, postID, postOwnerID);
                     }
                 })
                 .setNegativeButton("No", null)
@@ -227,5 +224,33 @@ public class DetailPostActivity extends BaseActivity implements PostContract.Det
     @Override
     public void displayInterestCountChangeError(String error) {
         Toast.makeText(this, error, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onLoadPostSuccess(Post post, User postOwner) {
+        location.setText(post.getLocation());
+        time.setText(post.getPostDuration());
+        description.setText(post.getDescription());
+        Picasso.get().load(post.getPhotoURL()).into(postPhoto);
+        numComments.setText(post.getCommentCount());
+        numInterests.setText(post.getInterestCount());
+
+        name.setText(postOwner.getFullName());
+        Picasso.get().load(postOwner.getProfileURL()).into(userProfile);
+    }
+
+    @Override
+    public void onLoadPostFailure(String error) {
+        Toast.makeText(this, error, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onUserLikedPost() {
+        postHeart.setImageResource(R.drawable.heart_filled);
+    }
+
+    @Override
+    public void onUserNotLikedPost() {
+        postHeart.setImageResource(R.drawable.heart_unfilled);
     }
 }

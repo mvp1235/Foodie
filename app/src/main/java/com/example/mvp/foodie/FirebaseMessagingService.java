@@ -10,6 +10,9 @@ import android.support.v4.app.NotificationManagerCompat;
 
 import com.google.firebase.messaging.RemoteMessage;
 
+import static com.example.mvp.foodie.UtilHelper.POST_ID;
+import static com.example.mvp.foodie.UtilHelper.USER_ID;
+
 public class FirebaseMessagingService extends com.google.firebase.messaging.FirebaseMessagingService {
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
@@ -17,8 +20,10 @@ public class FirebaseMessagingService extends com.google.firebase.messaging.Fire
 
         String messageTitle = remoteMessage.getNotification().getTitle();
         String messageBody = remoteMessage.getNotification().getBody();
-
         String click_action = remoteMessage.getNotification().getClickAction();
+
+        String postID = remoteMessage.getData().get("post_id");
+        String postOwnerID = remoteMessage.getData().get("post_owner_id");
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             // Create the NotificationChannel
@@ -44,6 +49,9 @@ public class FirebaseMessagingService extends com.google.firebase.messaging.Fire
 
 
         Intent resultIntent = new Intent(click_action);
+        resultIntent.putExtra(POST_ID, postID);
+        resultIntent.putExtra(USER_ID, postOwnerID);
+
         PendingIntent resultPendingIntent = PendingIntent.getActivity(
             this, 0, resultIntent, PendingIntent.FLAG_UPDATE_CURRENT
         );
