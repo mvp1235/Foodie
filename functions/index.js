@@ -19,6 +19,7 @@ exports.sendLikeNotifications = functions.database.ref('/Notifications/{user_id}
       const deviceTokens = admin.database().ref(`/Users/${to_user_id}/tokenIDs`).once('value');
       const fromUser = admin.database().ref(`/Users/${from_user_id}`).once('value');
       
+      
       return Promise.all([toUser, fromUser, deviceTokens]).then(result => {
     	  const to_user = result[0].val();
     	  const from_user = result[1].val();
@@ -38,7 +39,11 @@ exports.sendLikeNotifications = functions.database.ref('/Notifications/{user_id}
 				  notification: {
 					  title: "Foodie",
 					  body: `${from_user.fullName} ${notification.content}`,
-					  icon: `${from_user.profileURL}`
+					  icon: `${from_user.profileURL}`,
+					  click_action: "com.example.mvp.foodie.POST_NOTIFICATION_TARGET"
+				  },
+				  data: {
+					  post_id: `${notification.postID}`
 				  }
 		      };
 	    	  
@@ -50,7 +55,11 @@ exports.sendLikeNotifications = functions.database.ref('/Notifications/{user_id}
 				  notification: {
 					  title: "Foodie",
 					  body: `${from_user.fullName} ${notification.content}`,
-					  icon: `${from_user.profileURL}`
+					  icon: `${from_user.profileURL}`,
+					  click_action: "com.example.mvp.foodie.POST_NOTIFICATION_TARGET"
+				  },
+				  data: {
+					  post_id: `${notification.postID}`
 				  }
 		      };
 	    	  

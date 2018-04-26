@@ -25,7 +25,6 @@
         <activity android:name=".signin.SignInActivity">
             <intent-filter android:label="@string/app_name">
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -33,7 +32,10 @@
         <activity
             android:name=".profile.ProfileActivity"
             android:label="@string/profile" />
-        <activity android:name=".MainActivity" />
+
+        <activity android:name=".MainActivity">
+        </activity>
+
         <activity
             android:name=".profile.EditProfileActivity"
             android:label="@string/editProfile" />
@@ -42,10 +44,19 @@
             android:label="@string/newPost" />
         <activity
             android:name=".comment.PostCommentsActivity"
-            android:label="@string/comments" />
+            android:label="@string/comments">
+        </activity>
+
         <activity
             android:name=".post.EditPostActivity"
             android:label="@string/edit_post" />
+
+        <activity android:name=".post.DetailPostActivity">
+            <intent-filter>
+                <action android:name="com.example.mvp.foodie.COMMENT_NOTIFICATION_TARGET"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+            </intent-filter>
+        </activity>
 
         <service android:name=".FirebaseMessagingService">
             <intent-filter>
@@ -77,7 +88,6 @@
             android:name="com.google.firebase.messaging.default_notification_color"
             android:resource="@color/colorAccent" />
 
-        <activity android:name=".post.DetailPostActivity"></activity>
     </application>
 
 </manifest>
