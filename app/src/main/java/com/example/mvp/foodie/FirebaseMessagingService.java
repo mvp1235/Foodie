@@ -19,12 +19,16 @@ public class FirebaseMessagingService extends com.google.firebase.messaging.Fire
     public void onMessageReceived(RemoteMessage remoteMessage) {
         super.onMessageReceived(remoteMessage);
 
-        String messageTitle = remoteMessage.getNotification().getTitle();
-        String messageBody = remoteMessage.getNotification().getBody();
-        String click_action = remoteMessage.getNotification().getClickAction();
+//        String messageTitle = remoteMessage.getNotification().getTitle();
+//        String messageBody = remoteMessage.getNotification().getBody();
+//        String click_action = remoteMessage.getNotification().getClickAction();
 
+        String messageTitle = remoteMessage.getData().get("title");
+        String messageBody = remoteMessage.getData().get("body");
+        String click_action = remoteMessage.getData().get("click_action");
         String postID = remoteMessage.getData().get("post_id");
         String postOwnerID = remoteMessage.getData().get("post_owner_id");
+
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             // Create the NotificationChannel
@@ -42,6 +46,15 @@ public class FirebaseMessagingService extends com.google.firebase.messaging.Fire
             }
         }
 
+        Intent resultIntent = new Intent(click_action);
+        resultIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        resultIntent.putExtra(POST_ID, postID);
+        resultIntent.putExtra(USER_ID, postOwnerID);
+
+        PendingIntent resultPendingIntent = PendingIntent.getActivity(
+                this, 0, resultIntent, PendingIntent.FLAG_UPDATE_CURRENT
+        );
+
         NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this, getString(R.string.default_notification_channel_id))
                 .setSmallIcon(R.drawable.ic_launcher_background)
                 .setContentTitle(messageTitle)
@@ -50,21 +63,13 @@ public class FirebaseMessagingService extends com.google.firebase.messaging.Fire
                 .setAutoCancel(true);
 
 
-        Intent resultIntent = new Intent(click_action);
-        resultIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        resultIntent.putExtra(POST_ID, postID);
-        resultIntent.putExtra(USER_ID, postOwnerID);
-
-        PendingIntent resultPendingIntent = PendingIntent.getActivity(
-            this, 0, resultIntent, PendingIntent.FLAG_UPDATE_CURRENT
-        );
-
         mBuilder.setContentIntent(resultPendingIntent);
-        //Should set the intent to the appropriate activity later
-        //PART 24 15:00
+
 
         int mNotificationId = (int) System.currentTimeMillis();
         NotificationManager mNotifyManager = (NotificationManager)getSystemService(NOTIFICATION_SERVICE);
         mNotifyManager.notify(mNotificationId, mBuilder.build());
     }
+
+
 }

@@ -60,7 +60,6 @@ public class DetailPostActivity extends BaseActivity implements PostContract.Det
         final String postID = intent.getStringExtra(POST_ID);
         final String postOwnerID = intent.getStringExtra(USER_ID);
 
-
         initViews();
 
         presenter.loadDetailPost(this, postID, postOwnerID, FirebaseAuth.getInstance().getCurrentUser().getUid());

@@ -40,13 +40,11 @@ exports.sendLikeNotifications = functions.database.ref('/Notifications/{user_id}
     	  console.log('Notification: ', notification.type);
     	  if (notification.type === 'like') {
 	    	  const payload = {
-				  notification: {
+				  data: {
 					  title: "Foodie",
 					  body: `${from_user.fullName} ${notification.content}`,
 					  icon: `${from_user.profileURL}`,
-					  click_action: "com.example.mvp.foodie.POST_NOTIFICATION_TARGET"
-				  },
-				  data: {
+					  click_action: "com.example.mvp.foodie.POST_NOTIFICATION_TARGET",
 					  post_id: `${current_post.postID}`,
 					  post_owner_id: `${current_post.userID}`
 				  }
@@ -57,13 +55,11 @@ exports.sendLikeNotifications = functions.database.ref('/Notifications/{user_id}
 		      });
 	      } else if (notification.type === 'comment') {
 	    	  const payload = {
-				  notification: {
+				  data: {
 					  title: "Foodie",
 					  body: `${from_user.fullName} ${notification.content}`,
 					  icon: `${from_user.profileURL}`,
-					  click_action: "com.example.mvp.foodie.POST_NOTIFICATION_TARGET"
-				  },
-				  data: {
+					  click_action: "com.example.mvp.foodie.POST_NOTIFICATION_TARGET",
 					  post_id: `${current_post.postID}`,
 					  post_owner_id: `${current_post.userID}`
 				  }
