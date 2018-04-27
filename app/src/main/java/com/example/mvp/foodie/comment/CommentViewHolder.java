@@ -11,7 +11,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class CommentViewHolder extends RecyclerView.ViewHolder {
     public CircleImageView profilePhoto;
-    public AppCompatTextView userName, commentText;
+    public AppCompatTextView userName, commentText, commentTime;
     public AppCompatImageButton menuBtn;
 
     public CommentViewHolder(View itemView) {
@@ -21,5 +21,6 @@ public class CommentViewHolder extends RecyclerView.ViewHolder {
         userName = itemView.findViewById(R.id.notificationUserName_id);
         commentText = itemView.findViewById(R.id.commentText_id);
         menuBtn = itemView.findViewById(R.id.commentMenu_id);
+        commentTime = itemView.findViewById(R.id.commentTime_id);
     }
 }

@@ -38,6 +38,15 @@
         android:layout_below="@+id/notificationUserName_id"
         android:layout_toEndOf="@+id/notificationPhoto_id"
         android:layout_toRightOf="@+id/notificationPhoto_id"
-        android:text="I'm definitely coming!! dasdasdkasdjkas djaskdjlas jdaklasas djaslkjas djk dsdjasdljasdlasj ;sj dkljasd k kkk ask djk jaskdas dkljasdkl jasdkl jasdkl jasdkljasdklasjdkl ajks dj!" />
+        android:text="I'm definitely coming!!" />
+
+    <android.support.v7.widget.AppCompatTextView
+        android:id="@+id/commentTime_id"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_toStartOf="@+id/commentMenu_id"
+        android:layout_toLeftOf="@+id/commentMenu_id"
+        android:text="@string/sample_post_time" />
 
 </RelativeLayout>

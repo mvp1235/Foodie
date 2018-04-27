@@ -79,6 +79,7 @@ public class CommentRecyclerAdapter extends RecyclerView.Adapter<CommentViewHold
     public void onBindViewHolder(CommentViewHolder holder, int position) {
         Comment comment = comments.get(position);
         holder.commentText.setText(comment.getContent());
+        holder.commentTime.setText(comment.getCommentDuration());
         setUserInfo(holder, comment.getUserID());
         addMenuButton(comment, holder);
     }
