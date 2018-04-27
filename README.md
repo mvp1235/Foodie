@@ -14,7 +14,9 @@ Camera and Write External permissions are required for successfully uploading us
 ## Functionalities
 
 - Add new post, including a photo, a description, and location
+- Edit and delete post
 - Like and comment
+- Edit and delete comment
 - Notifications for user interactions with each other using Firebase Cloud Messaging and Cloud Functions
 - User authentication using Firebase Auth
 - Data storage using Firebase Realtime Database
@@ -35,6 +37,10 @@ Camera and Write External permissions are required for successfully uploading us
 ## Material Design
 
 - Bottom Navigation View and Navigation Drawer are used to provide the best experience for users.
+
+## 3rd Libarries Used
+- Picasso -         https://github.com/square/picasso
+- CircleImageView - https://github.com/hdodenhof/CircleImageView
 
 ## In-App Interface
 
