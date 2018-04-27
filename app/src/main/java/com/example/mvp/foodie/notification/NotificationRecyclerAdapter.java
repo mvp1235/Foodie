@@ -1,6 +1,7 @@
 package com.example.mvp.foodie.notification;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -53,6 +54,13 @@ public class NotificationRecyclerAdapter extends RecyclerView.Adapter<Notificati
         final Notification notification = notificationList.get(position);
 
         presenter.loadNotificationByID((BaseActivity) context, holder, notification.getnID(), notification.getToUserID());
+
+        holder.notificationBlock.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                presenter.loadDetailPostOfComment((BaseActivity) context, notification.getPostID());
+            }
+        });
     }
 
     @Override
@@ -72,6 +80,16 @@ public class NotificationRecyclerAdapter extends RecyclerView.Adapter<Notificati
 
     @Override
     public void onLoadNotificationFailure(String error) {
+        Toast.makeText(context, error, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onLoadDetailPostSuccess(Intent intent) {
+        context.startActivity(intent);
+    }
+
+    @Override
+    public void onLoadDetailPostFailure(String error) {
         Toast.makeText(context, error, Toast.LENGTH_SHORT).show();
     }
 }

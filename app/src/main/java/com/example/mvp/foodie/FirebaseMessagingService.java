@@ -19,10 +19,6 @@ public class FirebaseMessagingService extends com.google.firebase.messaging.Fire
     public void onMessageReceived(RemoteMessage remoteMessage) {
         super.onMessageReceived(remoteMessage);
 
-//        String messageTitle = remoteMessage.getNotification().getTitle();
-//        String messageBody = remoteMessage.getNotification().getBody();
-//        String click_action = remoteMessage.getNotification().getClickAction();
-
         String messageTitle = remoteMessage.getData().get("title");
         String messageBody = remoteMessage.getData().get("body");
         String click_action = remoteMessage.getData().get("click_action");
