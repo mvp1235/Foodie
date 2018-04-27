@@ -163,8 +163,6 @@ public class CommentRecyclerAdapter extends RecyclerView.Adapter<CommentViewHold
                 //Delete all notifications associated with the comment (for post owner and all users who subscribed to the post)
                 List<String> subscribedUserIDs = post.getSubscribedUserIDs();
 
-
-
                 for (final String userID : subscribedUserIDs) {
                     notificationRef.child(userID).addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
@@ -176,7 +174,9 @@ public class CommentRecyclerAdapter extends RecyclerView.Adapter<CommentViewHold
                                     @Override
                                     public void onDataChange(DataSnapshot dataSnapshot) {
                                         Notification n = dataSnapshot.getValue(Notification.class);
-                                        if (n != null && n.getCommentID().equals(commentID)) {
+
+                                        //Only check if this is a comment type notification
+                                        if (n != null && n.getType().equals("comment") && n.getCommentID().equals(commentID)) {
                                             notificationRef.child(userID).child(notificationID).removeValue();
                                         }
                                     }
