@@ -19,6 +19,8 @@ Camera and Write External permissions are required for successfully uploading us
 
 ## Functionalities
 
+- Sign up for account using personal email address
+- Update email and password
 - Add new post, including a photo, a description, and location
 - Edit and delete post
 - Like and comment
@@ -32,7 +34,7 @@ Camera and Write External permissions are required for successfully uploading us
 
 ## Upcoming Functionalities
 
-- Friendship Requests
+- Friend Requests
 - Private messaging
 - Multiple themes support
 - App Settings
@@ -109,3 +111,11 @@ Camera and Write External permissions are required for successfully uploading us
 ### Notification Fragment
 <img src="https://user-images.githubusercontent.com/15053859/39385957-33a2bb90-4a27-11e8-9025-f34cd3a97a0b.png" width="300" height="500">
 
+### Navigation Drawer
+<img src="https://user-images.githubusercontent.com/15053859/39386034-89aa2384-4a27-11e8-9d44-784d4ef85908.png" width="300" height="500">
+
+### Profile Page
+<img src="https://user-images.githubusercontent.com/15053859/39386036-89dcb3bc-4a27-11e8-9f42-27fa5aadc051.png" width="300" height="500">
+
+### Edit Profile Page
+<img src="https://user-images.githubusercontent.com/15053859/39386033-8991d194-4a27-11e8-9055-b3b0a8bcaa2d.png" width="300" height="500">
