@@ -19,6 +19,13 @@ Camera and Write External permissions are required for successfully uploading us
 - User authentication using Firebase Auth
 - Data storage using Firebase Realtime Database
 
+## Upcoming Functionalities
+
+- Friendship Requests
+- Private messaging
+- Multiple themes support
+- App Settings
+- Facebook and Google login
 
 ## Design Pattern
 
