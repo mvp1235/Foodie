@@ -38,7 +38,7 @@ Camera and Write External permissions are required for successfully uploading us
 
 - Bottom Navigation View and Navigation Drawer are used to provide the best experience for users.
 
-## 3rd Libarries Used
+## 3rd Libraries Used
 - Picasso -         https://github.com/square/picasso
 - CircleImageView - https://github.com/hdodenhof/CircleImageView
 
@@ -73,20 +73,4 @@ Camera and Write External permissions are required for successfully uploading us
 
 ### Comment edit fragment
 <img src="https://user-images.githubusercontent.com/15053859/39385220-835a3b2a-4a24-11e8-8267-0715d63f391f.png" width="300" height="500">
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
