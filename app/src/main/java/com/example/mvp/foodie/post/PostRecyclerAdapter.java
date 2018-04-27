@@ -16,6 +16,7 @@ import android.widget.Toast;
 import com.example.mvp.foodie.BaseActivity;
 import com.example.mvp.foodie.R;
 import com.example.mvp.foodie.comment.PostCommentsActivity;
+import com.example.mvp.foodie.interest.InterestListActivity;
 import com.example.mvp.foodie.models.Notification;
 import com.example.mvp.foodie.models.Post;
 import com.example.mvp.foodie.models.User;
@@ -110,7 +111,9 @@ public class PostRecyclerAdapter extends RecyclerView.Adapter<PostViewHolder>{
         holder.numInterests.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                Intent intent = new Intent(context, InterestListActivity.class);
+                intent.putExtra(POST_ID, post.getPostID());
+                context.startActivity(intent);
             }
         });
 
