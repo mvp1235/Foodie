@@ -15,6 +15,7 @@ import android.widget.Toast;
 import com.example.mvp.foodie.BaseActivity;
 import com.example.mvp.foodie.R;
 import com.example.mvp.foodie.comment.PostCommentsActivity;
+import com.example.mvp.foodie.interest.InterestListActivity;
 import com.example.mvp.foodie.models.Notification;
 import com.example.mvp.foodie.models.Post;
 import com.example.mvp.foodie.models.User;
@@ -78,6 +79,9 @@ public class DetailPostActivity extends BaseActivity implements PostContract.Det
             @Override
             public void onClick(View view) {
                 //view list of all users who liked the post
+                Intent intent = new Intent(DetailPostActivity.this, InterestListActivity.class);
+                intent.putExtra(POST_ID, postID);
+                startActivity(intent);
 
             }
         });
