@@ -11,7 +11,13 @@ public interface NotificationContract {
         void onLoadFailure(String error);
     }
 
+    interface Adapter {
+        void onLoadNotificationSuccess(Notification notification, NotificationViewHolder holder);
+        void onLoadNotificationFailure(String error);
+    }
+
     interface Presenter {
         void loadNotifications(BaseActivity activity, String userID);
+        void loadNotificationByID(BaseActivity activity, NotificationViewHolder holder, String notificationID, String toUserID);
     }
 }

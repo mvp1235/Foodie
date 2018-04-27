@@ -19,7 +19,7 @@ import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
-public class NotificationRecyclerAdapter extends RecyclerView.Adapter<NotificationViewHolder>{
+public class NotificationRecyclerAdapter extends RecyclerView.Adapter<NotificationViewHolder> implements NotificationContract.Adapter {
 
     private Context context;
     private List<Notification> notificationList;
@@ -28,6 +28,7 @@ public class NotificationRecyclerAdapter extends RecyclerView.Adapter<Notificati
     public NotificationRecyclerAdapter(Context context, List<Notification> notificationList) {
         this.context = context;
         this.notificationList = notificationList;
+        presenter = new NotificationPresenter(this);
     }
 
     public void setNotificationList(List<Notification> notificationList) {
@@ -35,6 +36,9 @@ public class NotificationRecyclerAdapter extends RecyclerView.Adapter<Notificati
         this.notifyDataSetChanged();
     }
 
+    public Context getContext() {
+        return context;
+    }
 
     @NonNull
     @Override
@@ -48,33 +52,26 @@ public class NotificationRecyclerAdapter extends RecyclerView.Adapter<Notificati
     public void onBindViewHolder(@NonNull NotificationViewHolder holder, int position) {
         final Notification notification = notificationList.get(position);
 
-        setNotificationInfo(notification.getnID(), notification.getToUserID(), holder);
-    }
-
-    private void setNotificationInfo(String notificationID, String toUserID, final NotificationViewHolder holder) {
-        DatabaseReference notificationRef = ((BaseActivity)context).getmDatabase().child("Notifications");
-
-        notificationRef.child(toUserID).child(notificationID).addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                Notification notification = dataSnapshot.getValue(Notification.class);
-                if (notification != null) {
-                    holder.content.setText(notification.getContent());
-                    holder.userName.setText(notification.getUserName());
-                    holder.time.setText(notification.getNotificationDuration());
-                    Picasso.get().load(notification.getPhotoURL()).into(holder.photoURL);
-                }
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                Toast.makeText(context, databaseError.getMessage(), Toast.LENGTH_SHORT).show();
-            }
-        });
+        presenter.loadNotificationByID((BaseActivity) context, holder, notification.getnID(), notification.getToUserID());
     }
 
     @Override
     public int getItemCount() {
         return notificationList.size();
+    }
+
+    @Override
+    public void onLoadNotificationSuccess(Notification notification, NotificationViewHolder holder) {
+        if (notification != null) {
+            holder.content.setText(notification.getContent());
+            holder.userName.setText(notification.getUserName());
+            holder.time.setText(notification.getNotificationDuration());
+            Picasso.get().load(notification.getPhotoURL()).into(holder.photoURL);
+        }
+    }
+
+    @Override
+    public void onLoadNotificationFailure(String error) {
+        Toast.makeText(context, error, Toast.LENGTH_SHORT).show();
     }
 }

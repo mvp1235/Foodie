@@ -13,9 +13,14 @@ import java.util.List;
 
 public class NotificationPresenter implements NotificationContract.Presenter {
     private NotificationContract.View view;
+    private NotificationContract.Adapter adapter;
 
     public NotificationPresenter(NotificationContract.View view) {
         this.view = view;
+    }
+
+    public NotificationPresenter(NotificationContract.Adapter adapter) {
+        this.adapter = adapter;
     }
 
 
@@ -46,4 +51,21 @@ public class NotificationPresenter implements NotificationContract.Presenter {
         });
     }
 
+    @Override
+    public void loadNotificationByID(BaseActivity activity, final NotificationViewHolder holder, String notificationID, String toUserID) {
+        DatabaseReference notificationRef = activity.getmDatabase().child("Notifications");
+
+        notificationRef.child(toUserID).child(notificationID).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                Notification notification = dataSnapshot.getValue(Notification.class);
+                adapter.onLoadNotificationSuccess(notification, holder);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                adapter.onLoadNotificationFailure(databaseError.getMessage());
+            }
+        });
+    }
 }
