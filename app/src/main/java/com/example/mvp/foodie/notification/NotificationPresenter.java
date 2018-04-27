@@ -97,7 +97,7 @@ public class NotificationPresenter implements NotificationContract.Presenter {
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-
+                adapter.onLoadDetailPostFailure(databaseError.getMessage());
             }
         });
 
