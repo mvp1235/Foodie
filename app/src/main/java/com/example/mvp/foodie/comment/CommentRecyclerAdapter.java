@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -15,6 +16,7 @@ import android.widget.PopupMenu;
 import com.example.mvp.foodie.BaseActivity;
 import com.example.mvp.foodie.R;
 import com.example.mvp.foodie.models.Comment;
+import com.example.mvp.foodie.models.Notification;
 import com.example.mvp.foodie.models.Post;
 import com.example.mvp.foodie.models.User;
 import com.google.firebase.database.DataSnapshot;
@@ -140,6 +142,7 @@ public class CommentRecyclerAdapter extends RecyclerView.Adapter<CommentViewHold
     private void deleteComment(final String postID, final String commentID) {
         final DatabaseReference postRef = ((BaseActivity)context).getmDatabase().child("Posts");
         final DatabaseReference commentRef = ((BaseActivity)context).getmDatabase().child("Comments");
+        final DatabaseReference notificationRef = ((BaseActivity)context).getmDatabase().child("Notifications");
 
         postRef.child(postID).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -155,6 +158,42 @@ public class CommentRecyclerAdapter extends RecyclerView.Adapter<CommentViewHold
 
                 //Update adapter
                 removeComment(commentID);
+
+                //Delete all notifications associated with the comment (for post owner and all users who subscribed to the post)
+                List<String> subscribedUserIDs = post.getSubscribedUserIDs();
+
+
+
+                for (final String userID : subscribedUserIDs) {
+                    notificationRef.child(userID).addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                                final String notificationID = snapshot.getKey();
+
+                                notificationRef.child(userID).child(notificationID).addListenerForSingleValueEvent(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(DataSnapshot dataSnapshot) {
+                                        Notification n = dataSnapshot.getValue(Notification.class);
+                                        if (n != null && n.getCommentID().equals(commentID)) {
+                                            notificationRef.child(userID).child(notificationID).removeValue();
+                                        }
+                                    }
+
+                                    @Override
+                                    public void onCancelled(DatabaseError databaseError) {
+
+                                    }
+                                });
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+
+                        }
+                    });
+                }
 
             }
 

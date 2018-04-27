@@ -107,7 +107,7 @@ public class CommentPresenter implements CommentContract.Presenter {
                     commentRef.child(comment.getcID()).setValue(comment);
 
                     //Add comment notification
-                    addCommentNotification(activity, postID, post.getUserID(), commenterID, post.getSubscribedUserIDs());
+                    addCommentNotification(activity, post, comment);
 
                     view.onCommentSuccess(comment);
                 }
@@ -121,10 +121,15 @@ public class CommentPresenter implements CommentContract.Presenter {
         }
     }
 
-    private void addCommentNotification(BaseActivity activity, final String postID, final String postOwnerID, final String commenterID, final ArrayList<String> subscribedIDs) {
+    private void addCommentNotification(BaseActivity activity, Post post, final Comment comment) {
         final DatabaseReference notificationRef = activity.getmDatabase().child("Notifications");
         final DatabaseReference userRef = activity.getmDatabase().child("Users");
 
+        final List<String> subscribedIDs = post.getSubscribedUserIDs();
+        final String postID = post.getPostID();
+        final String postOwnerID = post.getUserID();
+        final String commenterID = comment.getUserID();
+        final String commendID = comment.getcID();
 
         userRef.child(commenterID).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -142,6 +147,7 @@ public class CommentPresenter implements CommentContract.Presenter {
                         notification.setFromUserID(commenterID);
                         notification.setPostID(postID);
                         notification.setType("comment");
+                        notification.setCommentID(commendID);
                         notification.setUserName(commentUser.getFullName());
                         notification.setPhotoURL(commentUser.getProfileURL());
 

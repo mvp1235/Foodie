@@ -18,6 +18,7 @@ public class Notification implements Comparable<Notification>{
     private String fromUserID;
     private String toUserID;
     private long createdTime;
+    private String commentID;
 
     public Notification(){
         createdTime = System.currentTimeMillis();
@@ -33,6 +34,14 @@ public class Notification implements Comparable<Notification>{
 
     public String getType() {
         return type;
+    }
+
+    public String getCommentID() {
+        return commentID;
+    }
+
+    public void setCommentID(String commentID) {
+        this.commentID = commentID;
     }
 
     public void setType(String type) {
