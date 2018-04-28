@@ -123,9 +123,11 @@ public class EditProfileActivity extends BaseActivity implements ProfileContract
 
         if (error.contains("FirebaseAuthRecentLoginRequiredException"))
             Toast.makeText(this, R.string.re_log_in_prompt, Toast.LENGTH_LONG).show();
+        else if (error.contains("The email address is already in use by another account"))
+            email.setError("The email address is already in use by another account");
         else
             Toast.makeText(this, error, Toast.LENGTH_LONG).show();
-        finish();
+//        finish();
     }
 
     @Override
