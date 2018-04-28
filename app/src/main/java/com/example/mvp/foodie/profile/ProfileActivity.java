@@ -169,8 +169,13 @@ public class ProfileActivity extends BaseActivity implements ProfileContract.Vie
         postCountTV.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+            String userID = receivedIntent.getStringExtra(USER_ID);
+
             Intent intent = new Intent(ProfileActivity.this, AllUserPostActivity.class);
-            intent.putExtra(USER_ID, receivedIntent.getStringExtra(USER_ID));
+            if (userID != null)
+                intent.putExtra(USER_ID, userID);
+            else
+                intent.putExtra(USER_ID, getmAuth().getCurrentUser().getUid());
             startActivity(intent);
             }
         });
