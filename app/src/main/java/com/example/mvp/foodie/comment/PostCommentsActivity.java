@@ -10,6 +10,7 @@ import android.support.v7.widget.AppCompatEditText;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -26,6 +27,8 @@ import java.util.List;
 import static com.example.mvp.foodie.UtilHelper.POST_ID;
 
 public class PostCommentsActivity extends BaseActivity implements CommentContract.View, EditCommentDialogFragment.EditListener {
+
+    Toolbar toolbar;
     private AppCompatEditText commentET;
     private AppCompatButton postBtn;
 
@@ -48,6 +51,11 @@ public class PostCommentsActivity extends BaseActivity implements CommentContrac
     private void initViews() {
         Intent intent = getIntent();
         String currentPostID = intent.getStringExtra(POST_ID);
+
+
+        toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setTitle(R.string.comments);
 
         recyclerView = findViewById(R.id.recyclerView_id);
         commentET = findViewById(R.id.commentText_id);

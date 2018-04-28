@@ -33,7 +33,7 @@
         <activity
             android:name=".profile.ProfileActivity"
             android:label="@string/profile" />
-        <activity android:name=".MainActivity"></activity>
+        <activity android:name=".MainActivity" />
         <activity
             android:name=".profile.EditProfileActivity"
             android:label="@string/editProfile" />
@@ -42,7 +42,7 @@
             android:label="@string/newPost" />
         <activity
             android:name=".comment.PostCommentsActivity"
-            android:label="@string/comments"></activity>
+            android:label="@string/comments" />
         <activity
             android:name=".post.EditPostActivity"
             android:label="@string/edit_post" />
@@ -84,7 +84,8 @@
             android:name="com.google.firebase.messaging.default_notification_color"
             android:resource="@color/colorAccent" />
 
-        <activity android:name=".interest.InterestListActivity"></activity>
+        <activity android:name=".interest.InterestListActivity" />
+        <activity android:name=".post.AllUserPostActivity"></activity>
     </application>
 
 </manifest>

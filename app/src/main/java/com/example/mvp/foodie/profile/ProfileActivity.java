@@ -23,6 +23,7 @@ import com.example.mvp.foodie.BaseActivity;
 import com.example.mvp.foodie.R;
 import com.example.mvp.foodie.models.Notification;
 import com.example.mvp.foodie.models.User;
+import com.example.mvp.foodie.post.AllUserPostActivity;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -68,6 +69,7 @@ public class ProfileActivity extends BaseActivity implements ProfileContract.Vie
 
     private void loadData() {
         Intent intent = getIntent();
+        String userID = intent.getStringExtra(USER_ID);
         if (intent.getIntExtra(REQUEST_CODE, 0) == VIEW_MY_PROFILE) {
             presenter.loadDataFromFirebase(getmAuth().getCurrentUser().getUid());
 
@@ -83,7 +85,7 @@ public class ProfileActivity extends BaseActivity implements ProfileContract.Vie
 
             //Show/Hide appropriate fields
             //Hide all irrelevant field
-            if(!intent.getStringExtra(USER_ID).equals(getmAuth().getCurrentUser().getUid()))
+            if(!userID.equals(getmAuth().getCurrentUser().getUid()))
                 addFriendBtn.setVisibility(View.VISIBLE);
             else
                 addFriendBtn.setVisibility(View.GONE);
@@ -163,6 +165,15 @@ public class ProfileActivity extends BaseActivity implements ProfileContract.Vie
             });
 
         }
+
+        postCountTV.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+            Intent intent = new Intent(ProfileActivity.this, AllUserPostActivity.class);
+            intent.putExtra(USER_ID, receivedIntent.getStringExtra(USER_ID));
+            startActivity(intent);
+            }
+        });
 
 //        addFriendBtn.setOnClickListener(new View.OnClickListener() {
 //            @Override

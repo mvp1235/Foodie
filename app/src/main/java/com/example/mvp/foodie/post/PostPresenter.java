@@ -42,6 +42,7 @@ public class PostPresenter implements PostContract.Presenter {
     private PostContract.View view;
     private PostContract.EditView editView;
     private PostContract.DetailView detailView;
+    private PostContract.ListView listView;
     private StorageReference storageReference;
 
 
@@ -57,6 +58,11 @@ public class PostPresenter implements PostContract.Presenter {
 
     public PostPresenter(PostContract.DetailView detailView) {
         this.detailView = detailView;
+        storageReference = FirebaseStorage.getInstance().getReference();
+    }
+
+    public PostPresenter(PostContract.ListView listView) {
+        this.listView = listView;
         storageReference = FirebaseStorage.getInstance().getReference();
     }
 
@@ -429,6 +435,41 @@ public class PostPresenter implements PostContract.Presenter {
             @Override
             public void onCancelled(DatabaseError databaseError) {
 
+            }
+        });
+    }
+
+    @Override
+    public void loadAllUserPosts(BaseActivity activity, String userID) {
+        final DatabaseReference postRef = activity.getmDatabase().child("Posts");
+        DatabaseReference userRef = activity.getmDatabase().child("Users");
+
+        userRef.child(userID).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                User currentUser = dataSnapshot.getValue(User.class);
+
+                List<String> postIDs = currentUser.getPostIDs();
+
+                for (String id : postIDs) {
+                    postRef.child(id).addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            Post post = dataSnapshot.getValue(Post.class);
+                            listView.onLoadPostSuccess(post);
+                        }
+
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+                            listView.onLoadPostFailure(databaseError.getMessage());
+                        }
+                    });
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                listView.onLoadPostFailure(databaseError.getMessage());
             }
         });
     }

@@ -50,6 +50,11 @@ public class PostRecyclerAdapter extends RecyclerView.Adapter<PostViewHolder>{
         this.posts = posts;
     }
 
+    public void addPost(Post post) {
+        this.posts.add(0, post);
+        this.notifyDataSetChanged();
+    }
+
     public void setPosts(List<Post> posts) {
         this.posts = posts;
         this.notifyDataSetChanged();

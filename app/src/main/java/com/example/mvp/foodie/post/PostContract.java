@@ -1,15 +1,10 @@
 package com.example.mvp.foodie.post;
 
-import android.app.Activity;
 import android.content.Intent;
-import android.support.v7.widget.AppCompatImageView;
-import android.support.v7.widget.AppCompatTextView;
 import android.widget.ImageView;
 import com.example.mvp.foodie.BaseActivity;
 import com.example.mvp.foodie.models.Post;
 import com.example.mvp.foodie.models.User;
-
-import de.hdodenhof.circleimageview.CircleImageView;
 
 public interface PostContract {
     interface View {
@@ -38,6 +33,11 @@ public interface PostContract {
         void onUserNotLikedPost();
     }
 
+    interface ListView {
+        void onLoadPostSuccess(Post post);
+        void onLoadPostFailure(String error);
+    }
+
     interface Presenter {
         void getLocation(BaseActivity activity, String providedLocation);
         void uploadPost(BaseActivity activity, ImageView imageView, String description, String location, String userID);
@@ -46,6 +46,7 @@ public interface PostContract {
         void loadDetailPost(BaseActivity activity, String postID, String postOwnerID, String currentUserID);
         void checkIfUserLikedPost(BaseActivity activity, String postID, String userID);
         void handleUserInterestClick(BaseActivity activity, String postID, String userID);
+        void loadAllUserPosts(BaseActivity activity, String userID);
     }
 
 }

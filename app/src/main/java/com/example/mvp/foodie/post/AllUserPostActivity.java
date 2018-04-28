@@ -1,49 +1,45 @@
-package com.example.mvp.foodie.interest;
+package com.example.mvp.foodie.post;
 
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 import android.widget.Toast;
 
 import com.example.mvp.foodie.BaseActivity;
 import com.example.mvp.foodie.R;
-import com.example.mvp.foodie.models.Interest;
+import com.example.mvp.foodie.models.Post;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.example.mvp.foodie.UtilHelper.POST_ID;
+import static com.example.mvp.foodie.UtilHelper.USER_ID;
 
-public class InterestListActivity extends BaseActivity implements InterestContract.View{
+public class AllUserPostActivity extends BaseActivity implements PostContract.ListView {
 
-    Toolbar toolbar;
     private RecyclerView recyclerView;
-    private InterestRecyclerAdapter adapter;
+    private PostRecyclerAdapter adapter;
 
-    private List<Interest> interestList;
-
-    private InterestContract.Presenter presenter;
+    private List<Post> posts;
+    private PostContract.Presenter presenter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_interest_list);
+        setContentView(R.layout.activity_all_user_post);
 
+        initViews();
+    }
+
+    private void initViews() {
         Intent intent = getIntent();
-        String postID = intent.getStringExtra(POST_ID);
+        String userID = intent.getStringExtra(USER_ID);
 
-        toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setTitle(R.string.interests);
-
-        interestList = new ArrayList<>();
         recyclerView = findViewById(R.id.recyclerView_id);
-        adapter = new InterestRecyclerAdapter(this, interestList);
+        posts = new ArrayList<>();
 
+        adapter = new PostRecyclerAdapter(this, posts);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(linearLayoutManager);
         recyclerView.setHasFixedSize(true);
@@ -52,19 +48,17 @@ public class InterestListActivity extends BaseActivity implements InterestContra
                 linearLayoutManager.getOrientation());
         recyclerView.addItemDecoration(mDividerItemDecoration);
 
-        presenter = new InterestPresenter(this);
-        presenter.loadInterests(InterestListActivity.this, postID);
-
-
+        presenter = new PostPresenter(this);
+        presenter.loadAllUserPosts(this, userID);
     }
 
     @Override
-    public void onLoadInterestsSuccess(Interest interest) {
-        adapter.addInterest(interest);
+    public void onLoadPostSuccess(Post post) {
+        adapter.addPost(post);
     }
 
     @Override
-    public void onLoadInterestFailure(String error) {
+    public void onLoadPostFailure(String error) {
         Toast.makeText(this, error, Toast.LENGTH_SHORT).show();
     }
 }
