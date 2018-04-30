@@ -11,6 +11,7 @@ import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 import android.os.Bundle;
 import android.support.v7.widget.AppCompatButton;
+import android.support.v7.widget.AppCompatImageButton;
 import android.support.v7.widget.AppCompatTextView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -46,9 +47,9 @@ import static com.example.mvp.foodie.UtilHelper.VIEW_OTHER_PROFILE;
 
 public class ProfileActivity extends BaseActivity implements ProfileContract.View {
     Toolbar toolbar;
-    private AppCompatTextView nameTV, emailTV, locationTV, postCountTV, friendCountTV;
+    private AppCompatTextView nameTV, emailTV, postCountTV, friendCountTV;
     private CircleImageView profileImage;
-    private AppCompatButton addFriendBtn, unFriendBtn, acceptBtn, declineBtn;
+    private AppCompatButton viewSentRequestsBtn, viewPendingRequestsBtn;
 
     private AlertDialog photoActionDialog;
 
@@ -69,40 +70,18 @@ public class ProfileActivity extends BaseActivity implements ProfileContract.Vie
 
     private void loadData() {
         Intent intent = getIntent();
-        String userID = intent.getStringExtra(USER_ID);
+
+        //User viewing his/her own profile
         if (intent.getIntExtra(REQUEST_CODE, 0) == VIEW_MY_PROFILE) {
             presenter.loadDataFromFirebase(getmAuth().getCurrentUser().getUid());
 
-            //Show/Hide appropriate fields
-            //Hide all irrelevant field
-            addFriendBtn.setVisibility(View.GONE);
-            unFriendBtn.setVisibility(View.GONE);
-            acceptBtn.setVisibility(View.GONE);
-            declineBtn.setVisibility(View.GONE);
-
-        } else if (intent.getIntExtra(REQUEST_CODE, 0) == VIEW_OTHER_PROFILE) {
+        } else if (intent.getIntExtra(REQUEST_CODE, 0) == VIEW_OTHER_PROFILE) { //User viewing others' profiles
             presenter.loadDataFromFirebase(intent.getStringExtra(USER_ID));
 
-            //Show/Hide appropriate fields
-            //Hide all irrelevant field
-            if(!userID.equals(getmAuth().getCurrentUser().getUid()))
-                addFriendBtn.setVisibility(View.VISIBLE);
-            else
-                addFriendBtn.setVisibility(View.GONE);
-            unFriendBtn.setVisibility(View.GONE);
-            acceptBtn.setVisibility(View.GONE);
-            declineBtn.setVisibility(View.GONE);
         } else {
             Toast.makeText(this, "There is a problem with the server. Please reload the application.", Toast.LENGTH_SHORT).show();
         }
 
-        //FOR NOW, WON"T BE IMPLEMENTING FRIEND FEATURE
-        addFriendBtn.setVisibility(View.GONE);
-        unFriendBtn.setVisibility(View.GONE);
-        acceptBtn.setVisibility(View.GONE);
-        declineBtn.setVisibility(View.GONE);
-        ////////////////////////////////////////////////
-        //REMOVE THIS WHEN BACK TO IMPLEMENTING FRIEND FEATURE
     }
 
     private void getPermissions() {
@@ -135,15 +114,12 @@ public class ProfileActivity extends BaseActivity implements ProfileContract.Vie
 
         nameTV = findViewById(R.id.profileName_id);
         emailTV = findViewById(R.id.profileEmail_id);
-        locationTV = findViewById(R.id.profileLocation_id);
         postCountTV = findViewById(R.id.profilePostCount_id);
         friendCountTV = findViewById(R.id.profileFriendCount_id);
         profileImage = findViewById(R.id.profilePhoto_id);
 
-        addFriendBtn = findViewById(R.id.addFriendBtn_id);
-        unFriendBtn = findViewById(R.id.unFriendBtn_id);
-        acceptBtn = findViewById(R.id.acceptRequestBtn_id);
-        declineBtn = findViewById(R.id.removeRequestBtn_id);
+        viewSentRequestsBtn = findViewById(R.id.viewSentFriendRequestBtn_id);
+        viewPendingRequestsBtn = findViewById(R.id.viewPendingFriendRequestBtn_id);
     }
 
     private void setUpListeners() {

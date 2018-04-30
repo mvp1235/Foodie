@@ -127,7 +127,6 @@ public class EditProfileActivity extends BaseActivity implements ProfileContract
             email.setError("The email address is already in use by another account");
         else
             Toast.makeText(this, error, Toast.LENGTH_LONG).show();
-//        finish();
     }
 
     @Override

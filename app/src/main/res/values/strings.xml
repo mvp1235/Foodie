@@ -94,6 +94,8 @@
     <string name="sample_post_comments">10 Comments</string>
     <string name="post_history">Post History</string>
     <string name="interests">Interests</string>
+    <string name="sent_friend_requests">Sent Friend Requests</string>
+    <string name="pending_friend_requests">Pending Friend Requests</string>
 
 
 </resources>

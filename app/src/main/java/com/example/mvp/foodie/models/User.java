@@ -12,12 +12,17 @@ public class User {
     private List<String> postIDs;
     private List<String> friendIDs;
     private List<String> tokenIDs;
+    private List<String> pendingFriendRequestIDs;
+    private List<String> sentFriendRequestIDs;
+
 
 
     public User(){
         postIDs = new ArrayList<>();
         friendIDs = new ArrayList<>();
         tokenIDs = new ArrayList<>();
+        pendingFriendRequestIDs = new ArrayList<>();
+        sentFriendRequestIDs = new ArrayList<>();
     };
 
     public String getuID() {
@@ -124,5 +129,41 @@ public class User {
     public void removeTokenID(String tokenID) {
         if (tokenIDs.contains(tokenID))
             tokenIDs.remove(tokenID);
+    }
+
+    public List<String> getPendingFriendRequestIDs() {
+        return pendingFriendRequestIDs;
+    }
+
+    public void setPendingFriendRequestIDs(List<String> pendingFriendRequestIDs) {
+        this.pendingFriendRequestIDs = pendingFriendRequestIDs;
+    }
+
+    public void addPendingFriendRequestID(String id) {
+        if (!pendingFriendRequestIDs.contains(id))
+            pendingFriendRequestIDs.add(id);
+    }
+
+    public void removePendingFriendRequestID(String id) {
+        if (pendingFriendRequestIDs.contains(id))
+            pendingFriendRequestIDs.remove(id);
+    }
+
+    public List<String> getSentFriendRequestIDs() {
+        return sentFriendRequestIDs;
+    }
+
+    public void setSentFriendRequestIDs(List<String> sentFriendRequestIDs) {
+        this.sentFriendRequestIDs = sentFriendRequestIDs;
+    }
+
+    public void addSentFriendRequestID(String id) {
+        if (!sentFriendRequestIDs.contains(id))
+            sentFriendRequestIDs.add(id);
+    }
+
+    public void removeSentFriendRequestID(String id) {
+        if (sentFriendRequestIDs.contains(id))
+            sentFriendRequestIDs.remove(id);
     }
 }

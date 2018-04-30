@@ -88,46 +88,19 @@
     </LinearLayout>
 
     <android.support.v7.widget.AppCompatButton
-        android:id="@+id/addFriendBtn_id"
+        android:id="@+id/viewSentFriendRequestBtn_id"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
         android:layout_below="@+id/userStatsBlock_id"
-        android:background="@color/colorAccent"
-        android:text="@string/add_friend"
+        android:text="@string/sent_friend_requests"
         android:textColor="@android:color/white" />
 
     <android.support.v7.widget.AppCompatButton
-        android:id="@+id/unFriendBtn_id"
+        android:id="@+id/viewPendingFriendRequestBtn_id"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
-        android:layout_below="@+id/addFriendBtn_id"
-        android:background="@color/colorGoogleRed"
-        android:text="@string/unfriend"
-        android:textColor="@android:color/white" />
-
-    <android.support.v7.widget.AppCompatButton
-        android:id="@+id/acceptRequestBtn_id"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
-        android:layout_below="@+id/unFriendBtn_id"
-        android:background="@color/colorPrimary"
-        android:text="@string/accept_request"
-        android:textColor="@android:color/white" />
-
-    <android.support.v7.widget.AppCompatButton
-        android:id="@+id/removeRequestBtn_id"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
-        android:layout_below="@+id/acceptRequestBtn_id"
-        android:text="@string/decline_request"
+        android:layout_below="@+id/viewSentFriendRequestBtn_id"
+        android:text="@string/pending_friend_requests"
         android:textColor="@android:color/white" />
 
 </RelativeLayout>
