@@ -85,7 +85,8 @@
             android:resource="@color/colorAccent" />
 
         <activity android:name=".interest.InterestListActivity" />
-        <activity android:name=".post.AllUserPostActivity"></activity>
+        <activity android:name=".post.AllUserPostActivity" />
+        <activity android:name=".friend.FriendRequestsActivity"></activity>
     </application>
 
 </manifest>

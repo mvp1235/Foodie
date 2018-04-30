@@ -64,6 +64,12 @@ public class NewPostActivity extends BaseActivity implements PostContract.View {
 
     }
 
+    @Override
+    protected void onDestroy() {
+        mPrgressDialog.dismiss();
+        super.onDestroy();
+    }
+
     private void initViews() {
         toolbar = findViewById(R.id.new_post_toolbar);
         setSupportActionBar(toolbar);

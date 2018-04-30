@@ -88,19 +88,19 @@
     </LinearLayout>
 
     <android.support.v7.widget.AppCompatButton
-        android:id="@+id/viewSentFriendRequestBtn_id"
+        android:id="@+id/viewFriendRequestBtn_id"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/userStatsBlock_id"
-        android:text="@string/sent_friend_requests"
+        android:text="@string/friend_requests"
         android:textColor="@android:color/white" />
 
     <android.support.v7.widget.AppCompatButton
-        android:id="@+id/viewPendingFriendRequestBtn_id"
+        android:id="@+id/addFriendBtn_id"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/viewSentFriendRequestBtn_id"
-        android:text="@string/pending_friend_requests"
+        android:layout_below="@+id/viewFriendRequestBtn_id"
+        android:text="@string/add_friend"
         android:textColor="@android:color/white" />
 
 </RelativeLayout>

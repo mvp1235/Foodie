@@ -73,13 +73,12 @@
     <string name="delete">Delete</string>
     <string name="comments">Comments</string>
     <string name="edit_post">Edit Post</string>
-    <string name="cancel">Cancel</string>
     <string name="edit_comment">Edit Comment</string>
     <string name="add_friend">Add Friend</string>
     <string name="unfriend">Unfriend</string>
-    <string name="accept_request">Accept Request</string>
-    <string name="decline_request">Decline Request</string>
-    <string name="cancel_request">Cancel Request</string>
+    <string name="accept">Accept</string>
+    <string name="decline">Decline</string>
+    <string name="cancel">Cancel</string>
     <string name="current_password">Current password</string>
     <string name="new_password">New password</string>
     <string name="confirm_new_password">Confirm new password</string>
@@ -94,8 +93,7 @@
     <string name="sample_post_comments">10 Comments</string>
     <string name="post_history">Post History</string>
     <string name="interests">Interests</string>
-    <string name="sent_friend_requests">Sent Friend Requests</string>
-    <string name="pending_friend_requests">Pending Friend Requests</string>
+    <string name="friend_requests">Friend Requests</string>
 
 
 </resources>

@@ -22,6 +22,9 @@ import android.widget.Toast;
 
 import com.example.mvp.foodie.BaseActivity;
 import com.example.mvp.foodie.R;
+import com.example.mvp.foodie.friend.FriendContract;
+import com.example.mvp.foodie.friend.FriendPresenter;
+import com.example.mvp.foodie.friend.FriendRequestsActivity;
 import com.example.mvp.foodie.models.Notification;
 import com.example.mvp.foodie.models.User;
 import com.example.mvp.foodie.post.AllUserPostActivity;
@@ -45,15 +48,16 @@ import static com.example.mvp.foodie.UtilHelper.USER_ID;
 import static com.example.mvp.foodie.UtilHelper.VIEW_MY_PROFILE;
 import static com.example.mvp.foodie.UtilHelper.VIEW_OTHER_PROFILE;
 
-public class ProfileActivity extends BaseActivity implements ProfileContract.View {
+public class ProfileActivity extends BaseActivity implements ProfileContract.View, FriendContract.View {
     Toolbar toolbar;
     private AppCompatTextView nameTV, emailTV, postCountTV, friendCountTV;
     private CircleImageView profileImage;
-    private AppCompatButton viewSentRequestsBtn, viewPendingRequestsBtn;
+    private AppCompatButton viewFriendRequestsBtn, addFriendBtn;
 
     private AlertDialog photoActionDialog;
 
     private ProfileContract.Presenter presenter;
+    private FriendContract.Presenter friendPresenter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,6 +68,7 @@ public class ProfileActivity extends BaseActivity implements ProfileContract.Vie
         getPermissions();
         setUpListeners();
         presenter = new ProfilePresenter(this);
+        friendPresenter = new FriendPresenter(this);
         loadData();
 
     }
@@ -75,9 +80,15 @@ public class ProfileActivity extends BaseActivity implements ProfileContract.Vie
         if (intent.getIntExtra(REQUEST_CODE, 0) == VIEW_MY_PROFILE) {
             presenter.loadDataFromFirebase(getmAuth().getCurrentUser().getUid());
 
+            viewFriendRequestsBtn.setVisibility(View.VISIBLE);
+            addFriendBtn.setVisibility(View.GONE);
+
         } else if (intent.getIntExtra(REQUEST_CODE, 0) == VIEW_OTHER_PROFILE) { //User viewing others' profiles
             presenter.loadDataFromFirebase(intent.getStringExtra(USER_ID));
 
+            //Hide view requests button when viewing others' profiles
+            viewFriendRequestsBtn.setVisibility(View.GONE);
+            addFriendBtn.setVisibility(View.VISIBLE);
         } else {
             Toast.makeText(this, "There is a problem with the server. Please reload the application.", Toast.LENGTH_SHORT).show();
         }
@@ -118,8 +129,8 @@ public class ProfileActivity extends BaseActivity implements ProfileContract.Vie
         friendCountTV = findViewById(R.id.profileFriendCount_id);
         profileImage = findViewById(R.id.profilePhoto_id);
 
-        viewSentRequestsBtn = findViewById(R.id.viewSentFriendRequestBtn_id);
-        viewPendingRequestsBtn = findViewById(R.id.viewPendingFriendRequestBtn_id);
+        viewFriendRequestsBtn = findViewById(R.id.viewFriendRequestBtn_id);
+        addFriendBtn = findViewById(R.id.addFriendBtn_id);
     }
 
     private void setUpListeners() {
@@ -156,34 +167,27 @@ public class ProfileActivity extends BaseActivity implements ProfileContract.Vie
             }
         });
 
-//        addFriendBtn.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                if (addFriendBtn.getText().toString().equalsIgnoreCase("Add Friend")) {
-//                    addFriendBtn.setText(R.string.cancel_request);
-//                    sendFriendRequest(getmAuth().getCurrentUser().getUid(), receivedIntent.getStringExtra(USER_ID));
-//                } else {
-//                    addFriendBtn.setText(R.string.add_friend);
-//
-//                }
-//
-//            }
-//        });
+        viewFriendRequestsBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent =  new Intent(ProfileActivity.this, FriendRequestsActivity.class);
+                startActivity(intent);
+            }
+        });
 
+        addFriendBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String text = addFriendBtn.getText().toString();
 
+                if (text.equals(getString(R.string.add_friend))) {
+                    addFriendBtn.setText(getString(R.string.cancel));
+                } else {
+                    addFriendBtn.setText(getString(R.string.add_friend));
+                }
 
-    }
-
-
-    private void sendFriendRequest(final String fromID, final String toID) {
-        final DatabaseReference notificationRef = getmDatabase().child("Notifications");
-        final DatabaseReference userRef = getmDatabase().child("Users");
-        final String newNotificationID = notificationRef.push().getKey();
-
-        final Notification notification = new Notification();
-        notification.setContent("sent you a friend request.");
-        notification.setnID(newNotificationID);
-
+            }
+        });
 
     }
 
@@ -380,4 +384,33 @@ public class ProfileActivity extends BaseActivity implements ProfileContract.Vie
         Toast.makeText(this, error, Toast.LENGTH_SHORT).show();
     }
 
+    @Override
+    public void onSendRequestSuccess() {
+
+    }
+
+    @Override
+    public void onSendRequestFailure(String error) {
+
+    }
+
+    @Override
+    public void onCancelRequestSuccess() {
+
+    }
+
+    @Override
+    public void onCancelRequestFailure(String error) {
+
+    }
+
+    @Override
+    public void onAcceptRequestSuccess() {
+
+    }
+
+    @Override
+    public void onAcceptRequestFailure(String error) {
+
+    }
 }
