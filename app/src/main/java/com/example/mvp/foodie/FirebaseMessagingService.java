@@ -12,6 +12,7 @@ import android.util.Log;
 import com.google.firebase.messaging.RemoteMessage;
 
 import static com.example.mvp.foodie.UtilHelper.POST_ID;
+import static com.example.mvp.foodie.UtilHelper.REQUEST_CODE;
 import static com.example.mvp.foodie.UtilHelper.USER_ID;
 
 public class FirebaseMessagingService extends com.google.firebase.messaging.FirebaseMessagingService {
@@ -24,6 +25,8 @@ public class FirebaseMessagingService extends com.google.firebase.messaging.Fire
         String click_action = remoteMessage.getData().get("click_action");
         String postID = remoteMessage.getData().get("post_id");
         String postOwnerID = remoteMessage.getData().get("post_owner_id");
+        String requestCode = remoteMessage.getData().get("request_code");
+        String userID = remoteMessage.getData().get("user_id");
 
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -42,29 +45,48 @@ public class FirebaseMessagingService extends com.google.firebase.messaging.Fire
             }
         }
 
-        Intent resultIntent = new Intent(click_action);
-        resultIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        resultIntent.putExtra(POST_ID, postID);
-        resultIntent.putExtra(USER_ID, postOwnerID);
 
-        PendingIntent resultPendingIntent = PendingIntent.getActivity(
-                this, 0, resultIntent, PendingIntent.FLAG_UPDATE_CURRENT
-        );
+        Intent resultIntent = null;
 
-        NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this, getString(R.string.default_notification_channel_id))
-                .setSmallIcon(R.drawable.ic_launcher_background)
-                .setContentTitle(messageTitle)
-                .setContentText(messageBody)
-                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
-                .setAutoCancel(true);
+        if (postID != null && postOwnerID != null) {
+            resultIntent = new Intent(click_action);
+            resultIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            resultIntent.putExtra(POST_ID, postID);
+            resultIntent.putExtra(USER_ID, postOwnerID);
+        } else if (requestCode != null && userID != null) {
+            resultIntent = new Intent(click_action);
+            resultIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+
+            int resultCodeInt = Integer.parseInt(requestCode);
+            resultIntent.putExtra(REQUEST_CODE, resultCodeInt);
+            resultIntent.putExtra(USER_ID, userID);
+        } else if (userID != null) {
+            resultIntent = new Intent(click_action);
+            resultIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            resultIntent.putExtra(USER_ID, userID);
+        }
 
 
-        mBuilder.setContentIntent(resultPendingIntent);
+        if (resultIntent != null) {
+            PendingIntent resultPendingIntent = PendingIntent.getActivity(
+                    this, 0, resultIntent, PendingIntent.FLAG_UPDATE_CURRENT
+            );
+
+            NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this, getString(R.string.default_notification_channel_id))
+                    .setSmallIcon(R.drawable.ic_launcher_background)
+                    .setContentTitle(messageTitle)
+                    .setContentText(messageBody)
+                    .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+                    .setAutoCancel(true);
 
 
-        int mNotificationId = (int) System.currentTimeMillis();
-        NotificationManager mNotifyManager = (NotificationManager)getSystemService(NOTIFICATION_SERVICE);
-        mNotifyManager.notify(mNotificationId, mBuilder.build());
+            mBuilder.setContentIntent(resultPendingIntent);
+
+
+            int mNotificationId = (int) System.currentTimeMillis();
+            NotificationManager mNotifyManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+            mNotifyManager.notify(mNotificationId, mBuilder.build());
+        }
     }
 
 

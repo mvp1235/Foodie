@@ -32,7 +32,14 @@
         <activity android:name=".signup.SignUpActivity" />
         <activity
             android:name=".profile.ProfileActivity"
-            android:label="@string/profile" />
+            android:label="@string/profile">
+
+            <intent-filter>
+                <action android:name="com.example.mvp.foodie.FRIEND_CONFIRMATION_NOTIFICATION_TARGET" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+
+        </activity>
         <activity android:name=".MainActivity" />
         <activity
             android:name=".profile.EditProfileActivity"
@@ -49,7 +56,6 @@
         <activity android:name=".post.DetailPostActivity">
             <intent-filter>
                 <action android:name="com.example.mvp.foodie.POST_NOTIFICATION_TARGET" />
-
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
@@ -86,7 +92,12 @@
 
         <activity android:name=".interest.InterestListActivity" />
         <activity android:name=".post.AllUserPostActivity" />
-        <activity android:name=".friend.FriendRequestsActivity"></activity>
+        <activity android:name=".friend.FriendRequestsActivity">
+            <intent-filter>
+                <action android:name="com.example.mvp.foodie.FRIEND_REQUESTS_NOTIFICATION_TARGET" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
     </application>
 
 </manifest>

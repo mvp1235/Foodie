@@ -67,6 +67,37 @@ exports.sendNotifications = functions.database.ref('/Notifications/{user_id}/{no
 	    	  return admin.messaging().sendToDevice(token_ids, payload).then(response => {
 		    	  return console.log("Comment Notifications sent.");
 		      });
+	      } else if (notification.type === 'friend request') {
+	    	  const payload = {
+					  data: {
+						  title: "Foodie",
+						  body: `${from_user.fullName} ${notification.content}`,
+						  icon: `${from_user.profileURL}`,
+						  click_action: "com.example.mvp.foodie.FRIEND_REQUESTS_NOTIFICATION_TARGET",
+						  user_id: `to_user.uID`
+					  }
+			      };
+		    	  
+	    	  return admin.messaging().sendToDevice(token_ids, payload).then(response => {
+		    	  return console.log("Friend Request Notifications sent.");
+		      });
+	    	  
+	    	  
+	      } else if (notification.type === 'friend confirmation') {
+	    	  const payload = {
+					  data: {
+						  title: "Foodie",
+						  body: `${from_user.fullName} ${notification.content}`,
+						  icon: `${from_user.profileURL}`,
+						  click_action: "com.example.mvp.foodie.FRIEND_CONFIRMATION_NOTIFICATION_TARGET",
+						  request_code: "2010",
+						  user_id: `${from_user.uID}`
+					  }
+			      };
+		    	  
+	    	  return admin.messaging().sendToDevice(token_ids, payload).then(response => {
+		    	  return console.log("Friend Confirmation Notifications sent.");
+		      });
 	      } else {
 	    	  return console.log("Not valid notification")
 	      }
