@@ -52,14 +52,10 @@ public class FriendRequestsActivity extends BaseActivity implements FriendContra
                 linearLayoutManager.getOrientation());
         recyclerView.addItemDecoration(mDividerItemDecoration);
 
-        Intent receivedIntent = getIntent();
-        String userID = receivedIntent.getStringExtra(USER_ID);
 
         presenter = new FriendPresenter(this, adapter);
-        if (userID == null)
-            presenter.loadFriendRequests(getmAuth().getCurrentUser().getUid());
-        else
-            presenter.loadFriendRequests(userID);
+        presenter.loadFriendRequests(getmAuth().getCurrentUser().getUid());
+
     }
 
 

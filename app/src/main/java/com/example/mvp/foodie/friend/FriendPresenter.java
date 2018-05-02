@@ -1,6 +1,8 @@
 package com.example.mvp.foodie.friend;
 
 
+import android.util.Log;
+
 import com.example.mvp.foodie.models.FriendRequest;
 import com.example.mvp.foodie.models.Notification;
 import com.example.mvp.foodie.models.User;
@@ -167,9 +169,10 @@ public class FriendPresenter implements FriendContract.Presenter {
                             public void onDataChange(DataSnapshot dataSnapshot) {
                                 for (DataSnapshot ds : dataSnapshot.getChildren()) {
                                     Notification n = ds.getValue(Notification.class);
+
                                     if (n != null && n.getType().equals("friend request")
-                                            && n.getFromUserID().equals(fromUserID) && n.getToUserID().equals(toUserID)) {
-                                        notificationRef.child(toUserID).child(ds.getKey()).removeValue();
+                                            && n.getFromUserID().equals(toUserID) && n.getToUserID().equals(fromUserID)) {
+                                        notificationRef.child(fromUserID).child(ds.getKey()).removeValue();
                                         break;
                                     }
                                 }
@@ -273,12 +276,33 @@ public class FriendPresenter implements FriendContract.Presenter {
                 userRef.child(toUserID).addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
-                        User toUser = dataSnapshot.getValue(User.class);
+                        final User toUser = dataSnapshot.getValue(User.class);
                         toUser.removeFriendID(fromUserID);
-
 
                         userRef.child(fromUserID).setValue(fromUser);
                         userRef.child(toUserID).setValue(toUser);
+
+                        //remove previous friend confirmation since they are not longer friends
+                        notificationRef.child(fromUserID).addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(DataSnapshot dataSnapshot) {
+                                for (DataSnapshot ds : dataSnapshot.getChildren()) {
+                                    Notification n = ds.getValue(Notification.class);
+
+                                    if (n != null && n.getType().equals("friend confirmation")
+                                            && n.getFromUserID().equals(toUserID) && n.getToUserID().equals(fromUserID)) {
+                                        notificationRef.child(fromUserID).child(n.getnID()).removeValue();
+                                        break;
+                                    }
+                                }
+                            }
+
+                            @Override
+                            public void onCancelled(DatabaseError databaseError) {
+
+                            }
+                        });
+
                         view.onRemoveFriendshipSuccess(fromUser, toUser);
                     }
 
@@ -308,17 +332,17 @@ public class FriendPresenter implements FriendContract.Presenter {
                 for (String id : sentRequests) {
                     final FriendRequest f = new FriendRequest();
                     f.setType("sent");
-                    f.setFromUserID(userID);
-                    f.setFromUserName(user.getFullName());
+                    f.setToUserID(user.getuID());
+                    f.setToUserName(user.getFullName());
 
 
                     userRef.child(id).addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
-                            User toUser = dataSnapshot.getValue(User.class);
-                            f.setToUserID(toUser.getuID());
-                            f.setToUserName(toUser.getFullName());
-                            f.setTargetPhotoURL(toUser.getProfileURL());
+                            User fromUser = dataSnapshot.getValue(User.class);
+                            f.setFromUserID(fromUser.getuID());
+                            f.setFromUserName(fromUser.getFullName());
+                            f.setTargetPhotoURL(fromUser.getProfileURL());
 
                             view.onLoadRequestsSuccess(f);
 
@@ -332,7 +356,7 @@ public class FriendPresenter implements FriendContract.Presenter {
                 for (String id : pendingRequests) {
                     final FriendRequest f = new FriendRequest();
                     f.setType("pending");
-                    f.setFromUserID(userID);
+                    f.setFromUserID(user.getuID());
                     f.setFromUserName(user.getFullName());
 
                     userRef.child(id).addListenerForSingleValueEvent(new ValueEventListener() {

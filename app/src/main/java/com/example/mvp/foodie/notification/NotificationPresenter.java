@@ -108,9 +108,12 @@ public class NotificationPresenter implements NotificationContract.Presenter {
 
     @Override
     public void loadFriendRequests(BaseActivity activity, String userID) {
-        final Intent intent = new Intent(((NotificationRecyclerAdapter)adapter).getContext(), FriendRequestsActivity.class);
-        intent.putExtra(USER_ID, userID);
-        adapter.onLoadFriendPageSuccess(intent);
+        if (userID != null) {
+            final Intent intent = new Intent(((NotificationRecyclerAdapter) adapter).getContext(), FriendRequestsActivity.class);
+            adapter.onLoadFriendPageSuccess(intent);
+        } else {
+            adapter.onLoadFriendPageFailure("User does not exist.");
+        }
     }
 
     @Override
