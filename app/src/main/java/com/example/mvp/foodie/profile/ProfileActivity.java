@@ -187,9 +187,12 @@ public class ProfileActivity extends BaseActivity implements ProfileContract.Vie
                 if (text.equals(getString(R.string.add_friend))) {
                     addFriendBtn.setText(getString(R.string.cancel));
                     friendPresenter.sendFriendRequest(fromUserID, toUserID);
-                } else {
+                } else if (text.equals(getString(R.string.cancel))){
                     addFriendBtn.setText(getString(R.string.add_friend));
                     friendPresenter.cancelFriendRequest(fromUserID, toUserID);
+                } else if (text.equals(getString(R.string.unfriend))){
+                    addFriendBtn.setText(getString(R.string.add_friend));
+                    friendPresenter.removeFriendship(fromUserID, toUserID);
                 }
 
             }
@@ -411,6 +414,16 @@ public class ProfileActivity extends BaseActivity implements ProfileContract.Vie
 
     @Override
     public void onSendRequestFailure(String error) {
+        Toast.makeText(this, error, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onRemoveFriendshipSuccess(User fromUser, User toUser) {
+        Toast.makeText(this, "You are no longer friend with " + toUser.getFullName(), Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onRemoveFriendshipFailure(String error) {
         Toast.makeText(this, error, Toast.LENGTH_SHORT).show();
     }
 

@@ -11,6 +11,8 @@ public class FriendContract {
         void onCheckUserFriendshipFailure(String error);
         void onSendRequestSuccess(User fromUser, User toUser);
         void onSendRequestFailure(String error);
+        void onRemoveFriendshipSuccess(User fromUser, User toUser);
+        void onRemoveFriendshipFailure(String error);
         void onCancelRequestSuccess(User fromUser, User toUser);
         void onCancelRequestFailure(String error);
         void onAcceptRequestSuccess(User fromUser, User toUser);
@@ -28,6 +30,7 @@ public class FriendContract {
         void cancelFriendRequest(String fromUserID, String toUserID);
         void acceptFriendRequest(String fromUserID, String toUserID);
         void declineFriendRequest(String fromUserID, String toUserID);
+        void removeFriendship(String fromUserID, String toUserID);
         void loadFriendRequests(String userID);
         void checkUserFriendship(String fromUserID, String toUserID);
     }

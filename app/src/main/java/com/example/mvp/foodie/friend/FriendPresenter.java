@@ -262,6 +262,40 @@ public class FriendPresenter implements FriendContract.Presenter {
     }
 
     @Override
+    public void removeFriendship(final String fromUserID, final String toUserID) {
+        userRef.child(fromUserID).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                final User fromUser = dataSnapshot.getValue(User.class);
+                fromUser.removeFriendID(toUserID);
+
+                userRef.child(toUserID).addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        User toUser = dataSnapshot.getValue(User.class);
+                        toUser.removeFriendID(fromUserID);
+
+
+                        userRef.child(fromUserID).setValue(fromUser);
+                        userRef.child(toUserID).setValue(toUser);
+                        view.onRemoveFriendshipSuccess(fromUser, toUser);
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+                        view.onRemoveFriendshipFailure(databaseError.getMessage());
+                    }
+                });
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                view.onRemoveFriendshipFailure(databaseError.getMessage());
+            }
+        });
+    }
+
+    @Override
     public void loadFriendRequests(final String userID) {
         userRef.child(userID).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -347,7 +381,4 @@ public class FriendPresenter implements FriendContract.Presenter {
         });
     }
 
-    private void removeFriendRequest(String fromUserID) {
-
-    }
 }

@@ -108,7 +108,7 @@ public class User {
             friendIDs.add(friendID);
     }
 
-    public void deleteFriendID(String friendID) {
+    public void removeFriendID(String friendID) {
         if(friendIDs.contains(friendID))
             friendIDs.remove(friendID);
     }

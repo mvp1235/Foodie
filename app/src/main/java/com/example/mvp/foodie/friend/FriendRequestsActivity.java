@@ -116,4 +116,14 @@ public class FriendRequestsActivity extends BaseActivity implements FriendContra
     public void onLoadRequestsFailure(String error) {
         Toast.makeText(this, error, Toast.LENGTH_SHORT).show();
     }
+
+    @Override
+    public void onRemoveFriendshipSuccess(User fromUser, User toUser) {
+        Toast.makeText(this, "You are no longer friend with " + toUser.getFullName(), Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onRemoveFriendshipFailure(String error) {
+        Toast.makeText(this, error, Toast.LENGTH_SHORT).show();
+    }
 }
