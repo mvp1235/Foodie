@@ -146,7 +146,7 @@ public class FriendPresenter implements FriendContract.Presenter {
         notification.setnID(newNotificationID);
         notification.setFromUserID(fromUserID);
         notification.setToUserID(toUserID);
-        notification.setType("friend request");
+        notification.setType("friend confirmation");
 
         userRef.child(fromUserID).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override

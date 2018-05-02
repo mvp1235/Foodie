@@ -58,7 +58,16 @@ public class NotificationRecyclerAdapter extends RecyclerView.Adapter<Notificati
         holder.notificationBlock.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                presenter.loadDetailPostOfComment((BaseActivity) context, notification.getPostID());
+                String type = notification.getType();
+                //if the notification is a like or comment, load the detail post page
+                //else, it is a friend request or confirmation, lead to the friend requests page
+                if (type.equals("comment") || type.equals("like"))
+                    presenter.loadDetailPostOfComment((BaseActivity) context, notification.getPostID());
+                else if (type.equals("friend request"))
+                    presenter.loadFriendRequests((BaseActivity)context, notification.getToUserID());
+                else if (type.equals("friend confirmation"))
+                    presenter.loadFriendPage((BaseActivity)context, notification.getFromUserID());
+
             }
         });
     }
@@ -90,6 +99,26 @@ public class NotificationRecyclerAdapter extends RecyclerView.Adapter<Notificati
 
     @Override
     public void onLoadDetailPostFailure(String error) {
+        Toast.makeText(context, error, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onLoadFriendRequestsSuccess(Intent intent) {
+        context.startActivity(intent);
+    }
+
+    @Override
+    public void onLoadFriendRequestsFailure(String error) {
+        Toast.makeText(context, error, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onLoadFriendPageSuccess(Intent intent) {
+        context.startActivity(intent);
+    }
+
+    @Override
+    public void onLoadFriendPageFailure(String error) {
         Toast.makeText(context, error, Toast.LENGTH_SHORT).show();
     }
 }

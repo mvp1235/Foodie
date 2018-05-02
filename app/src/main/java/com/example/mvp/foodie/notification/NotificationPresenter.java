@@ -3,10 +3,12 @@ package com.example.mvp.foodie.notification;
 import android.content.Intent;
 
 import com.example.mvp.foodie.BaseActivity;
+import com.example.mvp.foodie.friend.FriendRequestsActivity;
 import com.example.mvp.foodie.models.Notification;
 import com.example.mvp.foodie.models.Post;
 import com.example.mvp.foodie.models.User;
 import com.example.mvp.foodie.post.DetailPostActivity;
+import com.example.mvp.foodie.profile.ProfileActivity;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -17,7 +19,9 @@ import java.util.Collections;
 import java.util.List;
 
 import static com.example.mvp.foodie.UtilHelper.POST_ID;
+import static com.example.mvp.foodie.UtilHelper.REQUEST_CODE;
 import static com.example.mvp.foodie.UtilHelper.USER_ID;
+import static com.example.mvp.foodie.UtilHelper.VIEW_OTHER_PROFILE;
 
 public class NotificationPresenter implements NotificationContract.Presenter {
     private NotificationContract.View view;
@@ -82,7 +86,6 @@ public class NotificationPresenter implements NotificationContract.Presenter {
         final Intent intent = new Intent(((NotificationRecyclerAdapter)adapter).getContext(), DetailPostActivity.class);
 
         DatabaseReference postRef = activity.getmDatabase().child("Posts");
-        final DatabaseReference userRef = activity.getmDatabase().child("Users");
 
         postRef.child(postID).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -100,6 +103,26 @@ public class NotificationPresenter implements NotificationContract.Presenter {
                 adapter.onLoadDetailPostFailure(databaseError.getMessage());
             }
         });
+
+    }
+
+    @Override
+    public void loadFriendRequests(BaseActivity activity, String userID) {
+        final Intent intent = new Intent(((NotificationRecyclerAdapter)adapter).getContext(), FriendRequestsActivity.class);
+        intent.putExtra(USER_ID, userID);
+        adapter.onLoadFriendPageSuccess(intent);
+    }
+
+    @Override
+    public void loadFriendPage(BaseActivity activity, String friendID) {
+        if (friendID == null)
+            adapter.onLoadFriendPageFailure("User does not exist.");
+        else {
+            final Intent intent = new Intent(((NotificationRecyclerAdapter) adapter).getContext(), ProfileActivity.class);
+            intent.putExtra(REQUEST_CODE, VIEW_OTHER_PROFILE);
+            intent.putExtra(USER_ID, friendID);
+            adapter.onLoadFriendPageSuccess(intent);
+        }
 
     }
 }

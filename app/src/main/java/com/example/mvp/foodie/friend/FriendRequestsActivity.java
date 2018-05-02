@@ -1,5 +1,6 @@
 package com.example.mvp.foodie.friend;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
@@ -14,6 +15,8 @@ import com.example.mvp.foodie.models.User;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.example.mvp.foodie.UtilHelper.USER_ID;
 
 public class FriendRequestsActivity extends BaseActivity implements FriendContract.View {
 
@@ -49,8 +52,14 @@ public class FriendRequestsActivity extends BaseActivity implements FriendContra
                 linearLayoutManager.getOrientation());
         recyclerView.addItemDecoration(mDividerItemDecoration);
 
+        Intent receivedIntent = getIntent();
+        String userID = receivedIntent.getStringExtra(USER_ID);
+
         presenter = new FriendPresenter(this, adapter);
-        presenter.loadFriendRequests(getmAuth().getCurrentUser().getUid());
+        if (userID == null)
+            presenter.loadFriendRequests(getmAuth().getCurrentUser().getUid());
+        else
+            presenter.loadFriendRequests(userID);
     }
 
 

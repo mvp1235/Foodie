@@ -4,7 +4,7 @@ const functions = require('firebase-functions');
 const admin = require('firebase-admin');
 admin.initializeApp(functions.config().firebase);
 
-exports.sendLikeNotifications = functions.database.ref('/Notifications/{user_id}/{notification_id}')
+exports.sendNotifications = functions.database.ref('/Notifications/{user_id}/{notification_id}')
 	.onCreate((snapshot, context) => {
       const to_user_id = context.params.user_id;
       const notification = snapshot.val();
@@ -27,7 +27,6 @@ exports.sendLikeNotifications = functions.database.ref('/Notifications/{user_id}
     	  const token_ids = result[2].val();
     	  const current_post = result[3].val();
     	  
-    	  console.log("TEST: ", current_post);
     	  
     	  console.log('New like notification to user: ', to_user.uID);
     	  

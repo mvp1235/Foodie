@@ -18,11 +18,17 @@ public interface NotificationContract {
         void onLoadNotificationFailure(String error);
         void onLoadDetailPostSuccess(Intent intent);
         void onLoadDetailPostFailure(String error);
+        void onLoadFriendRequestsSuccess(Intent intent);
+        void onLoadFriendRequestsFailure(String error);
+        void onLoadFriendPageSuccess(Intent intent);
+        void onLoadFriendPageFailure(String error);
     }
 
     interface Presenter {
         void loadNotifications(BaseActivity activity, String userID);
         void loadNotificationByID(BaseActivity activity, NotificationViewHolder holder, String notificationID, String toUserID);
         void loadDetailPostOfComment(BaseActivity activity, String postID);
+        void loadFriendRequests(BaseActivity activity, String userID);
+        void loadFriendPage(BaseActivity activity, String friendID);
     }
 }
