@@ -9,6 +9,8 @@ public class FriendContract {
     public interface View {
         void onCheckUserFriendshipSuccess(boolean friend);
         void onCheckUserFriendshipFailure(String error);
+        void onCheckSentRequest(boolean sent);
+        void onCheckSentFailure(String error);
         void onSendRequestSuccess(User fromUser, User toUser);
         void onSendRequestFailure(String error);
         void onRemoveFriendshipSuccess(User fromUser, User toUser);
@@ -33,5 +35,6 @@ public class FriendContract {
         void removeFriendship(String fromUserID, String toUserID);
         void loadFriendRequests(String userID);
         void checkUserFriendship(String fromUserID, String toUserID);
+        void checkSentFriendRequest(String fromUserID, String toUserID);
     }
 }

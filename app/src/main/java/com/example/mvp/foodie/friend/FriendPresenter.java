@@ -381,4 +381,25 @@ public class FriendPresenter implements FriendContract.Presenter {
         });
     }
 
+    @Override
+    public void checkSentFriendRequest(String fromUserID, final String toUserID) {
+        userRef.child(fromUserID).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                User fromUser = dataSnapshot.getValue(User.class);
+                List<String> sentRequests = fromUser.getSentFriendRequestIDs();
+
+                if (sentRequests.contains(toUserID)) {
+                    view.onCheckSentRequest(true);
+                } else {
+                    view.onCheckSentRequest(false);
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                view.onCheckSentFailure(databaseError.getMessage());
+            }
+        });
+    }
 }

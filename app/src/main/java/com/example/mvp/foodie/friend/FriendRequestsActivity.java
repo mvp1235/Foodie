@@ -61,6 +61,16 @@ public class FriendRequestsActivity extends BaseActivity implements FriendContra
 
     @Override
     public void onCheckUserFriendshipFailure(String error) {
+        
+    }
+
+    @Override
+    public void onCheckSentRequest(boolean sent) {
+
+    }
+
+    @Override
+    public void onCheckSentFailure(String error) {
 
     }
 

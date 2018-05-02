@@ -89,6 +89,7 @@ public class ProfileActivity extends BaseActivity implements ProfileContract.Vie
                 viewFriendRequestsBtn.setVisibility(View.GONE);
                 addFriendBtn.setVisibility(View.VISIBLE);
                 friendPresenter.checkUserFriendship(getmAuth().getCurrentUser().getUid(), intent.getStringExtra(USER_ID));
+                friendPresenter.checkSentFriendRequest(getmAuth().getCurrentUser().getUid(), intent.getStringExtra(USER_ID));
             }
 
         } else {
@@ -404,6 +405,18 @@ public class ProfileActivity extends BaseActivity implements ProfileContract.Vie
 
     @Override
     public void onCheckUserFriendshipFailure(String error) {
+        Toast.makeText(this, error, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onCheckSentRequest(boolean sent) {
+        if (sent) {
+            addFriendBtn.setText(R.string.cancel);
+        }
+    }
+
+    @Override
+    public void onCheckSentFailure(String error) {
         Toast.makeText(this, error, Toast.LENGTH_SHORT).show();
     }
 
