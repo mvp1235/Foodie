@@ -11,7 +11,6 @@ import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 import android.os.Bundle;
 import android.support.v7.widget.AppCompatButton;
-import android.support.v7.widget.AppCompatImageButton;
 import android.support.v7.widget.AppCompatTextView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -25,13 +24,9 @@ import com.example.mvp.foodie.R;
 import com.example.mvp.foodie.friend.FriendContract;
 import com.example.mvp.foodie.friend.FriendPresenter;
 import com.example.mvp.foodie.friend.FriendRequestsActivity;
-import com.example.mvp.foodie.models.Notification;
+import com.example.mvp.foodie.models.FriendRequest;
 import com.example.mvp.foodie.models.User;
 import com.example.mvp.foodie.post.AllUserPostActivity;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -87,8 +82,15 @@ public class ProfileActivity extends BaseActivity implements ProfileContract.Vie
             presenter.loadDataFromFirebase(intent.getStringExtra(USER_ID));
 
             //Hide view requests button when viewing others' profiles
-            viewFriendRequestsBtn.setVisibility(View.GONE);
-            addFriendBtn.setVisibility(View.VISIBLE);
+            if (intent.getStringExtra(USER_ID).equals(getmAuth().getCurrentUser().getUid())) {  //user viewing his/her own profile
+                viewFriendRequestsBtn.setVisibility(View.VISIBLE);
+                addFriendBtn.setVisibility(View.GONE);
+            } else {
+                viewFriendRequestsBtn.setVisibility(View.GONE);
+                addFriendBtn.setVisibility(View.VISIBLE);
+                friendPresenter.checkUserFriendship(getmAuth().getCurrentUser().getUid(), intent.getStringExtra(USER_ID));
+            }
+
         } else {
             Toast.makeText(this, "There is a problem with the server. Please reload the application.", Toast.LENGTH_SHORT).show();
         }
@@ -135,6 +137,8 @@ public class ProfileActivity extends BaseActivity implements ProfileContract.Vie
 
     private void setUpListeners() {
         final Intent receivedIntent = getIntent();
+        final String fromUserID = getmAuth().getCurrentUser().getUid();
+        final String toUserID = receivedIntent.getStringExtra(USER_ID);
         //only allow user to change profile photo if they are viewing their own profile
         if (receivedIntent.getIntExtra(REQUEST_CODE, 0) == VIEW_MY_PROFILE) {
             profileImage.setOnClickListener(new View.OnClickListener() {
@@ -143,7 +147,7 @@ public class ProfileActivity extends BaseActivity implements ProfileContract.Vie
                     showPhotoActionDialog();
                 }
             });
-        } else if (receivedIntent.getStringExtra(USER_ID).equals(getmAuth().getCurrentUser().getUid())) {
+        } else if (toUserID.equals(fromUserID)) {
             profileImage.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -182,8 +186,10 @@ public class ProfileActivity extends BaseActivity implements ProfileContract.Vie
 
                 if (text.equals(getString(R.string.add_friend))) {
                     addFriendBtn.setText(getString(R.string.cancel));
+                    friendPresenter.sendFriendRequest(fromUserID, toUserID);
                 } else {
                     addFriendBtn.setText(getString(R.string.add_friend));
+                    friendPresenter.cancelFriendRequest(fromUserID, toUserID);
                 }
 
             }
@@ -385,32 +391,62 @@ public class ProfileActivity extends BaseActivity implements ProfileContract.Vie
     }
 
     @Override
-    public void onSendRequestSuccess() {
+    public void onCheckUserFriendshipSuccess(boolean friend) {
+        if (friend) {
+            addFriendBtn.setText(R.string.unfriend);
+        } else {
+            addFriendBtn.setText(R.string.add_friend);
+        }
+    }
 
+    @Override
+    public void onCheckUserFriendshipFailure(String error) {
+        Toast.makeText(this, error, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onSendRequestSuccess(User fromUser, User toUser) {
+        Toast.makeText(this, "Sent a friend request to " + toUser.getFullName(), Toast.LENGTH_SHORT).show();
     }
 
     @Override
     public void onSendRequestFailure(String error) {
-
+        Toast.makeText(this, error, Toast.LENGTH_SHORT).show();
     }
 
     @Override
-    public void onCancelRequestSuccess() {
-
+    public void onCancelRequestSuccess(User fromUser, User toUser) {
+        Toast.makeText(this, "Canceled friend request from " + toUser.getFullName(), Toast.LENGTH_SHORT).show();
     }
 
     @Override
     public void onCancelRequestFailure(String error) {
-
+        Toast.makeText(this, error, Toast.LENGTH_SHORT).show();
     }
 
     @Override
-    public void onAcceptRequestSuccess() {
-
+    public void onAcceptRequestSuccess(User fromUser, User toUser) {
+        Toast.makeText(this, "You and " + toUser.getFullName() + " have became friends.", Toast.LENGTH_SHORT).show();
     }
 
     @Override
     public void onAcceptRequestFailure(String error) {
-
+        Toast.makeText(this, error, Toast.LENGTH_SHORT).show();
     }
-}
+
+    @Override
+    public void onDeclineRequestSuccess(User fromUser, User toUser) {
+        Toast.makeText(this, "You have declined friend request from " + toUser.getFullName(), Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onDeclineRequestFailure(String error) {
+        Toast.makeText(this, error, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onLoadRequestsSuccess(FriendRequest friendRequest) {}
+
+    @Override
+    public void onLoadRequestsFailure(String error) {}
+};

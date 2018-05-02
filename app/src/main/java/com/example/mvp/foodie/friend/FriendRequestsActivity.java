@@ -5,10 +5,12 @@ import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.widget.Toast;
 
 import com.example.mvp.foodie.BaseActivity;
 import com.example.mvp.foodie.R;
 import com.example.mvp.foodie.models.FriendRequest;
+import com.example.mvp.foodie.models.User;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,6 +21,8 @@ public class FriendRequestsActivity extends BaseActivity implements FriendContra
     private RecyclerView recyclerView;
     private FriendRequestRecyclerAdapter adapter;
     private List<FriendRequest> friendRequests;
+
+    private FriendContract.Presenter presenter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,18 +40,6 @@ public class FriendRequestsActivity extends BaseActivity implements FriendContra
         recyclerView = findViewById(R.id.recyclerView_id);
         friendRequests = new ArrayList<>();
 
-        FriendRequest r = new FriendRequest();
-        r.setType("sent");
-
-        friendRequests.add(r);
-        friendRequests.add(r);
-        friendRequests.add(r);
-
-        FriendRequest r2 = new FriendRequest();
-        r2.setType("pending");
-        friendRequests.add(r2);
-        friendRequests.add(r2);
-
         adapter = new FriendRequestRecyclerAdapter(this, friendRequests);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(linearLayoutManager);
@@ -56,36 +48,72 @@ public class FriendRequestsActivity extends BaseActivity implements FriendContra
         DividerItemDecoration mDividerItemDecoration = new DividerItemDecoration(recyclerView.getContext(),
                 linearLayoutManager.getOrientation());
         recyclerView.addItemDecoration(mDividerItemDecoration);
+
+        presenter = new FriendPresenter(this, adapter);
+        presenter.loadFriendRequests(getmAuth().getCurrentUser().getUid());
     }
 
 
     @Override
-    public void onSendRequestSuccess() {
+    public void onCheckUserFriendshipSuccess(boolean friend) {
 
+    }
+
+    @Override
+    public void onCheckUserFriendshipFailure(String error) {
+
+    }
+
+    @Override
+    public void onSendRequestSuccess(User fromUser, User toUser) {
+        Toast.makeText(this, "Sent a friend request to " + toUser.getFullName(), Toast.LENGTH_SHORT).show();
     }
 
     @Override
     public void onSendRequestFailure(String error) {
-
+        Toast.makeText(this, error, Toast.LENGTH_SHORT).show();
     }
 
     @Override
-    public void onCancelRequestSuccess() {
-
+    public void onCancelRequestSuccess(User fromUser, User toUser) {
+        Toast.makeText(this, "Canceled friend request from " + toUser.getFullName(), Toast.LENGTH_SHORT).show();
+        adapter.removeRequest(fromUser.getuID(), toUser.getuID());
     }
 
     @Override
     public void onCancelRequestFailure(String error) {
-
+        Toast.makeText(this, error, Toast.LENGTH_SHORT).show();
     }
 
     @Override
-    public void onAcceptRequestSuccess() {
-
+    public void onAcceptRequestSuccess(User fromUser, User toUser) {
+        Toast.makeText(this, "You and " + toUser.getFullName() + " have became friends.", Toast.LENGTH_SHORT).show();
+        adapter.removeRequest(fromUser.getuID(), toUser.getuID());
     }
 
     @Override
     public void onAcceptRequestFailure(String error) {
+        Toast.makeText(this, error, Toast.LENGTH_SHORT).show();
+    }
 
+    @Override
+    public void onDeclineRequestSuccess(User fromUser, User toUser) {
+        Toast.makeText(this, "You have declined friend request from " + toUser.getFullName(), Toast.LENGTH_SHORT).show();
+        adapter.removeRequest(fromUser.getuID(), toUser.getuID());
+    }
+
+    @Override
+    public void onDeclineRequestFailure(String error) {
+        Toast.makeText(this, error, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onLoadRequestsSuccess(FriendRequest friendRequest) {
+        adapter.addRequest(friendRequest);
+    }
+
+    @Override
+    public void onLoadRequestsFailure(String error) {
+        Toast.makeText(this, error, Toast.LENGTH_SHORT).show();
     }
 }
