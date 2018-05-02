@@ -59,7 +59,7 @@ public class FriendPresenter implements FriendContract.Presenter {
 
                         userRef.child(fromUserID).setValue(fromUser);
                         userRef.child(toUserID).setValue(toUser);
-                        notificationRef.child(newNotificationID).setValue(notification);
+                        notificationRef.child(toUserID).child(newNotificationID).setValue(notification);
                         view.onSendRequestSuccess(fromUser, toUser);
                     }
 
@@ -174,6 +174,7 @@ public class FriendPresenter implements FriendContract.Presenter {
                                     }
                                 }
 
+                                notification.setPhotoURL(fromUser.getProfileURL());
                                 notification.setContent(fromUser.getFullName() + " has accepted your friend request");
                                 notificationRef.child(toUserID).child(newNotificationID).setValue(notification);
                                 userRef.child(fromUserID).setValue(fromUser);
