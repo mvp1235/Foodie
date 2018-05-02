@@ -140,6 +140,7 @@ public class ProfileActivity extends BaseActivity implements ProfileContract.Vie
         final Intent receivedIntent = getIntent();
         final String fromUserID = getmAuth().getCurrentUser().getUid();
         final String toUserID = receivedIntent.getStringExtra(USER_ID);
+
         //only allow user to change profile photo if they are viewing their own profile
         if (receivedIntent.getIntExtra(REQUEST_CODE, 0) == VIEW_MY_PROFILE) {
             profileImage.setOnClickListener(new View.OnClickListener() {

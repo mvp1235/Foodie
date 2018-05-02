@@ -90,9 +90,9 @@ public class FriendRequestsActivity extends BaseActivity implements FriendContra
     }
 
     @Override
-    public void onCancelRequestSuccess(User fromUser, User toUser) {
-        Toast.makeText(this, "Canceled friend request from " + toUser.getFullName(), Toast.LENGTH_SHORT).show();
-        adapter.removeRequest(fromUser.getuID(), toUser.getuID());
+    public void onCancelRequestSuccess(User sentUser, User receivedUser) {
+        Toast.makeText(this, "Canceled friend request from " + receivedUser.getFullName(), Toast.LENGTH_SHORT).show();
+        adapter.removeRequest(sentUser.getuID(), receivedUser.getuID());
     }
 
     @Override

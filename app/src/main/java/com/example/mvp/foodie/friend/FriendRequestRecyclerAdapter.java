@@ -3,6 +3,7 @@ package com.example.mvp.foodie.friend;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -35,10 +36,22 @@ public class FriendRequestRecyclerAdapter extends RecyclerView.Adapter<FriendReq
         this.notifyDataSetChanged();
     }
 
-    public void removeRequest(String fromUserID, String toUserID) {
+    public void removeRequest(String sentUserID, String receivedUserID) {
         for (int i=0; i<requestList.size(); i++) {
             FriendRequest f = requestList.get(i);
-            if (f.getToUserID().equals(toUserID) && f.getFromUserID().equals(fromUserID)) {
+            String sentID;
+            String receivedID;
+
+            if (f.getType().equals("semt")) {
+                sentID = f.getSentUserID();
+                receivedID = f.getReceivedUserID();
+            } else {
+                sentID = f.getReceivedUserID();
+                receivedID = f.getSentUserID();
+            }
+
+
+            if (sentID.equals(sentUserID) && receivedID.equals(receivedUserID)) {
                 requestList.remove(i);
                 notifyDataSetChanged();
                 break;
@@ -57,39 +70,46 @@ public class FriendRequestRecyclerAdapter extends RecyclerView.Adapter<FriendReq
     @Override
     public void onBindViewHolder(@NonNull FriendRequestViewHolder holder, int position) {
         final FriendRequest friendRequest = requestList.get(position);
-        holder.userFullName.setText(friendRequest.getToUserName());
-        Picasso.get().load(friendRequest.getTargetPhotoURL()).into(holder.userPhoto);
+        String type = friendRequest.getType();
 
-        if (friendRequest.getType().equals("sent")) {
+        if (type.equals("sent")) {
             holder.cancelBtn.setVisibility(View.VISIBLE);
             holder.acceptBtn.setVisibility(View.INVISIBLE);
             holder.declineBtn.setVisibility(View.GONE);
+
+            holder.userFullName.setText(friendRequest.getReceivedUserName());
+            Picasso.get().load(friendRequest.getTargetPhotoURL()).into(holder.userPhoto);
+
+            holder.cancelBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    presenter.cancelFriendRequest(friendRequest.getSentUserID(), friendRequest.getReceivedUserID());
+                }
+            });
+
         } else {
             holder.cancelBtn.setVisibility(View.GONE);
             holder.acceptBtn.setVisibility(View.VISIBLE);
             holder.declineBtn.setVisibility(View.VISIBLE);
+
+            holder.userFullName.setText(friendRequest.getSentUserName());
+            Picasso.get().load(friendRequest.getTargetPhotoURL()).into(holder.userPhoto);
+
+            holder.acceptBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    presenter.acceptFriendRequest(friendRequest.getReceivedUserID(), friendRequest.getSentUserID());
+                }
+            });
+
+            holder.declineBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    presenter.declineFriendRequest(friendRequest.getReceivedUserID(), friendRequest.getSentUserID());
+                }
+            });
+
         }
-
-        holder.acceptBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-            presenter.acceptFriendRequest(friendRequest.getFromUserID(), friendRequest.getToUserID());
-            }
-        });
-
-        holder.declineBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-            presenter.declineFriendRequest(friendRequest.getFromUserID(), friendRequest.getToUserID());
-            }
-        });
-
-        holder.cancelBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-            presenter.cancelFriendRequest(friendRequest.getFromUserID(), friendRequest.getToUserID());
-            }
-        });
     }
 
 
