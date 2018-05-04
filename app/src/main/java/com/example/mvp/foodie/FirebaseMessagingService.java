@@ -50,19 +50,19 @@ public class FirebaseMessagingService extends com.google.firebase.messaging.Fire
 
         if (postID != null && postOwnerID != null) {
             resultIntent = new Intent(click_action);
-            resultIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+//            resultIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             resultIntent.putExtra(POST_ID, postID);
             resultIntent.putExtra(USER_ID, postOwnerID);
         } else if (requestCode != null && userID != null) {
             resultIntent = new Intent(click_action);
-            resultIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+//            resultIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
 
             int resultCodeInt = Integer.parseInt(requestCode);
             resultIntent.putExtra(REQUEST_CODE, resultCodeInt);
             resultIntent.putExtra(USER_ID, userID);
         } else if (userID != null) {
             resultIntent = new Intent(click_action);
-            resultIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+//            resultIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             resultIntent.putExtra(USER_ID, userID);
         }
 
