@@ -193,8 +193,9 @@ public class FriendPresenter implements FriendContract.Presenter {
 
                                 }
 
+                                notification.setUserName(fromUser.getFullName());
                                 notification.setPhotoURL(fromUser.getProfileURL());
-                                notification.setContent(" has accepted your friend request");
+                                notification.setContent("has accepted your friend request");
                                 notificationRef.child(toUserID).child(newNotificationID).setValue(notification);
                                 userRef.child(fromUserID).setValue(fromUser);
                                 userRef.child(toUserID).setValue(toUser);
