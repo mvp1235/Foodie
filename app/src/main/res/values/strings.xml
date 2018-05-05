@@ -94,6 +94,7 @@
     <string name="post_history">Post History</string>
     <string name="interests">Interests</string>
     <string name="friend_requests">Friend Requests</string>
+    <string name="sample_clock_time">10:03pm</string>
 
 
 </resources>

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="wrap_content">
+
+    <android.support.v7.widget.AppCompatTextView
+        android:id="@+id/messageTime_id"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_marginRight="20dp"
+        android:layout_marginEnd="20dp"
+        android:layout_toLeftOf="@+id/messageContent_id"
+        android:layout_toStartOf="@+id/messageContent_id"
+        android:text="@string/sample_clock_time" />
+
+    <android.support.v7.widget.AppCompatTextView
+        android:id="@+id/messageContent_id"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:background="@drawable/left_message_background"
+        android:maxWidth="250dp"
+        android:padding="10dp"
+        android:text="asdadasds dsadjasd asd jasdjas dkasdkl jasdasdkljasdklasj dkl jasdkl jkljasd kkaskdlj asdkljasdkas djkas djlasdjasdj jas" />
+
+
+</RelativeLayout>
