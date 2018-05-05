@@ -46,6 +46,12 @@ public class ChatActivity extends AppCompatActivity implements MessageContract.D
         initViews();
     }
 
+    @Override
+    protected void onStop() {
+        presenter.removeMessageEventListener();
+        super.onStop();
+    }
+
     private void initViews() {
 
         recyclerView = findViewById(R.id.recyclerView_id);
@@ -60,12 +66,10 @@ public class ChatActivity extends AppCompatActivity implements MessageContract.D
         messageList = new ArrayList<>();
         adapter = new MessageRecyclerAdapter(this, messageList);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
+        linearLayoutManager.setStackFromEnd(true);
         recyclerView.setLayoutManager(linearLayoutManager);
         recyclerView.setHasFixedSize(true);
         recyclerView.setAdapter(adapter);
-        DividerItemDecoration mDividerItemDecoration = new DividerItemDecoration(recyclerView.getContext(),
-                linearLayoutManager.getOrientation());
-        recyclerView.addItemDecoration(mDividerItemDecoration);
 
         presenter = new MessagePresenter(this);
         presenter.loadMessagesBetweenTheUsers(FirebaseAuth.getInstance().getCurrentUser().getUid(), getIntent().getStringExtra(TO_USER_ID));
@@ -102,6 +106,7 @@ public class ChatActivity extends AppCompatActivity implements MessageContract.D
     public void onSendMessageSuccess(Message message) {
         messageET.setText("");
         adapter.addMessage(message);
+        recyclerView.scrollToPosition(messageList.size()-1);
     }
 
     @Override

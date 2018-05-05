@@ -22,6 +22,7 @@ public interface MessageContract {
     interface Presenter {
         void loadConversations(String userID);
         void loadMessagesBetweenTheUsers(String firstUserID, String secondUserID);
+        void removeMessageEventListener();
         void sendMessage(String conversationID, String fromUserID, String toUserID, String messageContent);
     }
 }

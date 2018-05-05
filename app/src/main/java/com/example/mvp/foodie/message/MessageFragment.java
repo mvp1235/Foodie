@@ -27,6 +27,7 @@ public class MessageFragment extends Fragment implements MessageContract.View {
     RecyclerView recyclerView;
     private MessageContract.Presenter presenter;
     private FirebaseAuth mAuth;
+    private List<Conversation> conversations;
 
     public MessageFragment() {
         // Required empty public constructor
@@ -35,6 +36,11 @@ public class MessageFragment extends Fragment implements MessageContract.View {
     @Override
     public void onResume() {
         super.onResume();
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
     }
 
     @Override
@@ -49,7 +55,8 @@ public class MessageFragment extends Fragment implements MessageContract.View {
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
         recyclerView.setLayoutManager(linearLayoutManager);
 
-        adapter = new ConversationRecyclerAdapter(getContext(), new ArrayList<Conversation>());
+        conversations = new ArrayList<>();
+        adapter = new ConversationRecyclerAdapter(getContext(), conversations);
 
         recyclerView.setHasFixedSize(true);
         recyclerView.setAdapter(adapter);
@@ -70,6 +77,7 @@ public class MessageFragment extends Fragment implements MessageContract.View {
     @Override
     public void onLoadConversationsSuccess(Conversation c) {
         adapter.addConversation(c);
+        recyclerView.scrollToPosition(conversations.size()-1);
     }
 
     @Override

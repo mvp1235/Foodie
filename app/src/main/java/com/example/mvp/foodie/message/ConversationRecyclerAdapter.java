@@ -23,6 +23,7 @@ import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
+import static com.example.mvp.foodie.UtilHelper.TO_USER_ID;
 import static com.example.mvp.foodie.UtilHelper.USER_NAME;
 
 public class ConversationRecyclerAdapter extends RecyclerView.Adapter<ConversationViewHolder> {
@@ -68,7 +69,6 @@ public class ConversationRecyclerAdapter extends RecyclerView.Adapter<Conversati
     @Override
     public void onBindViewHolder(@NonNull final ConversationViewHolder holder, int position) {
         Conversation conversation = conversations.get(position);
-        setBlockClickListener(holder, "Huy Nguyen");
 
         conversationRef.child(conversation.getcID()).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -77,9 +77,9 @@ public class ConversationRecyclerAdapter extends RecyclerView.Adapter<Conversati
                 String currentUserID = mAuth.getCurrentUser().getUid();
                 String returnUserID = null;
                 if (currentUserID.equals(conversation.getFirstUserID()))
-                    returnUserID = conversation.getFirstUserID();
-                else if (currentUserID.equals(conversation.getSecondUserID()))
                     returnUserID = conversation.getSecondUserID();
+                else if (currentUserID.equals(conversation.getSecondUserID()))
+                    returnUserID = conversation.getFirstUserID();
 
                 if (returnUserID != null) {
                     userRef.child(returnUserID).addListenerForSingleValueEvent(new ValueEventListener() {
@@ -87,7 +87,7 @@ public class ConversationRecyclerAdapter extends RecyclerView.Adapter<Conversati
                         public void onDataChange(DataSnapshot dataSnapshot) {
                             User returnUser = dataSnapshot.getValue(User.class);
 
-                            setBlockClickListener(holder, returnUser.getFullName());
+                            setBlockClickListener(holder, returnUser.getFullName(), returnUser.getuID());
 
                             holder.userName.setText(returnUser.getFullName());
                             Picasso.get().load(returnUser.getProfileURL()).into(holder.userPhoto);
@@ -118,13 +118,14 @@ public class ConversationRecyclerAdapter extends RecyclerView.Adapter<Conversati
 
     }
 
-    private void setBlockClickListener(ConversationViewHolder holder, final String userName) {
+    private void setBlockClickListener(ConversationViewHolder holder, final String userName, final String toUserID) {
         holder.conversationBlock.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(context, ChatActivity.class);
-                intent.putExtra(USER_NAME, userName);
-                context.startActivity(intent);
+            Intent intent = new Intent(context, ChatActivity.class);
+            intent.putExtra(USER_NAME, userName);
+            intent.putExtra(TO_USER_ID, toUserID);
+            context.startActivity(intent);
             }
         });
     }

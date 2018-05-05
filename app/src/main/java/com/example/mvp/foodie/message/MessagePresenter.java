@@ -21,6 +21,8 @@ public class MessagePresenter implements MessageContract.Presenter {
     private DatabaseReference userRef;
     private DatabaseReference conversationRef;
 
+    private ValueEventListener messageEventListener;
+
     public MessagePresenter(MessageContract.View view) {
         this.view = view;
         mAuth = FirebaseAuth.getInstance();
@@ -34,6 +36,7 @@ public class MessagePresenter implements MessageContract.Presenter {
         userRef = FirebaseDatabase.getInstance().getReference().child("Users");
         conversationRef = FirebaseDatabase.getInstance().getReference().child("Conversations");
     }
+
 
 
     @Override
@@ -72,7 +75,7 @@ public class MessagePresenter implements MessageContract.Presenter {
 
     @Override
     public void loadMessagesBetweenTheUsers(final String firstUserID, final String secondUserID) {
-        conversationRef.addListenerForSingleValueEvent(new ValueEventListener() {
+        messageEventListener = conversationRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for (DataSnapshot ds : dataSnapshot.getChildren()) {
@@ -90,6 +93,12 @@ public class MessagePresenter implements MessageContract.Presenter {
                 detailView.onLoadMessagesFailure(databaseError.getMessage());
             }
         });
+    }
+
+    @Override
+    public void removeMessageEventListener() {
+        if (messageEventListener != null)
+            conversationRef.removeEventListener(messageEventListener);
     }
 
     private void addMessageToExistingConversation(final String conversationID, final Message message) {
@@ -110,7 +119,7 @@ public class MessagePresenter implements MessageContract.Presenter {
         });
     }
 
-    private String getConversationBetweenTwoUsers(List<String> firstUserConversations, List<String> secondUserConversations) {
+    private String getConversationIDBetweenTwoUsers(List<String> firstUserConversations, List<String> secondUserConversations) {
         for (String firstID : firstUserConversations)
             for (String secondID : secondUserConversations)
                 if (firstID.equals(secondID))
@@ -149,7 +158,7 @@ public class MessagePresenter implements MessageContract.Presenter {
                             List<String> fromUserConversations = fromUser.getConversationIDs();
                             List<String> toUserConversations = toUser.getConversationIDs();
 
-                            String existingConversationID = getConversationBetweenTwoUsers(fromUserConversations, toUserConversations);
+                            String existingConversationID = getConversationIDBetweenTwoUsers(fromUserConversations, toUserConversations);
 
                             if (existingConversationID != null) {
                                 addMessageToExistingConversation(existingConversationID, message);
