@@ -1,5 +1,6 @@
 package com.example.mvp.foodie.friend;
 
+import com.example.mvp.foodie.models.Friend;
 import com.example.mvp.foodie.models.FriendRequest;
 import com.example.mvp.foodie.models.User;
 
@@ -27,6 +28,12 @@ public class FriendContract {
 
     public interface Adapter {}
 
+    public interface FriendsView {
+        void onLoadFriendsSuccess(Friend friend);
+        void onLoadFriendFailure(String error);
+    }
+
+
     public interface Presenter {
         void sendFriendRequest(String fromUserID, String toUserID);
         void cancelFriendRequest(String fromUserID, String toUserID);
@@ -36,5 +43,6 @@ public class FriendContract {
         void loadFriendRequests(String userID);
         void checkUserFriendship(String fromUserID, String toUserID);
         void checkSentFriendRequest(String fromUserID, String toUserID);
+        void loadFriends(String userID);
     }
 }

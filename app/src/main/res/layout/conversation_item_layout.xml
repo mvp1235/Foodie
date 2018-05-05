@@ -33,7 +33,6 @@
         android:layout_below="@+id/conversationUserName_id"
         android:layout_toEndOf="@+id/conversationUserPhoto_id"
         android:layout_toRightOf="@+id/conversationUserPhoto_id"
-        android:layout_alignParentBottom=""
         android:maxWidth="250dp"
         android:text="asdadasds dsadjasd asd jasdjas dkasdk asdasdl" />
 

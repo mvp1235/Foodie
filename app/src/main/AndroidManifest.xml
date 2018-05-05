@@ -99,7 +99,8 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-        <activity android:name=".message.ConversationActivity"></activity>
+        <activity android:name=".message.ConversationActivity" />
+        <activity android:name=".message.ChatFriendListActivity"></activity>
     </application>
 
 </manifest>

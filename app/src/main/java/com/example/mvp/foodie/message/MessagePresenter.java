@@ -9,21 +9,14 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.List;
 
 public class MessagePresenter implements MessageContract.Presenter {
-    private MessageContract.Adapter adapter;
     private MessageContract.View view;
 
     private FirebaseAuth mAuth;
     private DatabaseReference userRef;
     private DatabaseReference conversationRef;
-
-    public MessagePresenter(MessageContract.Adapter adapter) {
-        this.adapter = adapter;
-        mAuth = FirebaseAuth.getInstance();
-        userRef = FirebaseDatabase.getInstance().getReference().child("Users");
-        conversationRef = FirebaseDatabase.getInstance().getReference().child("Conversations");
-    }
 
     public MessagePresenter(MessageContract.View view) {
         this.view = view;
@@ -34,38 +27,35 @@ public class MessagePresenter implements MessageContract.Presenter {
 
 
     @Override
-    public void loadConversationById(String conversationID, final ConversationViewHolder holder) {
-        conversationRef.child(conversationID).addListenerForSingleValueEvent(new ValueEventListener() {
+    public void loadConversations(String userID) {
+        userRef.child(userID).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                final Conversation conversation = dataSnapshot.getValue(Conversation.class);
-                String currentUserID = mAuth.getCurrentUser().getUid();
-                String returnUserID = null;
-                if (currentUserID.equals(conversation.getFirstUserID()))
-                    returnUserID = conversation.getFirstUserID();
-                else if (currentUserID.equals(conversation.getSecondUserID()))
-                    returnUserID = conversation.getSecondUserID();
+                User currentUser = dataSnapshot.getValue(User.class);
 
-                if (returnUserID != null) {
-                    userRef.child(returnUserID).addListenerForSingleValueEvent(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(DataSnapshot dataSnapshot) {
-                            User returnUser = dataSnapshot.getValue(User.class);
-                            adapter.onLoadConversationSuccess(conversation, returnUser, holder);
-                        }
+                List<String> conversationIDs = currentUser.getConversationIDs();
 
-                        @Override
-                        public void onCancelled(DatabaseError databaseError) {
-                            adapter.onLoadConversationFailure(databaseError.getMessage());
-                        }
-                    });
+                if(conversationIDs.size() > 0) {
+                    for (String cID : conversationIDs) {
+                        conversationRef.child(cID).addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(DataSnapshot dataSnapshot) {
+                                Conversation conversation = dataSnapshot.getValue(Conversation.class);
+                                view.onLoadConversationsSuccess(conversation);
+                            }
+
+                            @Override
+                            public void onCancelled(DatabaseError databaseError) {
+                                view.onLoadConversationsFailure(databaseError.getMessage());
+                            }
+                        });
+                    }
                 }
-
             }
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-                adapter.onLoadConversationFailure(databaseError.getMessage());
+                view.onLoadConversationsFailure(databaseError.getMessage());
             }
         });
     }

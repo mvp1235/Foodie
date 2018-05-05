@@ -12,20 +12,30 @@ import com.example.mvp.foodie.R;
 import com.example.mvp.foodie.models.Conversation;
 import com.example.mvp.foodie.models.Message;
 import com.example.mvp.foodie.models.User;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
-public class ConversationRecyclerAdapter extends RecyclerView.Adapter<ConversationViewHolder> implements MessageContract.Adapter{
+public class ConversationRecyclerAdapter extends RecyclerView.Adapter<ConversationViewHolder> {
 
     private Context context;
     private List<Conversation> conversations;
-    private MessageContract.Presenter presenter;
+    private FirebaseAuth mAuth;
+    private DatabaseReference userRef;
+    private DatabaseReference conversationRef;
 
     public ConversationRecyclerAdapter(Context context, List<Conversation> conversations) {
         this.context = context;
         this.conversations = conversations;
-        presenter = new MessagePresenter(this);
+        mAuth = FirebaseAuth.getInstance();
+        userRef = FirebaseDatabase.getInstance().getReference().child("Users");
+        conversationRef = FirebaseDatabase.getInstance().getReference().child("Conversations");
     }
 
     public void addConversation(Conversation conversation) {
@@ -53,9 +63,52 @@ public class ConversationRecyclerAdapter extends RecyclerView.Adapter<Conversati
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ConversationViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull final ConversationViewHolder holder, int position) {
         Conversation conversation = conversations.get(position);
-        presenter.loadConversationById(conversation.getcID(), holder);
+
+        conversationRef.child(conversation.getcID()).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                final Conversation conversation = dataSnapshot.getValue(Conversation.class);
+                String currentUserID = mAuth.getCurrentUser().getUid();
+                String returnUserID = null;
+                if (currentUserID.equals(conversation.getFirstUserID()))
+                    returnUserID = conversation.getFirstUserID();
+                else if (currentUserID.equals(conversation.getSecondUserID()))
+                    returnUserID = conversation.getSecondUserID();
+
+                if (returnUserID != null) {
+                    userRef.child(returnUserID).addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            User returnUser = dataSnapshot.getValue(User.class);
+
+                            holder.userName.setText(returnUser.getFullName());
+                            Picasso.get().load(returnUser.getProfileURL()).into(holder.userPhoto);
+
+                            List<Message> messages = conversation.getMessages();
+
+                            if (messages.size() > 0) {
+                                Message lastMessage = messages.get(messages.size()-1);
+                                holder.lastMessageContent.setText(lastMessage.getContent());
+                                holder.lastMessageTime.setText(lastMessage.getMessageDuration());
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+                            Toast.makeText(context, databaseError.getMessage(), Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                }
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Toast.makeText(context, databaseError.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
 
     }
 
@@ -64,22 +117,4 @@ public class ConversationRecyclerAdapter extends RecyclerView.Adapter<Conversati
         return conversations.size();
     }
 
-    @Override
-    public void onLoadConversationSuccess(Conversation conversation, User returnUser, ConversationViewHolder holder) {
-        holder.userName.setText(returnUser.getFullName());
-        Picasso.get().load(returnUser.getProfileURL()).into(holder.userPhoto);
-
-        List<Message> messages = conversation.getMessages();
-
-        if (messages.size() > 0) {
-            Message lastMessage = messages.get(messages.size()-1);
-            holder.lastMessageContent.setText(lastMessage.getContent());
-            holder.lastMessageTime.setText(lastMessage.getMessageDuration());
-        }
-    }
-
-    @Override
-    public void onLoadConversationFailure(String error) {
-        Toast.makeText(context, error, Toast.LENGTH_SHORT).show();
-    }
 }

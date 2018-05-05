@@ -20,6 +20,8 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.example.mvp.foodie.main_feed.MainFeedFragment;
+import com.example.mvp.foodie.message.ChatFriendListActivity;
+import com.example.mvp.foodie.message.MessageFragment;
 import com.example.mvp.foodie.models.User;
 import com.example.mvp.foodie.navigation_drawer.DrawerContract;
 import com.example.mvp.foodie.navigation_drawer.DrawerPresenter;
@@ -235,12 +237,12 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
                 Toast.makeText(this, "Search", Toast.LENGTH_SHORT).show();
                 break;
             case R.id.menu_add_post:
-                Toast.makeText(this, "Add post", Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(this, NewPostActivity.class);
                 startActivity(intent);
                 break;
             case R.id.menu_send_message:
-                Toast.makeText(this, "Send message", Toast.LENGTH_SHORT).show();
+                Intent sendMessageIntent = new Intent(this, ChatFriendListActivity.class);
+                startActivity(sendMessageIntent);
                 break;
         }
 

@@ -1,8 +1,8 @@
 package com.example.mvp.foodie.friend;
 
 
-import android.util.Log;
 
+import com.example.mvp.foodie.models.Friend;
 import com.example.mvp.foodie.models.FriendRequest;
 import com.example.mvp.foodie.models.Notification;
 import com.example.mvp.foodie.models.User;
@@ -16,12 +16,19 @@ import java.util.List;
 
 public class FriendPresenter implements FriendContract.Presenter {
     private FriendContract.View view;
+    private FriendContract.FriendsView friendsView;
     private FriendContract.Adapter adapter;
     private DatabaseReference notificationRef;
     private DatabaseReference userRef;
 
     public FriendPresenter(FriendContract.View view) {
         this.view = view;
+        notificationRef = FirebaseDatabase.getInstance().getReference().child("Notifications");
+        userRef = FirebaseDatabase.getInstance().getReference().child("Users");
+    }
+
+    public FriendPresenter(FriendContract.FriendsView friendsView) {
+        this.friendsView = friendsView;
         notificationRef = FirebaseDatabase.getInstance().getReference().child("Notifications");
         userRef = FirebaseDatabase.getInstance().getReference().child("Users");
     }
@@ -499,6 +506,43 @@ public class FriendPresenter implements FriendContract.Presenter {
             @Override
             public void onCancelled(DatabaseError databaseError) {
                 view.onCheckSentFailure(databaseError.getMessage());
+            }
+        });
+    }
+
+    @Override
+    public void loadFriends(String userID) {
+        userRef.child(userID).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                User currentUser = dataSnapshot.getValue(User.class);
+                List<String> friendIDs = currentUser.getFriendIDs();
+
+                if (friendIDs.size() > 0) {
+                    for (String id : friendIDs) {
+                        userRef.child(id).addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(DataSnapshot dataSnapshot) {
+                                User user = dataSnapshot.getValue(User.class);
+                                Friend friend = new Friend();
+                                friend.setFullName(user.getFullName());
+                                friend.setId(user.getuID());
+                                friend.setPhotoURL(user.getProfileURL());
+                                friendsView.onLoadFriendsSuccess(friend);
+                            }
+
+                            @Override
+                            public void onCancelled(DatabaseError databaseError) {
+                                friendsView.onLoadFriendFailure(databaseError.getMessage());
+                            }
+                        });
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                friendsView.onLoadFriendFailure(databaseError.getMessage());
             }
         });
     }
