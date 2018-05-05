@@ -15,6 +15,8 @@ import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
+import static com.example.mvp.foodie.UtilHelper.TO_USER_ID;
+import static com.example.mvp.foodie.UtilHelper.USER_ID;
 import static com.example.mvp.foodie.UtilHelper.USER_NAME;
 
 public class FriendRecyclerAdapter extends RecyclerView.Adapter<FriendViewHolder> {
@@ -63,6 +65,7 @@ public class FriendRecyclerAdapter extends RecyclerView.Adapter<FriendViewHolder
             public void onClick(View view) {
                 Intent intent = new Intent(context, ChatActivity.class);
                 intent.putExtra(USER_NAME, friend.getFullName());
+                intent.putExtra(TO_USER_ID, friend.getId());
                 context.startActivity(intent);
             }
         });

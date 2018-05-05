@@ -4,6 +4,8 @@ public class UtilHelper {
     public static final String POST_ID = "Post_ID";
     public static final String USER_ID = "User_ID";
     public static final String USER_NAME = "User_Name";
+    public static final String FROM_USER_ID = "From_User_ID";
+    public static final String TO_USER_ID = "To_User_ID";
     public static final String POST_URL = "Post_URL";
     public static final String POST_DESCRIPTION = "Post_Description";
     public static final String POST_LOCATION = "Post_Location";
@@ -15,7 +17,7 @@ public class UtilHelper {
     public static final String REQUEST_CODE = "Request Code";
     public static final String NUM_INTERESTS = "Interest count";
     public static final String NUM_COMMENTS = "Comment count";
-
+    public static final String CONVERSATION_ID = "Conversation_ID";
 
 
 
