@@ -1,6 +1,7 @@
 package com.example.mvp.foodie.message;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -21,6 +22,8 @@ import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
+
+import static com.example.mvp.foodie.UtilHelper.USER_NAME;
 
 public class ConversationRecyclerAdapter extends RecyclerView.Adapter<ConversationViewHolder> {
 
@@ -65,6 +68,7 @@ public class ConversationRecyclerAdapter extends RecyclerView.Adapter<Conversati
     @Override
     public void onBindViewHolder(@NonNull final ConversationViewHolder holder, int position) {
         Conversation conversation = conversations.get(position);
+        setBlockClickListener(holder, "Huy Nguyen");
 
         conversationRef.child(conversation.getcID()).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -82,6 +86,8 @@ public class ConversationRecyclerAdapter extends RecyclerView.Adapter<Conversati
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
                             User returnUser = dataSnapshot.getValue(User.class);
+
+                            setBlockClickListener(holder, returnUser.getFullName());
 
                             holder.userName.setText(returnUser.getFullName());
                             Picasso.get().load(returnUser.getProfileURL()).into(holder.userPhoto);
@@ -110,6 +116,17 @@ public class ConversationRecyclerAdapter extends RecyclerView.Adapter<Conversati
             }
         });
 
+    }
+
+    private void setBlockClickListener(ConversationViewHolder holder, final String userName) {
+        holder.conversationBlock.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(context, ChatActivity.class);
+                intent.putExtra(USER_NAME, userName);
+                context.startActivity(intent);
+            }
+        });
     }
 
     @Override

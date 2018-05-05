@@ -96,6 +96,8 @@
     <string name="friend_requests">Friend Requests</string>
     <string name="sample_clock_time">10:03pm</string>
     <string name="friends">Friends</string>
+    <string name="add_new_message">Add new message</string>
+    <string name="send">Send</string>
 
 
 </resources>
