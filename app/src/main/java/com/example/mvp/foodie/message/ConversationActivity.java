@@ -5,11 +5,11 @@ import android.os.Bundle;
 
 import com.example.mvp.foodie.R;
 
-public class MessageListActivity extends AppCompatActivity {
+public class ConversationActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_message_list);
+        setContentView(R.layout.activity_conversation);
     }
 }
