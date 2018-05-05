@@ -14,7 +14,7 @@ public class User {
     private List<String> tokenIDs;
     private List<String> pendingFriendRequestIDs;
     private List<String> sentFriendRequestIDs;
-
+    private List<Conversation> conversations;
 
 
     public User(){
@@ -23,7 +23,25 @@ public class User {
         tokenIDs = new ArrayList<>();
         pendingFriendRequestIDs = new ArrayList<>();
         sentFriendRequestIDs = new ArrayList<>();
+        conversations = new ArrayList<>();
     };
+
+    public void addConversation(Conversation conversation) {
+        conversations.add(conversation);
+    }
+
+    public void removeConversation(Conversation conversation) {
+        if (conversations.contains(conversation))
+            conversations.remove(conversation);
+    }
+
+    public List<Conversation> getConversations() {
+        return conversations;
+    }
+
+    public void setConversations(List<Conversation> conversations) {
+        this.conversations = conversations;
+    }
 
     public String getuID() {
         return uID;

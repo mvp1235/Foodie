@@ -6,23 +6,39 @@ import static com.example.mvp.foodie.UtilHelper.SECONDS_IN_MINUTE;
 import static com.example.mvp.foodie.UtilHelper.SECONDS_IN_MONTH;
 import static com.example.mvp.foodie.UtilHelper.SECONDS_IN_YEAR;
 
-public class Comment {
-    private String cID;
+public class Message {
+    private String mID;
+    private String fromUserID;
+    private String toUserID;
     private String content;
     private long createdTime;
-    private String userID;
-    private String postID;
 
-    public Comment() {
+    public Message() {
         createdTime = System.currentTimeMillis();
     }
 
-    public String getcID() {
-        return cID;
+    public String getmID() {
+        return mID;
     }
 
-    public void setcID(String cID) {
-        this.cID = cID;
+    public void setmID(String mID) {
+        this.mID = mID;
+    }
+
+    public String getFromUserID() {
+        return fromUserID;
+    }
+
+    public void setFromUserID(String fromUserID) {
+        this.fromUserID = fromUserID;
+    }
+
+    public String getToUserID() {
+        return toUserID;
+    }
+
+    public void setToUserID(String toUserID) {
+        this.toUserID = toUserID;
     }
 
     public String getContent() {
@@ -41,23 +57,7 @@ public class Comment {
         this.createdTime = createdTime;
     }
 
-    public String getUserID() {
-        return userID;
-    }
-
-    public void setUserID(String userID) {
-        this.userID = userID;
-    }
-
-    public String getPostID() {
-        return postID;
-    }
-
-    public void setPostID(String postID) {
-        this.postID = postID;
-    }
-
-    public String getCommentDuration() {
+    public String getMessageDuration() {
         String time = "";
         long currentTime = System.currentTimeMillis();
         long timeDifference = currentTime - createdTime;
@@ -85,5 +85,14 @@ public class Comment {
             time = "Just now";
         }
         return time;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) return false;
+        if (obj.getClass() != this.getClass()) return false;
+
+        Message other = (Message) obj;
+        return this.mID.equals(other.mID);
     }
 }
