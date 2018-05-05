@@ -7,10 +7,20 @@ public class Conversation {
     private String cID;
     private String firstUserID;
     private String secondUserID;
+    private long lastMessageTime;
     private List<Message> messages;
 
     public Conversation() {
         messages = new ArrayList<>();
+        lastMessageTime = System.currentTimeMillis();
+    }
+
+    public long getLastMessageTime() {
+        return lastMessageTime;
+    }
+
+    public void setLastMessageTime(long lastMessageTime) {
+        this.lastMessageTime = lastMessageTime;
     }
 
     public void addMessage(Message message) {
