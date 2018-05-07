@@ -18,6 +18,8 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.squareup.picasso.Callback;
+import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -106,10 +108,21 @@ public class MessageRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.Vi
         userRef.child(message.getFromUserID()).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                User fromUser = dataSnapshot.getValue(User.class);
+                final User fromUser = dataSnapshot.getValue(User.class);
                 holder.messageContent.setText(message.getContent());
                 holder.messageTime.setText(message.getMessageDuration());
-                Picasso.get().load(fromUser.getProfileURL()).into(holder.userPhoto);
+
+                Picasso.get().load(fromUser.getProfileURL())
+                        .networkPolicy(NetworkPolicy.OFFLINE)
+                        .into(holder.userPhoto, new Callback() {
+                            @Override
+                            public void onSuccess() {}
+
+                            @Override
+                            public void onError(Exception e) {
+                                Picasso.get().load(fromUser.getProfileURL()).into(holder.userPhoto);
+                            }
+                        });
             }
 
             @Override

@@ -23,6 +23,8 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
+import com.squareup.picasso.Callback;
+import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -210,10 +212,21 @@ public class CommentRecyclerAdapter extends RecyclerView.Adapter<CommentViewHold
         userRef.child(userID).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                User u = dataSnapshot.getValue(User.class);
+                final User u = dataSnapshot.getValue(User.class);
 
                 holder.userName.setText(u.getFullName());
-                Picasso.get().load(u.getProfileURL()).into(holder.profilePhoto);
+
+                Picasso.get().load(u.getProfileURL())
+                        .networkPolicy(NetworkPolicy.OFFLINE)
+                        .into(holder.profilePhoto, new Callback() {
+                            @Override
+                            public void onSuccess() {}
+
+                            @Override
+                            public void onError(Exception e) {
+                                Picasso.get().load(u.getProfileURL()).into(holder.profilePhoto);
+                            }
+                        });
             }
 
             @Override

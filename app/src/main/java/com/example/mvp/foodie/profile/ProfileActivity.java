@@ -28,6 +28,8 @@ import com.example.mvp.foodie.friend.FriendRequestsActivity;
 import com.example.mvp.foodie.models.FriendRequest;
 import com.example.mvp.foodie.models.User;
 import com.example.mvp.foodie.post.AllUserPostActivity;
+import com.squareup.picasso.Callback;
+import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -380,15 +382,38 @@ public class ProfileActivity extends BaseActivity implements ProfileContract.Vie
     }
 
     @Override
-    public void onLoadDataSuccess(User user) {
+    public void onLoadDataSuccess(final User user) {
         nameTV.setText(user.getFullName());
         emailTV.setText(user.getEmail());
         postCountTV.setText(user.getPostCount() + " posts");
         friendCountTV.setText(user.getFriendCount() + " friends");
-        if (user.getProfileURL() != null)
-            Picasso.get().load(user.getProfileURL()).into(profileImage);
-        else
-            Picasso.get().load("http://www.personalbrandingblog.com/wp-content/uploads/2017/08/blank-profile-picture-973460_640-300x300.png").into(profileImage);
+
+        if (user.getProfileURL() != null) {
+            Picasso.get().load(user.getProfileURL())
+                    .networkPolicy(NetworkPolicy.OFFLINE)
+                    .into(profileImage, new Callback() {
+                        @Override
+                        public void onSuccess() {}
+
+                        @Override
+                        public void onError(Exception e) {
+                            Picasso.get().load(user.getProfileURL()).into(profileImage);
+                        }
+                    });
+        } else {
+            Picasso.get().load("http://www.personalbrandingblog.com/wp-content/uploads/2017/08/blank-profile-picture-973460_640-300x300.png")
+                    .networkPolicy(NetworkPolicy.OFFLINE)
+                    .into(profileImage, new Callback() {
+                        @Override
+                        public void onSuccess() {}
+
+                        @Override
+                        public void onError(Exception e) {
+                            Picasso.get().load("http://www.personalbrandingblog.com/wp-content/uploads/2017/08/blank-profile-picture-973460_640-300x300.png").into(profileImage);
+                        }
+                    });
+        }
+
     }
 
     @Override

@@ -9,6 +9,8 @@ import android.view.ViewGroup;
 
 import com.example.mvp.foodie.R;
 import com.example.mvp.foodie.models.Interest;
+import com.squareup.picasso.Callback;
+import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -42,11 +44,22 @@ public class InterestRecyclerAdapter extends RecyclerView.Adapter<InterestViewHo
     }
 
     @Override
-    public void onBindViewHolder(@NonNull InterestViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull final InterestViewHolder holder, int position) {
         final Interest interest = interestList.get(position);
 
         holder.userName.setText(interest.getUserName());
-        Picasso.get().load(interest.getProfileURL()).into(holder.userProfile);
+
+        Picasso.get().load(interest.getProfileURL())
+                .networkPolicy(NetworkPolicy.OFFLINE)
+                .into(holder.userProfile, new Callback() {
+                    @Override
+                    public void onSuccess() {}
+
+                    @Override
+                    public void onError(Exception e) {
+                        Picasso.get().load(interest.getProfileURL()).into(holder.userProfile);
+                    }
+                });
     }
 
     @Override

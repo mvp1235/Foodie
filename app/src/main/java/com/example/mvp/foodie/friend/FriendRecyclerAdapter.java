@@ -15,6 +15,8 @@ import com.example.mvp.foodie.R;
 import com.example.mvp.foodie.models.Friend;
 import com.example.mvp.foodie.profile.ProfileActivity;
 import com.google.firebase.auth.FirebaseAuth;
+import com.squareup.picasso.Callback;
+import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -48,10 +50,21 @@ public class FriendRecyclerAdapter extends RecyclerView.Adapter<FriendRecyclerAd
     }
 
     @Override
-    public void onBindViewHolder(@NonNull FriendViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull final FriendViewHolder holder, int position) {
         final Friend friend = friends.get(position);
         holder.friendName.setText(friend.getFullName());
-        Picasso.get().load(friend.getPhotoURL()).into(holder.friendPhoto);
+
+        Picasso.get().load(friend.getPhotoURL())
+                .networkPolicy(NetworkPolicy.OFFLINE)
+                .into(holder.friendPhoto, new Callback() {
+                    @Override
+                    public void onSuccess() {}
+
+                    @Override
+                    public void onError(Exception e) {
+                        Picasso.get().load(friend.getPhotoURL()).into(holder.friendPhoto);
+                    }
+                });
 
         if (isCurrentUser()) {
             holder.unfriendBtn.setVisibility(View.VISIBLE);

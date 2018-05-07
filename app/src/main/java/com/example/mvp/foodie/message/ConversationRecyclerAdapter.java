@@ -19,6 +19,8 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.squareup.picasso.Callback;
+import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
 
 import java.util.Collections;
@@ -119,12 +121,23 @@ public class ConversationRecyclerAdapter extends RecyclerView.Adapter<Conversati
                     userRef.child(returnUserID).addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
-                            User returnUser = dataSnapshot.getValue(User.class);
+                            final User returnUser = dataSnapshot.getValue(User.class);
 
                             setBlockClickListener(holder, returnUser.getFullName(), returnUser.getuID());
 
                             holder.userName.setText(returnUser.getFullName());
-                            Picasso.get().load(returnUser.getProfileURL()).into(holder.userPhoto);
+
+                            Picasso.get().load(returnUser.getProfileURL())
+                                    .networkPolicy(NetworkPolicy.OFFLINE)
+                                    .into(holder.userPhoto, new Callback() {
+                                        @Override
+                                        public void onSuccess() {}
+
+                                        @Override
+                                        public void onError(Exception e) {
+                                            Picasso.get().load(returnUser.getProfileURL()).into(holder.userPhoto);
+                                        }
+                                    });
 
                             List<Message> messages = conversation.getMessages();
 

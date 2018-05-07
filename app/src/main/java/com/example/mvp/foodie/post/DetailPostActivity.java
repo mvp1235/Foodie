@@ -25,6 +25,8 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
+import com.squareup.picasso.Callback;
+import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -232,16 +234,38 @@ public class DetailPostActivity extends BaseActivity implements PostContract.Det
     }
 
     @Override
-    public void onLoadPostSuccess(Post post, User postOwner) {
+    public void onLoadPostSuccess(final Post post, final User postOwner) {
         location.setText(post.getLocation());
         time.setText(post.getPostDuration());
         description.setText(post.getDescription());
-        Picasso.get().load(post.getPhotoURL()).into(postPhoto);
         numComments.setText(post.getCommentCount());
         numInterests.setText(post.getInterestCount());
 
         name.setText(postOwner.getFullName());
-        Picasso.get().load(postOwner.getProfileURL()).into(userProfile);
+
+        Picasso.get().load(post.getPhotoURL())
+                .networkPolicy(NetworkPolicy.OFFLINE)
+                .into(postPhoto, new Callback() {
+                    @Override
+                    public void onSuccess() {}
+
+                    @Override
+                    public void onError(Exception e) {
+                        Picasso.get().load(post.getPhotoURL()).into(postPhoto);
+                    }
+                });
+
+        Picasso.get().load(postOwner.getProfileURL())
+                .networkPolicy(NetworkPolicy.OFFLINE)
+                .into(userProfile, new Callback() {
+                    @Override
+                    public void onSuccess() {}
+
+                    @Override
+                    public void onError(Exception e) {
+                        Picasso.get().load(postOwner.getProfileURL()).into(userProfile);
+                    }
+                });
     }
 
     @Override

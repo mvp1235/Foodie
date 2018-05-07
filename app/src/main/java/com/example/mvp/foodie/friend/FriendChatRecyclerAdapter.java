@@ -11,6 +11,8 @@ import android.view.ViewGroup;
 import com.example.mvp.foodie.R;
 import com.example.mvp.foodie.message.ChatActivity;
 import com.example.mvp.foodie.models.Friend;
+import com.squareup.picasso.Callback;
+import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -54,10 +56,22 @@ public class FriendChatRecyclerAdapter extends RecyclerView.Adapter<FriendChatVi
     }
 
     @Override
-    public void onBindViewHolder(@NonNull FriendChatViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull final FriendChatViewHolder holder, int position) {
         final Friend friend = friendList.get(position);
         holder.friendName.setText(friend.getFullName());
-        Picasso.get().load(friend.getPhotoURL()).into(holder.friendPhoto);
+
+        Picasso.get().load(friend.getPhotoURL())
+                .networkPolicy(NetworkPolicy.OFFLINE)
+                .into(holder.friendPhoto, new Callback() {
+                    @Override
+                    public void onSuccess() {}
+
+                    @Override
+                    public void onError(Exception e) {
+                        Picasso.get().load(friend.getPhotoURL()).into(holder.friendPhoto);
+                    }
+                });
+
 
         holder.friendBlock.setOnClickListener(new View.OnClickListener() {
             @Override

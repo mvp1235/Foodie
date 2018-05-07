@@ -86,7 +86,6 @@ public class NotificationRecyclerAdapter extends RecyclerView.Adapter<Notificati
             holder.userName.setText(notification.getUserName());
             holder.time.setText(notification.getNotificationDuration());
 
-//            Picasso.get().load(notification.getPhotoURL()).into(holder.photoURL);
             Picasso.get().load(notification.getPhotoURL())
                     .networkPolicy(NetworkPolicy.OFFLINE)
                     .into(holder.photoURL, new Callback() {

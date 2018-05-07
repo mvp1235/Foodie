@@ -10,6 +10,8 @@ import android.view.ViewGroup;
 
 import com.example.mvp.foodie.R;
 import com.example.mvp.foodie.models.FriendRequest;
+import com.squareup.picasso.Callback;
+import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -68,9 +70,21 @@ public class FriendRequestRecyclerAdapter extends RecyclerView.Adapter<FriendReq
     }
 
     @Override
-    public void onBindViewHolder(@NonNull FriendRequestViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull final FriendRequestViewHolder holder, int position) {
         final FriendRequest friendRequest = requestList.get(position);
         String type = friendRequest.getType();
+
+        Picasso.get().load(friendRequest.getTargetPhotoURL())
+                .networkPolicy(NetworkPolicy.OFFLINE)
+                .into(holder.userPhoto, new Callback() {
+                    @Override
+                    public void onSuccess() {}
+
+                    @Override
+                    public void onError(Exception e) {
+                        Picasso.get().load(friendRequest.getTargetPhotoURL()).into(holder.userPhoto);
+                    }
+                });
 
         if (type.equals("sent")) {
             holder.cancelBtn.setVisibility(View.VISIBLE);
@@ -78,7 +92,8 @@ public class FriendRequestRecyclerAdapter extends RecyclerView.Adapter<FriendReq
             holder.declineBtn.setVisibility(View.GONE);
 
             holder.userFullName.setText(friendRequest.getReceivedUserName());
-            Picasso.get().load(friendRequest.getTargetPhotoURL()).into(holder.userPhoto);
+
+
 
             holder.cancelBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -93,7 +108,6 @@ public class FriendRequestRecyclerAdapter extends RecyclerView.Adapter<FriendReq
             holder.declineBtn.setVisibility(View.VISIBLE);
 
             holder.userFullName.setText(friendRequest.getSentUserName());
-            Picasso.get().load(friendRequest.getTargetPhotoURL()).into(holder.userPhoto);
 
             holder.acceptBtn.setOnClickListener(new View.OnClickListener() {
                 @Override

@@ -25,6 +25,8 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
+import com.squareup.picasso.Callback;
+import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -72,9 +74,20 @@ public class PostRecyclerAdapter extends RecyclerView.Adapter<PostViewHolder>{
         userRef.child(userID).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                User u = dataSnapshot.getValue(User.class);
+                final User u = dataSnapshot.getValue(User.class);
                 holder.name.setText(u.getFullName());
-                Picasso.get().load(u.getProfileURL()).into(holder.userProfile);
+
+                Picasso.get().load(u.getProfileURL())
+                        .networkPolicy(NetworkPolicy.OFFLINE)
+                        .into(holder.userProfile, new Callback() {
+                            @Override
+                            public void onSuccess() {}
+
+                            @Override
+                            public void onError(Exception e) {
+                                Picasso.get().load(u.getProfileURL()).into(holder.userProfile);
+                            }
+                        });
             }
 
             @Override
@@ -92,10 +105,21 @@ public class PostRecyclerAdapter extends RecyclerView.Adapter<PostViewHolder>{
         holder.location.setText(post.getLocation());
         holder.time.setText(post.getPostDuration());
         holder.description.setText(post.getDescription());
-        Picasso.get().load(post.getPhotoURL()).into(holder.postPhoto);
         holder.numComments.setText(post.getCommentCount());
         holder.numInterests.setText(post.getInterestCount());
         userLikedPost(holder.postHeart, post.getPostID(), (((BaseActivity)context).getmAuth().getCurrentUser().getUid()));
+
+        Picasso.get().load(post.getPhotoURL())
+                .networkPolicy(NetworkPolicy.OFFLINE)
+                .into(holder.postPhoto, new Callback() {
+                    @Override
+                    public void onSuccess() {}
+
+                    @Override
+                    public void onError(Exception e) {
+                        Picasso.get().load(post.getPhotoURL()).into(holder.postPhoto);
+                    }
+                });
 
 
         holder.description.setOnClickListener(new View.OnClickListener() {
