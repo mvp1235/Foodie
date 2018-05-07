@@ -78,7 +78,7 @@ public class MessageFragment extends Fragment implements MessageContract.View {
     @Override
     public void onLoadConversationsSuccess(Conversation c) {
         adapter.addConversation(c);
-        recyclerView.scrollToPosition(conversations.size()-1);
+        adapter.sortConversations();
     }
 
     @Override

@@ -15,6 +15,8 @@ public class MainFeedPresenter implements MainFeedContract.Presenter {
     MainFeedContract.View view;
     private DatabaseReference databaseReference;
 
+    private ValueEventListener postListener;
+
     public MainFeedPresenter(MainFeedContract.View view) {
         this.view = view;
         databaseReference = FirebaseDatabase.getInstance().getReference();
@@ -22,7 +24,7 @@ public class MainFeedPresenter implements MainFeedContract.Presenter {
 
     @Override
     public void loadPosts() {
-        databaseReference.child("Posts").orderByChild("createdTime").addValueEventListener(new ValueEventListener() {
+        postListener = databaseReference.child("Posts").orderByChild("createdTime").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 List<Post> posts = new ArrayList<>();
@@ -41,5 +43,10 @@ public class MainFeedPresenter implements MainFeedContract.Presenter {
                 view.onPostsLoadedFailure(databaseError.getMessage());
             }
         });
+    }
+
+    @Override
+    public void removePostEventListener() {
+        databaseReference.child("Posts").removeEventListener(postListener);
     }
 }

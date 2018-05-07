@@ -94,7 +94,6 @@ public class MessagePresenter implements MessageContract.Presenter {
         String secondID = conversation.getSecondUserID();
 
         return (firstID.equals(userID1) && secondID.equals(userID2)) || (firstID.equals(userID2) && secondID.equals(userID1));
-
     }
 
     @Override
@@ -115,6 +114,7 @@ public class MessagePresenter implements MessageContract.Presenter {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 Conversation conversation = dataSnapshot.getValue(Conversation.class);
                 conversation.addMessage(message);
+                conversation.setLastMessageTime(message.getCreatedTime());
                 conversationRef.child(conversationID).setValue(conversation);
 
                 detailView.onSendMessageSuccess(message);
@@ -178,6 +178,7 @@ public class MessagePresenter implements MessageContract.Presenter {
                                 conversation.setFirstUserID(fromUserID);
                                 conversation.setSecondUserID(toUserID);
                                 conversation.addMessage(message);
+                                conversation.setLastMessageTime(message.getCreatedTime());
 
                                 //Add conversation id to from user
                                 userRef.child(fromUserID).addListenerForSingleValueEvent(new ValueEventListener() {

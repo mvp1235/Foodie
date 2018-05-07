@@ -30,6 +30,12 @@ public class MainFeedFragment extends Fragment implements MainFeedContract.View 
     }
 
     @Override
+    public void onStop() {
+        presenter.removePostEventListener();
+        super.onStop();
+    }
+
+    @Override
     public void onResume() {
         super.onResume();
         presenter.loadPosts();

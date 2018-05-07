@@ -12,6 +12,7 @@ public interface MainFeedContract {
 
     interface Presenter {
         void loadPosts();
+        void removePostEventListener();
     }
 
 }

@@ -21,6 +21,8 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import static com.example.mvp.foodie.UtilHelper.TO_USER_ID;
@@ -40,6 +42,24 @@ public class ConversationRecyclerAdapter extends RecyclerView.Adapter<Conversati
         mAuth = FirebaseAuth.getInstance();
         userRef = FirebaseDatabase.getInstance().getReference().child("Users");
         conversationRef = FirebaseDatabase.getInstance().getReference().child("Conversations");
+    }
+
+    public void sortConversations() {
+        Collections.sort(conversations, new Comparator<Conversation>() {
+            @Override
+            public int compare(Conversation c1, Conversation c2) {
+                long time1 = c1.getLastMessageTime();
+                long time2 = c2.getLastMessageTime();
+
+                if (time1 > time2)
+                    return -1;
+                else if (time1 < time2)
+                    return 1;
+                else
+                    return 0;
+            }
+        });
+        notifyDataSetChanged();
     }
 
     public void addConversation(Conversation conversation) {
