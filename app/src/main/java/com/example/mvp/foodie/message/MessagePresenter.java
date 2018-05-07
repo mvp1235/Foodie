@@ -17,27 +17,19 @@ public class MessagePresenter implements MessageContract.Presenter {
     private MessageContract.View view;
     private MessageContract.DetailView detailView;
 
-    private FirebaseAuth mAuth;
-    private DatabaseReference userRef;
-    private DatabaseReference conversationRef;
+    private FirebaseAuth mAuth = FirebaseAuth.getInstance();
+    private DatabaseReference userRef = FirebaseDatabase.getInstance().getReference().child("Users");
+    private DatabaseReference conversationRef = FirebaseDatabase.getInstance().getReference().child("Conversations");
 
     private ValueEventListener messageEventListener;
 
     public MessagePresenter(MessageContract.View view) {
         this.view = view;
-        mAuth = FirebaseAuth.getInstance();
-        userRef = FirebaseDatabase.getInstance().getReference().child("Users");
-        conversationRef = FirebaseDatabase.getInstance().getReference().child("Conversations");
     }
 
     public MessagePresenter(MessageContract.DetailView detailView) {
         this.detailView = detailView;
-        mAuth = FirebaseAuth.getInstance();
-        userRef = FirebaseDatabase.getInstance().getReference().child("Users");
-        conversationRef = FirebaseDatabase.getInstance().getReference().child("Conversations");
     }
-
-
 
     @Override
     public void loadConversations(String userID) {
@@ -93,6 +85,14 @@ public class MessagePresenter implements MessageContract.Presenter {
                 detailView.onLoadMessagesFailure(databaseError.getMessage());
             }
         });
+    }
+
+    private boolean conversationExist(Conversation conversation, String userID1, String userID2) {
+        String firstID = conversation.getFirstUserID();
+        String secondID = conversation.getSecondUserID();
+
+        return (firstID.equals(userID1) && secondID.equals(userID2)) || (firstID.equals(userID2) && secondID.equals(userID1));
+
     }
 
     @Override
@@ -209,7 +209,7 @@ public class MessagePresenter implements MessageContract.Presenter {
 
                         @Override
                         public void onCancelled(DatabaseError databaseError) {
-
+                            detailView.onSendMessageFailure(databaseError.getMessage());
                         }
                     });
 
@@ -217,20 +217,10 @@ public class MessagePresenter implements MessageContract.Presenter {
 
                 @Override
                 public void onCancelled(DatabaseError databaseError) {
-
+                    detailView.onSendMessageFailure(databaseError.getMessage());
                 }
             });
 
         }
     }
-
-    private boolean conversationExist(Conversation conversation, String userID1, String userID2) {
-        String firstID = conversation.getFirstUserID();
-        String secondID = conversation.getSecondUserID();
-
-        return (firstID.equals(userID1) && secondID.equals(userID2)) || (firstID.equals(userID2) && secondID.equals(userID1));
-
-    }
-
-
 }

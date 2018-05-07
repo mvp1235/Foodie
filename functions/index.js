@@ -4,6 +4,70 @@ const functions = require('firebase-functions');
 const admin = require('firebase-admin');
 admin.initializeApp(functions.config().firebase);
 
+exports.sendMessageNotifications = functions.database.ref('/Conversations/{conversation_id}/messages')
+	.onWrite((change, context) => {
+		
+		//If message is deleted, exit
+		if (!change.after.exists()) {
+	        return null;
+		}
+		
+	    
+	    const conversation_id = context.params.conversation_id;
+	    const conversation = admin.database().ref(`/Conversations/${conversation_id}`).once('value');
+	    
+	    return Promise.all([conversation]).then(result => {
+	    	  
+	    	  const messages = change.after.val();
+	    	  const conversation = result[0].val();
+	    	  
+	    	  const newMessage = messages[messages.length-1];
+	    	  
+	    	  console.log('New Message: ', newMessage);
+	    	  
+	    	  const to_user_id = newMessage.toUserID;
+	  		  const from_user_id = newMessage.fromUserID;
+	  		  const toUser = admin.database().ref(`/Users/${to_user_id}`).once('value');
+	  	      const fromUser = admin.database().ref(`/Users/${from_user_id}`).once('value');
+	  	      const token_ids = admin.database().ref(`/Users/${to_user_id}/tokenIDs`).once('value');
+	    	  
+	  	      return Promise.all([fromUser, toUser, token_ids]).then(result => {
+	  	    	  const fromUser = result[0].val();
+	  	    	  const toUser = result[1].val();
+	  	    	  const token_ids = result[2].val();
+	  	    	  
+	  	    	  console.log('From User: ', fromUser);
+		  	      console.log('To User: ', toUser);
+		    	  console.log('New message notification to user: ', toUser.uID);
+		    	  
+		    	  if(!result[2].hasChildren()) {
+		    		  return console.log('There are no notification tokens to send to.');
+		    	  }
+		    	  
+		    	  console.log('There are ', result[2].numChildren(), ' tokens to send notifications to.');
+		    	  
+		    	  const payload = {
+					  data: {
+						  title: "Foodie",
+						  body: `${fromUser.fullName}: ${newMessage.content}`,
+						  icon: `${fromUser.profileURL}`,
+						  click_action: "com.example.mvp.foodie.MESSAGING_NOTIFICATION_TARGET",
+						  user_name: `${fromUser.fullName}`,
+						  to_user_id: `${fromUser.uID}`,
+						  conversation_id: `${conversation.cID}`
+					  }
+			      };
+		    	  
+		    	  return admin.messaging().sendToDevice(token_ids, payload).then(response => {
+			    	  return console.log("Message Notifications sent.");
+			      });
+	  	      });
+	    	  
+	    });
+		
+		
+	});
+
 exports.sendNotifications = functions.database.ref('/Notifications/{user_id}/{notification_id}')
 	.onCreate((snapshot, context) => {
       const to_user_id = context.params.user_id;
@@ -99,7 +163,7 @@ exports.sendNotifications = functions.database.ref('/Notifications/{user_id}/{no
 		    	  return console.log("Friend Confirmation Notifications sent.");
 		      });
 	      } else {
-	    	  return console.log("Not valid notification")
+	    	  return console.log("Not valid notification");
 	      }
       });
       

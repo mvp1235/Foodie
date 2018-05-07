@@ -100,7 +100,13 @@
             </intent-filter>
         </activity>
         <activity android:name=".message.ChatFriendListActivity" />
-        <activity android:name=".message.ChatActivity"></activity>
+        <activity android:name=".message.ChatActivity">
+            <intent-filter>
+                <action android:name="com.example.mvp.foodie.MESSAGING_NOTIFICATION_TARGET" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
     </application>
 
 </manifest>
