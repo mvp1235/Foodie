@@ -67,8 +67,11 @@ public class Conversation {
     }
 
     public List<Message> getMessages() {
-        if (messages.size() > 100)
-            return messages.subList(0, 100);
+        if (messages.size() > 100) {
+            int lastIndex = messages.size();
+            int firstIndex = lastIndex - 100;
+            return messages.subList(firstIndex, lastIndex);
+        }
         else
             return messages;
     }
