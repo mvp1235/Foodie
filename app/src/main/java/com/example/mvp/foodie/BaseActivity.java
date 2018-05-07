@@ -16,6 +16,7 @@ public class BaseActivity extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
         firebaseUser = mAuth.getCurrentUser();
         mDatabase = FirebaseDatabase.getInstance().getReference();
+        mDatabase.keepSynced(true);
     }
 
     public FirebaseAuth getmAuth() {

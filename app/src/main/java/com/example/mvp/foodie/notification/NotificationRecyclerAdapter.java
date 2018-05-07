@@ -16,6 +16,8 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
+import com.squareup.picasso.Callback;
+import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -78,12 +80,24 @@ public class NotificationRecyclerAdapter extends RecyclerView.Adapter<Notificati
     }
 
     @Override
-    public void onLoadNotificationSuccess(Notification notification, NotificationViewHolder holder) {
+    public void onLoadNotificationSuccess(final Notification notification, final NotificationViewHolder holder) {
         if (notification != null) {
             holder.content.setText(notification.getContent());
             holder.userName.setText(notification.getUserName());
             holder.time.setText(notification.getNotificationDuration());
-            Picasso.get().load(notification.getPhotoURL()).into(holder.photoURL);
+
+//            Picasso.get().load(notification.getPhotoURL()).into(holder.photoURL);
+            Picasso.get().load(notification.getPhotoURL())
+                    .networkPolicy(NetworkPolicy.OFFLINE)
+                    .into(holder.photoURL, new Callback() {
+                        @Override
+                        public void onSuccess() {}
+
+                        @Override
+                        public void onError(Exception e) {
+                            Picasso.get().load(notification.getPhotoURL()).into(holder.photoURL);
+                        }
+                    });
         }
     }
 
