@@ -31,6 +31,8 @@ public class FriendContract {
     public interface FriendsView {
         void onLoadFriendsSuccess(Friend friend);
         void onLoadFriendFailure(String error);
+        void onRemoveFriendshipSuccess(Friend friend);
+        void onRemoveFriendshipFailure(String error);
     }
 
 

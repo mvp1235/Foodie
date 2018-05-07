@@ -1,6 +1,5 @@
-package com.example.mvp.foodie.message;
+package com.example.mvp.foodie.friend;
 
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
@@ -8,33 +7,54 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.widget.Toast;
 
+import com.example.mvp.foodie.BaseActivity;
 import com.example.mvp.foodie.R;
-import com.example.mvp.foodie.friend.FriendContract;
-import com.example.mvp.foodie.friend.FriendPresenter;
-import com.example.mvp.foodie.friend.FriendChatRecyclerAdapter;
 import com.example.mvp.foodie.models.Friend;
-import com.google.firebase.auth.FirebaseAuth;
+import com.example.mvp.foodie.models.User;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class ChatFriendListActivity extends AppCompatActivity implements FriendContract.FriendsView{
+import static com.example.mvp.foodie.UtilHelper.USER_ID;
+
+public class FriendListActivity extends BaseActivity implements FriendContract.FriendsView {
 
     Toolbar toolbar;
     private RecyclerView recyclerView;
-    private FriendChatRecyclerAdapter adapter;
+    private FriendRecyclerAdapter adapter;
     private List<Friend> friendList;
+
     private FriendContract.Presenter presenter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_chat_friend_list);
+        setContentView(R.layout.activity_friend_list);
+
+        init();
+    }
+
+    private void init() {
+        String userID = getIntent().getStringExtra(USER_ID);
+        String currentUserID = getmAuth().getCurrentUser().getUid();
+
+        toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setTitle(R.string.friends);
+
 
         recyclerView = findViewById(R.id.recyclerView_id);
 
         friendList = new ArrayList<>();
-        adapter = new FriendChatRecyclerAdapter(this, friendList);
+        adapter = new FriendRecyclerAdapter(this, friendList);
+
+        //Use for showing or hiding unfriend button on the adapter
+        //Only show if user is viewing his/her own friend list, but not on others
+        if (userID.equals(currentUserID))
+            adapter.setCurrentUser(true);
+        else
+            adapter.setCurrentUser(false);
+
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(linearLayoutManager);
         recyclerView.setHasFixedSize(true);
@@ -43,12 +63,9 @@ public class ChatFriendListActivity extends AppCompatActivity implements FriendC
                 linearLayoutManager.getOrientation());
         recyclerView.addItemDecoration(mDividerItemDecoration);
 
-        toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setTitle(R.string.friends);
-
         presenter = new FriendPresenter(this);
-        presenter.loadFriends(FirebaseAuth.getInstance().getCurrentUser().getUid());
+        presenter.loadFriends(userID);
+
     }
 
     @Override
@@ -63,11 +80,12 @@ public class ChatFriendListActivity extends AppCompatActivity implements FriendC
 
     @Override
     public void onRemoveFriendshipSuccess(Friend friend) {
-
+        adapter.removeFriend(friend);
+        Toast.makeText(this, "You are no longer friend with " + friend.getFullName(), Toast.LENGTH_SHORT).show();
     }
 
     @Override
     public void onRemoveFriendshipFailure(String error) {
-
+        Toast.makeText(this, error, Toast.LENGTH_SHORT).show();
     }
 }

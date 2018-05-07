@@ -22,6 +22,7 @@ import android.widget.Toast;
 import com.example.mvp.foodie.BaseActivity;
 import com.example.mvp.foodie.R;
 import com.example.mvp.foodie.friend.FriendContract;
+import com.example.mvp.foodie.friend.FriendListActivity;
 import com.example.mvp.foodie.friend.FriendPresenter;
 import com.example.mvp.foodie.friend.FriendRequestsActivity;
 import com.example.mvp.foodie.models.FriendRequest;
@@ -170,6 +171,20 @@ public class ProfileActivity extends BaseActivity implements ProfileContract.Vie
             else
                 intent.putExtra(USER_ID, getmAuth().getCurrentUser().getUid());
             startActivity(intent);
+            }
+        });
+
+        friendCountTV.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String userID = receivedIntent.getStringExtra(USER_ID);
+                Intent intent = new Intent(ProfileActivity.this, FriendListActivity.class);
+
+                if (userID != null)
+                    intent.putExtra(USER_ID, userID);
+                else
+                    intent.putExtra(USER_ID, getmAuth().getCurrentUser().getUid());
+                startActivity(intent);
             }
         });
 

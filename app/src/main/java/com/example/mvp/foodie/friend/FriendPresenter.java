@@ -372,12 +372,25 @@ public class FriendPresenter implements FriendContract.Presenter {
                             }
                         });
 
-                        view.onRemoveFriendshipSuccess(unfriendingUser, unfriendedUser);
+                        if (view != null)
+                            view.onRemoveFriendshipSuccess(unfriendingUser, unfriendedUser);
+
+                        if (friendsView != null) {
+                            Friend removedFriend = new Friend();
+                            removedFriend.setId(unfriendedUser.getuID());
+                            removedFriend.setFullName(unfriendedUser.getFullName());
+                            removedFriend.setPhotoURL(unfriendedUser.getProfileURL());
+                            friendsView.onRemoveFriendshipSuccess(removedFriend);
+                        }
+
                     }
 
                     @Override
                     public void onCancelled(DatabaseError databaseError) {
-                        view.onRemoveFriendshipFailure(databaseError.getMessage());
+                        if (view != null)
+                            view.onRemoveFriendshipFailure(databaseError.getMessage());
+                        if (friendsView != null)
+                            friendsView.onRemoveFriendshipFailure(databaseError.getMessage());
                     }
                 });
             }

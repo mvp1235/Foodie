@@ -9,13 +9,13 @@ import com.example.mvp.foodie.R;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class FriendViewHolder extends RecyclerView.ViewHolder {
+public class FriendChatViewHolder extends RecyclerView.ViewHolder {
     public RelativeLayout friendBlock;
     public CircleImageView friendPhoto;
     public AppCompatTextView friendName;
 
 
-    public FriendViewHolder(View itemView) {
+    public FriendChatViewHolder(View itemView) {
         super(itemView);
         friendBlock = itemView.findViewById(R.id.friendBlock_id);
         friendPhoto = itemView.findViewById(R.id.friendPhoto_id);
