@@ -21,7 +21,9 @@ public class MessagePresenter implements MessageContract.Presenter {
     private DatabaseReference userRef = FirebaseDatabase.getInstance().getReference().child("Users");
     private DatabaseReference conversationRef = FirebaseDatabase.getInstance().getReference().child("Conversations");
 
+
     private ValueEventListener messageEventListener;
+    private ValueEventListener conversationEventListener;
 
     public MessagePresenter(MessageContract.View view) {
         this.view = view;
@@ -99,6 +101,12 @@ public class MessagePresenter implements MessageContract.Presenter {
     public void removeMessageEventListener() {
         if (messageEventListener != null)
             conversationRef.removeEventListener(messageEventListener);
+    }
+
+    @Override
+    public void removeConversationEventListener() {
+        if (conversationEventListener != null)
+            conversationRef.removeEventListener(conversationEventListener);
     }
 
     private void addMessageToExistingConversation(final String conversationID, final Message message) {

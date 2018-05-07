@@ -23,6 +23,7 @@ public interface MessageContract {
         void loadConversations(String userID);
         void loadMessagesBetweenTheUsers(String firstUserID, String secondUserID);
         void removeMessageEventListener();
+        void removeConversationEventListener();
         void sendMessage(String conversationID, String fromUserID, String toUserID, String messageContent);
     }
 }

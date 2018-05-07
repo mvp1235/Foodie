@@ -43,8 +43,22 @@ public class ConversationRecyclerAdapter extends RecyclerView.Adapter<Conversati
     }
 
     public void addConversation(Conversation conversation) {
-        conversations.add(conversation);
-        notifyDataSetChanged();
+        if (!conversations.contains(conversation)) {
+            conversations.add(conversation);
+            notifyDataSetChanged();
+        } else {
+            updateExistingConversation(conversation);
+        }
+    }
+
+    private void updateExistingConversation(Conversation conversation) {
+        for (int i=0; i<conversations.size(); i++) {
+            Conversation c = conversations.get(i);
+            if (c.getcID().equals(conversation.getcID())) {
+                conversations.set(i, conversation);
+                break;
+            }
+        }
     }
 
     public void removeConversation(Conversation conversation) {

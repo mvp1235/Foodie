@@ -53,7 +53,6 @@ public class ChatActivity extends AppCompatActivity implements MessageContract.D
     }
 
     private void initViews() {
-
         recyclerView = findViewById(R.id.recyclerView_id);
         toolbar = findViewById(R.id.toolbar);
         messageET = findViewById(R.id.messageText_id);
@@ -61,7 +60,6 @@ public class ChatActivity extends AppCompatActivity implements MessageContract.D
 
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle(getIntent().getStringExtra(USER_NAME));
-
 
         messageList = new ArrayList<>();
         adapter = new MessageRecyclerAdapter(this, messageList);
@@ -81,13 +79,13 @@ public class ChatActivity extends AppCompatActivity implements MessageContract.D
         sendBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String messageContent = messageET.getText().toString();
-                if (!TextUtils.isEmpty(messageContent)) {
-                    String conversationID = getIntent().getStringExtra(CONVERSATION_ID);
-                    String fromUserID = FirebaseAuth.getInstance().getCurrentUser().getUid();
-                    String toUserID = getIntent().getStringExtra(TO_USER_ID);
-                    presenter.sendMessage(conversationID, fromUserID, toUserID, messageContent);
-                }
+            String messageContent = messageET.getText().toString();
+            if (!TextUtils.isEmpty(messageContent)) {
+                String conversationID = getIntent().getStringExtra(CONVERSATION_ID);
+                String fromUserID = FirebaseAuth.getInstance().getCurrentUser().getUid();
+                String toUserID = getIntent().getStringExtra(TO_USER_ID);
+                presenter.sendMessage(conversationID, fromUserID, toUserID, messageContent);
+            }
             }
         });
     }

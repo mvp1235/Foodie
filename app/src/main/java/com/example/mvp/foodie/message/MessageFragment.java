@@ -40,6 +40,7 @@ public class MessageFragment extends Fragment implements MessageContract.View {
 
     @Override
     public void onStop() {
+        presenter.removeConversationEventListener();
         super.onStop();
     }
 
