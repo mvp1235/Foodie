@@ -67,7 +67,10 @@ public class Conversation {
     }
 
     public List<Message> getMessages() {
-        return messages;
+        if (messages.size() > 100)
+            return messages.subList(0, 100);
+        else
+            return messages;
     }
 
     public void setMessages(List<Message> messages) {
