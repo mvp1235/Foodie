@@ -25,6 +25,8 @@ Camera and Write External permissions are required for successfully uploading us
 - Edit and delete post
 - Like and comment
 - Edit and delete comment
+- Friend Requests
+- Private messaging
 - Notifications for user interactions with each other using Firebase Cloud Messaging and Cloud Functions
 - User authentication using Firebase Auth
 - Data storage using Firebase Realtime Database
@@ -34,8 +36,6 @@ Camera and Write External permissions are required for successfully uploading us
 
 ## Upcoming Functionalities
 
-- Friend Requests
-- Private messaging
 - Multiple themes support
 - App Settings
 - Facebook and Google login
