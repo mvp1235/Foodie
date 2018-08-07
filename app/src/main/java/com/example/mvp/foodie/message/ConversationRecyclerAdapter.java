@@ -143,8 +143,12 @@ public class ConversationRecyclerAdapter extends RecyclerView.Adapter<Conversati
 
                             if (messages.size() > 0) {
                                 Message lastMessage = messages.get(messages.size()-1);
-                                holder.lastMessageContent.setText(lastMessage.getContent());
                                 holder.lastMessageTime.setText(lastMessage.getMessageDuration());
+
+                                if (lastMessage.getContent().length() > 100)
+                                    holder.lastMessageContent.setText(lastMessage.getContent().substring(0, 97) + "...");
+                                else
+                                    holder.lastMessageContent.setText(lastMessage.getContent());
                             }
                         }
 
