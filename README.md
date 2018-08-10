@@ -107,6 +107,8 @@ Camera and Write External permissions are required for successfully uploading us
 ### Comment edit fragment
 <img src="https://user-images.githubusercontent.com/15053859/39385220-835a3b2a-4a24-11e8-8267-0715d63f391f.png" width="300" height="500">
 
+### Messaging
+<img src="https://user-images.githubusercontent.com/15053859/43974104-57741cb2-9c8e-11e8-8f0d-626e47129a33.png" width="300" height="500">
 
 ### Notification Fragment
 <img src="https://user-images.githubusercontent.com/15053859/39385957-33a2bb90-4a27-11e8-9025-f34cd3a97a0b.png" width="300" height="500">
